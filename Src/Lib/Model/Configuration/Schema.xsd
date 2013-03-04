@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified"
+	targetNamespace="http://www.rpi.co.uk/"
+	xmlns:RPI="http://www.rpi.co.uk/">
+
+	<xs:simpleType name="contentType">
+		<xs:restriction base="xs:normalizedString">
+			<xs:enumeration value="js"/>
+			<xs:enumeration value="css"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="project">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="1" maxOccurs="unbounded" ref="RPI:build"/>
+			</xs:sequence>
+			<xs:attribute name="appName" use="required" type="xs:normalizedString">
+				<xs:annotation>
+					<xs:documentation>
+						
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="appRoot" use="required" type="xs:normalizedString"/>
+			<xs:attribute name="name" use="required" type="xs:normalizedString"/>
+			<xs:attribute name="prefix" use="required" type="xs:normalizedString"/>
+			<xs:attribute name="proxyScriptType" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:normalizedString">
+						<xs:enumeration value="jsp"/>
+						<xs:enumeration value="php"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="includeDebug" use="optional" type="xs:boolean"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="build">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="0" maxOccurs="unbounded" ref="RPI:files"/>
+			</xs:sequence>
+			<xs:attribute name="buildDirectory" use="required" type="xs:normalizedString"/>
+			<xs:attribute name="name" use="required" type="xs:normalizedString"/>
+			<xs:attribute name="outputDirectory" use="optional" type="xs:normalizedString"/>
+			<xs:attribute name="type" use="required" type="RPI:contentType"/>
+			<xs:attribute name="version" use="required" type="xs:normalizedString"/>
+
+			<xs:attribute name="outputFilename" use="optional" type="xs:normalizedString"/>
+
+			<xs:attribute name="externalDependenciesNames" use="optional" type="xs:normalizedString">
+				<xs:annotation>
+					<xs:documentation>
+						Comma separated list of build names that specify dependencies outside this build file
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="files">
+		<xs:complexType>
+			<xs:attribute name="name" use="optional" type="xs:normalizedString"/>
+			<xs:attribute name="referenceName" use="optional" type="xs:normalizedString"/>
+			<xs:attribute name="type" use="optional" type="RPI:contentType"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
+
