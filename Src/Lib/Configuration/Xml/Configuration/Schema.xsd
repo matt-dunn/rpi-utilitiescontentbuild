@@ -17,25 +17,26 @@
 			<xs:sequence>
 				<xs:element minOccurs="1" maxOccurs="unbounded" ref="RPI:build"/>
 			</xs:sequence>
-			<xs:attribute name="appName" use="required" type="xs:normalizedString">
+<!--			<xs:attribute name="appName" use="required" type="xs:normalizedString">
 				<xs:annotation>
 					<xs:documentation>
 						
 					</xs:documentation>
 				</xs:annotation>
-			</xs:attribute>
+			</xs:attribute>-->
 			<xs:attribute name="appRoot" use="required" type="xs:normalizedString"/>
 			<xs:attribute name="name" use="required" type="xs:normalizedString"/>
 			<xs:attribute name="prefix" use="required" type="xs:normalizedString"/>
-			<xs:attribute name="proxyScriptType" use="required">
+<!--			<xs:attribute name="proxyScriptType" use="required">
 				<xs:simpleType>
 					<xs:restriction base="xs:normalizedString">
 						<xs:enumeration value="jsp"/>
 						<xs:enumeration value="php"/>
 					</xs:restriction>
 				</xs:simpleType>
-			</xs:attribute>
-			<xs:attribute name="includeDebug" use="optional" type="xs:boolean"/>
+			</xs:attribute>-->
+			<!--<xs:attribute name="includeDebug" use="optional" type="xs:boolean"/>-->
+			<xs:attribute name="basePath" use="optional" type="xs:normalizedString"/>
 		</xs:complexType>
 	</xs:element>
 

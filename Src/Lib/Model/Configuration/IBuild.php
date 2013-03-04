@@ -17,6 +17,11 @@ interface IBuild
     /**
      * @return string
      */
+    public function getOutputFilename();
+    
+    /**
+     * @return string
+     */
     public function getType();
     
     /**
@@ -33,4 +38,9 @@ interface IBuild
      * @return array
      */
     public function getFiles();
+    
+    /**
+     * @return string
+     */
+    public function getExternalDependenciesNames();
 }

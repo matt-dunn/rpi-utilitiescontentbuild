@@ -23,4 +23,9 @@ interface IProject
      * @return \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild[]
      */
     public function getBuilds();
+    
+    /**
+     * @return string
+     */
+    public function getBasePath();
 }

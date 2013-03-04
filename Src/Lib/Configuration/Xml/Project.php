@@ -6,7 +6,8 @@ namespace RPI\Utilities\ContentBuild\Lib\Configuration\Xml;
  * @property-read string $name
  * @property-read string $prefix
  * @property-read string $appRoot
- * @property-read \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild[] $builds
+ * @property-read \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild[] $basePath
+ * @property-read string $builds
  */
 class Project extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
 {
@@ -27,6 +28,12 @@ class Project extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements 
      * @var string 
      */
     private $appRoot = null;
+    
+    /**
+     *
+     * @var string
+     */
+    private $basePath = null;
     
     /**
      *
@@ -58,9 +65,18 @@ class Project extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements 
         
         $config = \RPI\Utilities\ContentBuild\Lib\Helpers\Dom::deserialize(simplexml_import_dom($doc));
         
-        $this->name = $config["@"]["name"];
-        $this->prefix = $config["@"]["prefix"];
-        $this->appRoot = $config["@"]["appRoot"];
+        if (isset($config["@"]["name"])) {
+            $this->name = $config["@"]["name"];
+        }
+        if (isset($config["@"]["prefix"])) {
+            $this->prefix = $config["@"]["prefix"];
+        }
+        if (isset($config["@"]["appRoot"])) {
+            $this->appRoot = $config["@"]["appRoot"];
+        }
+        if (isset($config["@"]["basePath"])) {
+            $this->basePath = $config["@"]["basePath"];
+        }
         
         if (!isset($config["build"][0])) {
             $config["build"] = array($config["build"]);
@@ -75,7 +91,7 @@ class Project extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements 
     {
         $doc = new \DOMDocument();
         $doc->load($configurationFile);
-        if (!\RPI\Utilities\ContentBuild\Lib\Helpers\Dom::validateSchema($doc, dirname(__FILE__)."/../../Model/Configuration/Schema.xsd")) {
+        if (!\RPI\Utilities\ContentBuild\Lib\Helpers\Dom::validateSchema($doc, dirname(__FILE__)."/Configuration/Schema.xsd")) {
             exit(2);
         }
     }
@@ -114,5 +130,14 @@ class Project extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements 
     public function getAppRoot()
     {
         return $this->appRoot;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getBasePath()
+    {
+        return $this->basePath;
     }
 }

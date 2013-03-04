@@ -40,6 +40,18 @@ class Build extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements \R
      *
      * @var string
      */
+    private $outputFilename = null;
+    
+    /**
+     *
+     * @var string
+     */
+    private $externalDependenciesNames = null;
+    
+    /**
+     *
+     * @var string
+     */
     private $type = null;
     
     /**
@@ -50,11 +62,27 @@ class Build extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements \R
     
     public function __construct(array $buildDetails)
     {
-        $this->name = $buildDetails["@"]["name"];
-        $this->version = $buildDetails["@"]["version"];
-        $this->type = $buildDetails["@"]["type"];
-        $this->outputDirectory = $buildDetails["@"]["outputDirectory"];
-        $this->buildDirectory = $buildDetails["@"]["buildDirectory"];
+        if (isset($buildDetails["@"]["name"])) {
+            $this->name = $buildDetails["@"]["name"];
+        }
+        if (isset($buildDetails["@"]["version"])) {
+            $this->version = $buildDetails["@"]["version"];
+        }
+        if (isset($buildDetails["@"]["type"])) {
+            $this->type = $buildDetails["@"]["type"];
+        }
+        if (isset($buildDetails["@"]["outputDirectory"])) {
+            $this->outputDirectory = $buildDetails["@"]["outputDirectory"];
+        }
+        if (isset($buildDetails["@"]["outputFilename"])) {
+            $this->outputFilename = $buildDetails["@"]["outputFilename"];
+        }
+        if (isset($buildDetails["@"]["buildDirectory"])) {
+            $this->buildDirectory = $buildDetails["@"]["buildDirectory"];
+        }
+        if (isset($buildDetails["@"]["externalDependenciesNames"])) {
+            $this->externalDependenciesNames = $buildDetails["@"]["externalDependenciesNames"];
+        }
         
         if (!isset($buildDetails["files"][0])) {
             $buildDetails["files"] = array($buildDetails["files"]);
@@ -117,5 +145,23 @@ class Build extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements \R
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getOutputFilename()
+    {
+        return $this->outputFilename;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getExternalDependenciesNames()
+    {
+        return $this->externalDependenciesNames;
     }
 }
