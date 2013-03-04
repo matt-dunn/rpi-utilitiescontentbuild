@@ -2,8 +2,6 @@
 
 namespace RPI\Utilities\ContentBuild\Lib;
 
-use Ulrichsg\Getopt;
-
 class Build
 {
     const COMPRESSOR_JAR = "yuicompressor-2.4.7.jar";
@@ -45,37 +43,20 @@ class Build
      */
     private $includeDebug = true;
     
-    public function __construct(\RPI\Utilities\ContentBuild\Lib\Processor $processor)
-    {
+    /**
+     *
+     * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
+     */
+    private $project = null;
+    
+    public function __construct(
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
+        \RPI\Utilities\ContentBuild\Lib\Processor $processor
+    ) {
+        $this->project = $project;
+        $this->configurationFile = $this->project->configurationFile;
         $this->processor = $processor;
-        
-        $getopt = new Getopt(
-            array(
-                array("h", "help", Getopt::NO_ARGUMENT, "Show this help"),
-                array("l", "loglevel", Getopt::REQUIRED_ARGUMENT, "Define the log level"),
-                array("c", "config", Getopt::REQUIRED_ARGUMENT, "Location of the configuration file")
-            )
-        );
-        
-        try {
-            $getopt->parse();
-        } catch (\UnexpectedValueException $ex) {
-            echo $ex->getMessage()."\r\n";
-            exit(1);
-        }
-        
-        if ($getopt->getOption("help")) {
-            $getopt->showHelp();
-            exit;
-        }
-        
-        $logLevel = $getopt->getOption("loglevel");
-        if (isset($logLevel)) {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::setLogLevel($logLevel);
-        }
-
-        $this->configurationFile = $getopt->getOption("config");
-        
+       
         $this->yuicompressorLocation = dirname(__FILE__)."/../../vendor/yui/yuicompressor/build/".self::COMPRESSOR_JAR;
         if (!file_exists($this->yuicompressorLocation)) {
             throw new \Exception("Unable to find yuicompressor (".$this->yuicompressorLocation.")");
@@ -86,28 +67,28 @@ class Build
     {
         \RPI\Utilities\ContentBuild\Lib\Exception\Handler::$displayShutdownInformation = true;
 
-        $project = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Project($this->configurationFile);
-        
-        $this->basePath = realpath(dirname($this->configurationFile).$project->basePath);
-        $this->webroot = realpath($this->basePath."/".$project->appRoot);
+        $this->basePath = realpath(dirname($this->configurationFile).$this->project->basePath);
+        $this->webroot = realpath($this->basePath."/".$this->project->appRoot);
 
-        foreach ($project->builds as $build) {
-            $this->buildDependencies($project, $build);
+        foreach ($this->project->builds as $build) {
+            $this->buildDependencies($this->project, $build);
         }
         
-        foreach ($project->builds as $build) {
+        $this->processor->init($this->project);
+        
+        foreach ($this->project->builds as $build) {
             $outputFilename =
                 $this->basePath."/".
                 $build->outputDirectory.
-                $project->prefix.".".
+                $this->project->prefix.".".
                 $build->version."-".
-                $project->name."-".
+                $this->project->name."-".
                 $build->name.".".
                 $build->type;
-            $this->processBuild($project, $build, $outputFilename, $build->outputDirectory);
+            $this->processBuild($this->project, $build, $outputFilename, $build->outputDirectory);
         }
         
-//        var_dump($this->buildFiles);
+        $this->processor->complete($this->project);
     }
     
     private function processBuild(
@@ -160,8 +141,12 @@ class Build
 
             $buffer = file_get_contents($file);
             
-            // TODO: process CSS
-            $this->processor->process();
+            // TODO: should this call preProcessCSS/preProcessJs etc?
+            if ($build->type == "css") {
+                $buffer = $this->processor->preProcess($build, $file, $outputFilename, $debugPath, $buffer);
+
+                $buffer = $this->processor->process($file, $outputFilename, $debugPath, $buffer);
+            }
             
             file_put_contents($outputFilename, $buffer, FILE_APPEND);
         }

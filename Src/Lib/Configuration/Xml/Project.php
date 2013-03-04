@@ -41,22 +41,20 @@ class Project extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements 
      */
     private $builds = array();
     
+    /**
+     *
+     * @var string
+     */
+    private $configurationFile = null;
+    
     function __construct($configurationFile)
     {
-        if (!isset($configurationFile)) {
-            if (file_exists(getcwd()."/"."ui.build.xml")) {
-                $configurationFile = getcwd()."/"."ui.build.xml";
-            }
-        } else {
-            if (!file_exists($configurationFile)) {
-                $configurationFile = getcwd()."/".$configurationFile;
-            }
-        }
-
         if (!file_exists($configurationFile)) {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Unable to locate configuration file '{$configurationFile}'", LOG_ERR);
             exit(2);
         }
+        
+        $this->configurationFile = $configurationFile;
 
         $this->validateConfigurationFile($configurationFile);
         
@@ -139,5 +137,14 @@ class Project extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements 
     public function getBasePath()
     {
         return $this->basePath;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getConfigurationFile()
+    {
+        return $this->configurationFile;
     }
 }

@@ -7,6 +7,11 @@ interface IProject
     /**
      * @return string
      */
+    public function getConfigurationFile();
+    
+    /**
+     * @return string
+     */
     public function getName();
     
     /**
