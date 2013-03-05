@@ -445,7 +445,12 @@ CONTENT;
         }
 
         $proxyFile = $outputPath."/proxy.php";
-        $scriptPath = $outputPath.self::makeRelativePath(__DIR__."/../", $outputPath);
+        $scriptPath = null;
+        if (\Phar::running() !== "") {
+            $scriptPath = __DIR__."/../";
+        } else {
+            $scriptPath = $outputPath.self::makeRelativePath(__DIR__."/../", $outputPath);
+        }
         $output = <<<EOT
 <?php
 require_once "{$scriptPath}../vendor/autoload.php";
