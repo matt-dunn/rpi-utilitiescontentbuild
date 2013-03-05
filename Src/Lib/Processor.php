@@ -47,6 +47,15 @@ class Processor
                 }
             }
         }
+
+        // Ensure the following processors are always run:
+        if (!isset($this->processors["RPI\Utilities\ContentBuild\Processors\Comments"])) {
+            $this->add(new \RPI\Utilities\ContentBuild\Processors\Comments());
+        }
+        
+        if (!isset($this->processors["RPI\Utilities\ContentBuild\Processors\Images"])) {
+            $this->add(new \RPI\Utilities\ContentBuild\Processors\Images());
+        }
     }
     
     /**
@@ -57,7 +66,7 @@ class Processor
      */
     public function add(\RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor $processor)
     {
-        $this->processors[] = $processor;
+        $this->processors[get_class($processor)] = $processor;
         
         return $this;
     }
