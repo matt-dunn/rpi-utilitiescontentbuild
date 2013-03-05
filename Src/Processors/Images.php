@@ -69,8 +69,6 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
     ) {
-        var_dump($this->imageFiles);
-        
         if (count($this->imageFiles) > 0) {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Copying images", LOG_DEBUG);
             self::copyCSSImageFiles($this->imageFiles);
