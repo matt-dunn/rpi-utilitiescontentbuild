@@ -201,7 +201,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                         // This needs to be on a single line so that line number reporting
                         // does not break (e.g. when using firebug)
                         return "background:url({$spriteData["spritePath"]}) no-repeat {$offsetX}px {$offsetY}px;".
-                            "width:{$spriteData["width"]}px;height:{$spriteData["height"]}px;content:''";
+                            "width:{$spriteData["width"]}px;height:{$spriteData["height"]}px;content:'';";
                     }
 
                     return "";
