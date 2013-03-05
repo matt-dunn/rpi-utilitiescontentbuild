@@ -1,6 +1,6 @@
 <?php
 
-const CONTENT_BUILD_VERSION = "1.0.1";
+const CONTENT_BUILD_VERSION = "1.0.2";
 
 require_once __DIR__."/../vendor/autoload.php";
 require_once __DIR__."/Autoload.php";
