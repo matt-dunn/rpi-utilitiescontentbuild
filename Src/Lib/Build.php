@@ -59,8 +59,18 @@ class Build
     
     public function run()
     {
+        $cleanupYuiCompressor = false;
+        
         \RPI\Utilities\ContentBuild\Lib\Exception\Handler::$displayShutdownInformation = true;
-
+        
+        if (\Phar::running() !== "") {
+            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Extracting yuicompressor", LOG_NOTICE);
+            $tempYuiCompressorLocation = sys_get_temp_dir()."/".self::COMPRESSOR_JAR;
+            copy($this->yuicompressorLocation, $tempYuiCompressorLocation);
+            $this->yuicompressorLocation = $tempYuiCompressorLocation;
+            $cleanupYuiCompressor = true;
+        }
+        
         $this->webroot = realpath($this->project->basePath."/".$this->project->appRoot);
 
         foreach ($this->project->builds as $build) {
@@ -83,6 +93,11 @@ class Build
         }
         
         $this->processor->complete();
+        
+        if ($cleanupYuiCompressor) {
+            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Deleting  yuicompressor '{$this->yuicompressorLocation}'", LOG_DEBUG);
+            unlink($this->yuicompressorLocation);
+        }
     }
     
     private function processBuild(
