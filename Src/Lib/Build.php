@@ -95,7 +95,10 @@ class Build
         $this->processor->complete();
         
         if ($cleanupYuiCompressor) {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Deleting  yuicompressor '{$this->yuicompressorLocation}'", LOG_DEBUG);
+            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
+                "Deleting  yuicompressor '{$this->yuicompressorLocation}'",
+                LOG_DEBUG
+            );
             unlink($this->yuicompressorLocation);
         }
     }
