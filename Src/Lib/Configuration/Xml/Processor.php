@@ -2,11 +2,13 @@
 
 namespace RPI\Utilities\ContentBuild\Lib\Configuration\Xml;
 
+use \RPI\Utilities\ContentBuild\Lib\Helpers\Object;
+
 /**
  * @property-read string $type
  * @property-read array $params
  */
-class Processor extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProcessor
+class Processor extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProcessor
 {
     /**
      *
@@ -25,7 +27,7 @@ class Processor extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implement
      * @param string $type
      * @param array $params
      */
-    function __construct($type, array $params = null)
+    public function __construct($type, array $params = null)
     {
         $this->type = $type;
         $this->params = $params;

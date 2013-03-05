@@ -2,6 +2,8 @@
 
 namespace RPI\Utilities\ContentBuild\Lib\Configuration\Xml;
 
+use \RPI\Utilities\ContentBuild\Lib\Helpers\Object;
+
 /**
  * @property-read string $buildDirectory
  * @property-read array $files
@@ -10,7 +12,7 @@ namespace RPI\Utilities\ContentBuild\Lib\Configuration\Xml;
  * @property-read $type $buildDirectory
  * @property-read $version $buildDirectory
  */
-class Build extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild
+class Build extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild
 {
     /**
      *
@@ -66,8 +68,10 @@ class Build extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements \R
      */
     private $debugPath = null;
     
-    public function __construct(\RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project, array $buildDetails)
-    {
+    public function __construct(
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
+        array $buildDetails
+    ) {
         if (isset($buildDetails["@"]["name"])) {
             $this->name = $buildDetails["@"]["name"];
         }

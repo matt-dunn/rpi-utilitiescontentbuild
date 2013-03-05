@@ -43,7 +43,10 @@ class Handler
                 self::log("********** SCRIPT FAILED - WITH ".self::$errorCount." ERRORS/WARNINGS:", LOG_ERR, true);
                 $exitStatus = 1;
             } elseif (count(self::$warnings) > 0) {
-                self::log("********** SCRIPT SUCCESSFUL - completed with ".count(self::$warnings)." WARNINGS:\r\n", LOG_INFO);
+                self::log(
+                    "********** SCRIPT SUCCESSFUL - completed with ".count(self::$warnings)." WARNINGS:\r\n",
+                    LOG_INFO
+                );
                 $exitStatus = 2;
             } else {
                 self::log("SCRIPT SUCCESSFUL", LOG_INFO);
@@ -100,9 +103,11 @@ class Handler
         $timestamp = new \DateTime(date("Y-m-d H:i:s.".$micro, $t));
 
         if (self::isCli()) {
-            if (self::$displayShutdownInformation && !$dislayError && ($severity == LOG_CRIT || $severity == LOG_WARNING || $severity == LOG_ERR)) {
+            if (self::$displayShutdownInformation
+                && !$dislayError
+                && ($severity == LOG_CRIT || $severity == LOG_WARNING || $severity == LOG_ERR)) {
                 array_push(self::$warnings, $msg);
-            } else if ($dislayError || (self::$logLevel == 0 || $logLevel <= self::$logLevel)) {
+            } elseif ($dislayError || (self::$logLevel == 0 || $logLevel <= self::$logLevel)) {
                 fwrite(STDOUT, $timestamp->format("Y-m-d H:i:s.u").": ".$fullMessage."\r\n");
             } else {
                 echo ".";

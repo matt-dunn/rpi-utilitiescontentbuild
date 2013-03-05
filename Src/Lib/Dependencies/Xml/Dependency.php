@@ -2,10 +2,12 @@
 
 namespace RPI\Utilities\ContentBuild\Lib\Dependencies\Xml;
 
+use \RPI\Utilities\ContentBuild\Lib\Helpers\Object;
+
 /**
  * @property-read array $files
  */
-class Dependency extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements \RPI\Utilities\ContentBuild\Lib\Model\IDependency
+class Dependency extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\IDependency
 {
     /**
      *

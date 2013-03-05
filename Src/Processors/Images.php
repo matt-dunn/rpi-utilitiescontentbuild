@@ -34,14 +34,18 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
             function ($matches) use ($inputFilename, &$files, $outputFilename, $debugPath) {
                 $imageUrl = realpath(dirname($inputFilename)."/".$matches[1]);
                 if ($imageUrl === false) {
-                    \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Unable to locate image '{$matches[1]}' in '$inputFilename'", LOG_ERR);
+                    \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
+                        "Unable to locate image '{$matches[1]}' in '$inputFilename'",
+                        LOG_ERR
+                    );
                 } else {
                     $files[$imageUrl] = array(
                         "imagePath" => $matches[1],
                         "sourceDocument" => $inputFilename,
                         "sourceFile" => $imageUrl,
                         "destinationFile" => dirname($outputFilename)."/".str_replace("../", "", $matches[1]),
-                        "destinationFileDebug" => (isset($debugPath) ? $debugPath."/".str_replace("../", "", $matches[1]) : null)
+                        "destinationFileDebug" =>
+                            (isset($debugPath) ? $debugPath."/".str_replace("../", "", $matches[1]) : null)
                     );
                 }
             },
@@ -84,7 +88,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         
         if (count($basePaths) > 0) {
             $basePaths = array_keys($basePaths);
-            foreach($basePaths as $basePath) {
+            foreach ($basePaths as $basePath) {
                 \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Cleaning images in '$basePath'", LOG_DEBUG);
                 self::cleanupImages($basePath, $this->timestamp);
             }
@@ -111,18 +115,28 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
             umask($oldumask);
         }
 
-        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Copying '$sourceImageFile' to '$destImageFile'", LOG_NOTICE);
+        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
+            "Copying '$sourceImageFile' to '$destImageFile'",
+            LOG_NOTICE
+        );
         copy($sourceImageFile, $destImageFile);
     }
     
     private static function cleanupImages($basePath, $timestamp)
     {
-        $filesSearch = \RPI\Utilities\ContentBuild\Lib\Helpers\FileUtils::find($basePath, "/.*\.(png|gif|jpg|jpeg)/", true);
+        $filesSearch = \RPI\Utilities\ContentBuild\Lib\Helpers\FileUtils::find(
+            $basePath,
+            "/.*\.(png|gif|jpg|jpeg)/",
+            true
+        );
         $existingFiles = array_keys($filesSearch);
         
         foreach ($existingFiles as $existingFile) {
             if (filemtime($existingFile) < $timestamp) {
-                \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Deleting unused file '$existingFile'", LOG_INFO);
+                \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
+                    "Deleting unused file '$existingFile'",
+                    LOG_INFO
+                );
                 unlink($existingFile);
             }
         }

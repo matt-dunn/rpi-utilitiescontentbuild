@@ -40,14 +40,28 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         
         preg_replace_callback(
             "/^\s*(#sprite\:\s*(.*?);)/sim",
-            function ($matches) use ($inputFilename, $outputFilename, $build, &$sprites, $spriteOutputFilename, $debugSpriteOutputFilename, $maxSpriteWidth) {
+            function ($matches) use (
+                $inputFilename,
+                $outputFilename,
+                $build,
+                &$sprites,
+                $spriteOutputFilename,
+                $debugSpriteOutputFilename,
+                $maxSpriteWidth
+                ) {
                 if (!file_exists(dirname($inputFilename)."/".$matches[2])) {
-                    \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Unable to locate image '{$matches[2]}' in '$inputFilename'", LOG_ERR);
+                    \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
+                        "Unable to locate image '{$matches[2]}' in '$inputFilename'",
+                        LOG_ERR
+                    );
                 } else {
                     $spriteFilename = realpath(dirname($inputFilename)."/".$matches[2]);
                     
                     if (!isset($sprites[$spriteFilename])) {
-                        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Creating Sprite image ' $spriteFilename'", LOG_DEBUG);
+                        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
+                            "Creating Sprite image ' $spriteFilename'",
+                            LOG_DEBUG
+                        );
                         $imageDataSprite = getimagesize($spriteFilename);
 
                         $im = null;
@@ -55,7 +69,8 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                         $offsetY = 0;
 
                         if (file_exists($spriteOutputFilename)) {
-                            $previousSprite = \RPI\Utilities\ContentBuild\Processors\Sprites::findLastIcon($build, $sprites);
+                            $previousSprite =
+                                \RPI\Utilities\ContentBuild\Processors\Sprites::findLastIcon($build, $sprites);
                             if ($previousSprite !== false) {
                                 $offsetX = $previousSprite["offsetX"] + $previousSprite["width"];
                                 $offsetY = $previousSprite["offsetY"];
@@ -83,7 +98,16 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                             $alpha = imagecolorallocatealpha($im, 0, 0, 0, 127);
                             imagefill($im, 0, 0, $alpha);
 
-                            imagecopy($im, $imOriginal, 0, 0, 0, 0, $imageDataSpriteOutput[0], $imageDataSpriteOutput[1]);
+                            imagecopy(
+                                $im,
+                                $imOriginal,
+                                0,
+                                0,
+                                0,
+                                0,
+                                $imageDataSpriteOutput[0],
+                                $imageDataSpriteOutput[1]
+                            );
 
                             imagedestroy($imOriginal);
                         } else {
@@ -122,7 +146,10 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                             imagedestroy($im);
                             imagedestroy($im2);
                         } else {
-                            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Unable to create image ' $spriteFilename'", LOG_ERR);
+                            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
+                                "Unable to create image ' $spriteFilename'",
+                                LOG_ERR
+                            );
                         }
 
                         $sprites[$spriteFilename] = array(
@@ -135,7 +162,6 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                             "spriteDebugName" => $debugSpriteOutputFilename,
                             "spritePath" => substr($spriteOutputFilename, strlen(dirname($outputFilename)) + 1),
                             "originalName" => $spriteFilename
-//                            "relativePath" => \RPI\Utilities\Build\Content\Build::makeRelativePath(dirname($spriteFilename), dirname($spriteOutputFilename))."/".basename($spriteFilename)
                         );
                     }
                 }
@@ -172,14 +198,10 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                             $offsetY = $offsetY * -1;
                         }
 
-                        $spriteDetails = "";
-//                        if ($runtime) {
-//                            $spriteDetails = "/*! Sprite: {$spriteData["originalName"]} */";
-//                        }
-                        // This needs to be on a single line so that line number reporting does not break (e.g. when using firebug)
-                        return <<<EOT
-{$spriteDetails} background:url({$spriteData["spritePath"]}) no-repeat {$offsetX}px {$offsetY}px;width:{$spriteData["width"]}px;height:{$spriteData["height"]}px;content:'';
-EOT;
+                        // This needs to be on a single line so that line number reporting
+                        // does not break (e.g. when using firebug)
+                        return "background:url({$spriteData["spritePath"]}) no-repeat {$offsetX}px {$offsetY}px;".
+                            "width:{$spriteData["width"]}px;height:{$spriteData["height"]}px;content:''";
                     }
 
                     return "";

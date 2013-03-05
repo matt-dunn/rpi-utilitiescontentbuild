@@ -2,6 +2,8 @@
 
 namespace RPI\Utilities\ContentBuild\Lib\Configuration\Xml;
 
+use \RPI\Utilities\ContentBuild\Lib\Helpers\Object;
+
 /**
  * @property-read string $name
  * @property-read string $prefix
@@ -9,7 +11,7 @@ namespace RPI\Utilities\ContentBuild\Lib\Configuration\Xml;
  * @property-read \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild[] $basePath
  * @property-read string $builds
  */
-class Project extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
+class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
 {
     /**
      *
@@ -59,10 +61,13 @@ class Project extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements 
      */
     private $includeDebug = true;
     
-    function __construct($configurationFile)
+    public function __construct($configurationFile)
     {
         if (!file_exists($configurationFile)) {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Unable to locate configuration file '{$configurationFile}'", LOG_ERR);
+            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
+                "Unable to locate configuration file '{$configurationFile}'",
+                LOG_ERR
+            );
             exit(2);
         }
         
@@ -117,7 +122,10 @@ class Project extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements 
                         $params[] = $param;
                     }
                 }
-                $this->processors[] = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Processor($processor["@"]["type"], $params);
+                $this->processors[] = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Processor(
+                    $processor["@"]["type"],
+                    $params
+                );
             }
         }
     }
@@ -126,7 +134,10 @@ class Project extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements 
     {
         $doc = new \DOMDocument();
         $doc->load($configurationFile);
-        if (!\RPI\Utilities\ContentBuild\Lib\Helpers\Dom::validateSchema($doc, dirname(__FILE__)."/Configuration/Schema.xsd")) {
+        if (!\RPI\Utilities\ContentBuild\Lib\Helpers\Dom::validateSchema(
+            $doc,
+            dirname(__FILE__)."/Configuration/Schema.xsd"
+        )) {
             exit(2);
         }
     }

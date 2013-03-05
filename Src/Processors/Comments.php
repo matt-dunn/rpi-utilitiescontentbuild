@@ -27,7 +27,7 @@ class Comments implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProce
         $buffer = preg_replace_callback(
             "/\/\*.*?\*\//sim",
             function ($matches) {
-                return "";            
+                return "";
             },
             $buffer
         );
@@ -46,7 +46,7 @@ class Comments implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProce
             $buffer = preg_replace_callback(
                 "/\/\*.*?\*\//sim",
                 function ($matches) {
-                    return "";            
+                    return "";
                 },
                 $buffer
             );

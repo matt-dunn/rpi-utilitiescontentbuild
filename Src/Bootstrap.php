@@ -5,7 +5,7 @@ require_once __DIR__."/Autoload.php";
 
 \RPI\Utilities\ContentBuild\Autoload::init();
 
-\RPI\Utilities\ContentBuild\Lib\Exception\Handler::set("ContentBuild");        
+\RPI\Utilities\ContentBuild\Lib\Exception\Handler::set("ContentBuild");
 
 use Ulrichsg\Getopt;
 

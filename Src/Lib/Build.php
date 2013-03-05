@@ -95,7 +95,7 @@ class Build
             unlink($outputFilename);
         }
 
-        $debugPath = $build->debugPath;;
+        $debugPath = $build->debugPath;
         if (isset($debugPath) && !file_exists($debugPath)) {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Creating debug path: ".$debugPath, LOG_DEBUG);
             $oldumask = umask(0);
@@ -192,7 +192,10 @@ class Build
         if (!self::fileExists($inputFilename)) {
             throw new \Exception("Unable to locate input file '$inputFilename'");
         }
-        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Building dependencies: [".$build->name."] ".$inputFilename, LOG_NOTICE);
+        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
+            "Building dependencies: [".$build->name."] ".$inputFilename,
+            LOG_NOTICE
+        );
 
         $type = pathinfo($inputFilename, PATHINFO_EXTENSION);
         if (!isset($type) || $type === false || $type == "") {
@@ -206,7 +209,10 @@ class Build
 
         $dependencesFile = dirname($inputFilename)."/".pathinfo($inputFilename, PATHINFO_FILENAME).".dependencies.xml";
         if (file_exists($dependencesFile)) {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Found dependencies file: ".$dependencesFile, LOG_NOTICE);
+            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
+                "Found dependencies file: ".$dependencesFile,
+                LOG_NOTICE
+            );
 
             if (array_search($inputFilename, $dependentFiles) !== false) {
                 $dependencesFile = dirname(
@@ -274,13 +280,16 @@ class Build
     }
     
     private function writeDebugFileJs(
-            \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
-            \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
-            array $files,
-            $outputFilename,
-            $outputPath
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
+        array $files,
+        $outputFilename,
+        $outputPath
     ) {
-        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Creating JavaScript debug code: ".$outputFilename, LOG_DEBUG);
+        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
+            "Creating JavaScript debug code: ".$outputFilename,
+            LOG_DEBUG
+        );
         $proxyFileScript = dirname(__FILE__)."/../Scripts/Proxy.js.php";
         if (!file_exists($proxyFileScript)) {
             throw new \Exception("Unable to locate proxy script file: ".$proxyFileScript);
