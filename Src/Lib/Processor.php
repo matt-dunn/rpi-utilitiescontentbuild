@@ -32,7 +32,7 @@ class Processor
     {
         $this->project = $project;
         
-        $this->metadataFilename = dirname($project->configurationFile)."/build/metadata";
+        $this->metadataFilename = dirname($project->configurationFile)."/.metadata";
         
         if (isset($project->processors)) {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Processors configured:'", LOG_INFO);
