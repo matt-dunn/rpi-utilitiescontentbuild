@@ -96,18 +96,18 @@ class Handler
         $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
         $timestamp = new \DateTime(date("Y-m-d H:i:s.".$micro, $t));
 
-        if (self::$displayShutdownInformation && !$dislayError && ($severity == LOG_CRIT || $severity == LOG_WARNING || $severity == LOG_ERR)) {
-            array_push(self::$warnings, $msg);
-
-            if (!self::isCli()) {
-                openlog(self::$ident." (php)", LOG_NDELAY, LOG_USER);
-                syslog($severity, $msg);
-                closelog();
+        if (self::isCli()) {
+            if (self::$displayShutdownInformation && !$dislayError && ($severity == LOG_CRIT || $severity == LOG_WARNING || $severity == LOG_ERR)) {
+                array_push(self::$warnings, $msg);
+            } else if ($dislayError || (self::$logLevel == 0 || $logLevel <= self::$logLevel)) {
+                fwrite(STDOUT, $timestamp->format("Y-m-d H:i:s.u").": ".$fullMessage."\r\n");
+            } else {
+                echo ".";
             }
-        } else if ($dislayError || (self::$logLevel == 0 || $logLevel <= self::$logLevel)) {
-            fwrite(STDOUT, $timestamp->format("Y-m-d H:i:s.u").": ".$fullMessage."\r\n");
-        } else {
-            echo ".";
+        } elseif ($severity == LOG_CRIT || $severity == LOG_WARNING || $severity == LOG_ERR) {
+            openlog(self::$ident." (php)", LOG_NDELAY, LOG_USER);
+            syslog($severity, $msg);
+            closelog();
         }
     }
 

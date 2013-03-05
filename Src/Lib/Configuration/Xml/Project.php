@@ -47,6 +47,12 @@ class Project extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements 
      */
     private $configurationFile = null;
     
+    /**
+     *
+     * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProcessor[]
+     */
+    private $processors = null;
+    
     function __construct($configurationFile)
     {
         if (!file_exists($configurationFile)) {
@@ -82,6 +88,28 @@ class Project extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements 
         
         foreach ($config["build"] as $build) {
             $this->builds[] = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Build($build);
+        }
+        
+        if (isset($config["processors"], $config["processors"]["processor"])) {
+            if (!isset($config["processors"]["processor"][0])) {
+                $config["processors"]["processor"] = array($config["processors"]["processor"]);
+            }
+            
+            $this->processors = array();
+            
+            foreach ($config["processors"]["processor"] as $processor) {
+                $params = null;
+                if (isset($processor["param"])) {
+                    if (!isset($processor["param"][0])) {
+                        $processor["param"] = array($processor["param"]);
+                    }
+                    $params = array();
+                    foreach ($processor["param"] as $param) {
+                        $params[] = $param;
+                    }
+                }
+                $this->processors[] = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Processor($processor["@"]["type"], $params);
+            }
         }
     }
 
@@ -146,5 +174,10 @@ class Project extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements 
     public function getConfigurationFile()
     {
         return $this->configurationFile;
+    }
+
+    public function getProcessors()
+    {
+        return $this->processors;
     }
 }

@@ -5,9 +5,7 @@ require_once __DIR__."/Autoload.php";
 
 \RPI\Utilities\ContentBuild\Autoload::init();
 
-date_default_timezone_set("Europe/London");
 \RPI\Utilities\ContentBuild\Lib\Exception\Handler::set("ContentBuild");        
-
 
 use Ulrichsg\Getopt;
 
@@ -49,16 +47,7 @@ if (!isset($configurationFile)) {
 
 $project = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Project($configurationFile);
 
-$processor = new \RPI\Utilities\ContentBuild\Lib\Processor(dirname($configurationFile));
-$processor->add(
-    new \RPI\Utilities\ContentBuild\Processors\Comments()
-);
-$processor->add(
-    new \RPI\Utilities\ContentBuild\Processors\Images()
-);
-$processor->add(
-    new \RPI\Utilities\ContentBuild\Processors\Sprites()
-);
+$processor = new \RPI\Utilities\ContentBuild\Lib\Processor($project);
 
 $build = new \RPI\Utilities\ContentBuild\Lib\Build($project, $processor);
 $build->run();

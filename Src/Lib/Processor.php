@@ -10,9 +10,17 @@ class Processor
      */
     private $processors = array();
     
-    private $configurationPath = null;
-    
+    /**
+     *
+     * @var string
+     */
     private $metadataFilename = null;
+    
+    /**
+     *
+     * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
+     */
+    private $project = null;
     
     /**
      *
@@ -20,29 +28,24 @@ class Processor
      */
     private $metadata = null;
     
-    public function __construct($configurationPath)
+    public function __construct(\RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project)
     {
-        $this->configurationPath = $configurationPath;
+        $this->project = $project;
         
-        $this->metadataFilename = $this->configurationPath."/build/metadata";
-        if (file_exists($this->metadataFilename)) {
-            $this->metadata = unserialize(file_get_contents($this->metadataFilename));
-        }
-    }
-    
-    public function __destruct()
-    {
-        if (isset($this->metadata)) {
-            if (!file_exists(dirname($this->metadataFilename))) {
-                $oldumask = umask(0);
-                mkdir(dirname($this->metadataFilename), 0755, true);
-                umask($oldumask);
+        $this->metadataFilename = dirname($project->configurationFile)."/build/metadata";
+        
+        if (isset($project->processors)) {
+            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Processors configured:'", LOG_INFO);
+            foreach ($project->processors as $processor) {
+                \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("  Creating '{$processor->type}'", LOG_INFO);
+                $instance = new \ReflectionClass($processor->type);
+                $constructor = $instance->getConstructor();
+                if (isset($constructor)) {
+                    $this->add($instance->newInstanceArgs($processor->params));
+                } else {
+                    $this->add($instance->newInstance());
+                }
             }
-
-            file_put_contents(
-                $this->metadataFilename,
-                serialize($this->metadata)
-            );
         }
     }
     
@@ -68,11 +71,11 @@ class Processor
         return $this->processors;
     }
     
-    public function init(\RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project)
+    public function init()
     {
         foreach($this->processors as $processor) {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Init '".get_class($processor)."'", LOG_DEBUG);
-            $processor->init($this, $project);
+            $processor->init($this, $this->project);
         }
         
         return $this;
@@ -88,21 +91,21 @@ class Processor
         return $buffer;
     }
     
-    public function process($inputFilename, $outputFilename, $debugPath, $buffer)
+    public function process($inputFilename, $buffer)
     {
         foreach($this->processors as $processor) {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Process '".get_class($processor)."'", LOG_DEBUG);
-            $buffer = $processor->process($this, $inputFilename, $outputFilename, $debugPath, $buffer);
+            $buffer = $processor->process($this, $inputFilename, $buffer);
         }
         
         return $buffer;
     }
     
-    public function complete(\RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project)
+    public function complete()
     {
         foreach($this->processors as $processor) {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Complete '".get_class($processor)."'", LOG_DEBUG);
-            $processor->complete($this, $project);
+            $processor->complete($this, $this->project);
         }
         
         return $this;
@@ -110,7 +113,15 @@ class Processor
     
     public function getMetadata($name)
     {
-        if (isset($this->metadata, $this->metadata[$name])) {
+        if (!isset($this->metadata)) {
+            if (file_exists($this->metadataFilename)) {
+                $this->metadata = unserialize(file_get_contents($this->metadataFilename));
+            } else {
+                $this->metadata = false;
+            }
+        }
+        
+        if ($this->metadata !== false && isset($this->metadata, $this->metadata[$name])) {
             return $this->metadata[$name];
         }
         
@@ -124,5 +135,16 @@ class Processor
         }
         
         $this->metadata[$name] = $value;
+        
+        if (!file_exists(dirname($this->metadataFilename))) {
+            $oldumask = umask(0);
+            mkdir(dirname($this->metadataFilename), 0755, true);
+            umask($oldumask);
+        }
+
+        file_put_contents(
+            $this->metadataFilename,
+            serialize($this->metadata)
+        );
     }
 }

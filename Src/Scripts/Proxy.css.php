@@ -5,22 +5,25 @@ header("Cache-Control: no-cache, must-revalidate");
 header("Cache-Control: pre-check=0, post-check=0, max-age=0");
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 
+\RPI\Utilities\ContentBuild\Autoload::init();
+
+\RPI\Utilities\ContentBuild\Lib\Exception\Handler::set("ContentBuild");
+
 if (parse_url($_GET["f"], PHP_URL_SCHEME) == "http") {
     $file = $_GET["f"];
 } else {
     $file = ($_SERVER["DOCUMENT_ROOT"].$_GET["f"]);
 }
 
-if (class_exists("\RPI\Utilities\Build\Content\scripts\ProcessCSS")) {
+if (isset($GLOBALS["configuration-file"])) {
+    $project = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Project($GLOBALS["configuration-file"]);
+
+    $processor = new \RPI\Utilities\ContentBuild\Lib\Processor($project);
+
     $seg = sem_get("12131313121");
     sem_acquire($seg);
 
-    echo \RPI\Utilities\Build\Content\scripts\ProcessCSS::process(
-        $file,
-        file_get_contents($file),
-        dirname(__FILE__)."/variables"
-    );
-    \RPI\Utilities\Build\Content\scripts\ProcessCSS::saveVariables(dirname(__FILE__)."/variables");
+    echo $processor->process($file, file_get_contents($file));
 
     sem_release($seg);
 } else {

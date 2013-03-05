@@ -151,8 +151,6 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
     public function process(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         $inputFilename,
-        $outputFilename,
-        $debugPath,
         $buffer
     ) {
         $sprites = $processor->getMetaData("sprites");

@@ -33,4 +33,9 @@ interface IProject
      * @return string
      */
     public function getBasePath();
+    
+    /**
+     * @return \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProcessor[]
+     */
+    public function getProcessors();
 }

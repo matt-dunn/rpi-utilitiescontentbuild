@@ -21,8 +21,6 @@ interface IProcessor
     public function process(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         $inputFilename,
-        $outputFilename,
-        $debugPath,
         $buffer
     );
     

@@ -4,6 +4,8 @@ namespace RPI\Utilities\ContentBuild\Processors;
 
 class Comments implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
+    private $hasProcessed = false;
+    
     public function getOptions()
     {
         return null;
@@ -31,16 +33,26 @@ class Comments implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProce
             $buffer
         );
             
+        $this->hasProcessed = true;
+            
         return $buffer;
     }
     
     public function process(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         $inputFilename,
-        $outputFilename,
-        $debugPath,
         $buffer
     ) {
+        if (!$this->hasProcessed) {
+            $buffer = preg_replace_callback(
+                "/\/\*.*?\*\//sim",
+                function ($matches) {
+                    return "";            
+                },
+                $buffer
+            );
+        }
+        
         return $buffer;
     }
     

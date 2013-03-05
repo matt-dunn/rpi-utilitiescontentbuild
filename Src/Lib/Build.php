@@ -74,7 +74,7 @@ class Build
             $this->buildDependencies($this->project, $build);
         }
         
-        $this->processor->init($this->project);
+        $this->processor->init();
         
         foreach ($this->project->builds as $build) {
             $outputFilename =
@@ -88,7 +88,7 @@ class Build
             $this->processBuild($this->project, $build, $outputFilename, $build->outputDirectory);
         }
         
-        $this->processor->complete($this->project);
+        $this->processor->complete();
     }
     
     private function processBuild(
@@ -145,7 +145,7 @@ class Build
             if ($build->type == "css") {
                 $buffer = $this->processor->preProcess($build, $file, $outputFilename, $debugPath, $buffer);
 
-                $buffer = $this->processor->process($file, $outputFilename, $debugPath, $buffer);
+                $buffer = $this->processor->process($file, $buffer);
             }
             
             file_put_contents($outputFilename, $buffer, FILE_APPEND);
@@ -430,27 +430,17 @@ CONTENT;
             throw new \Exception("Unable to locate proxy script file: ".$proxyFileScript);
         }
 
-        $proxyFileScriptProcessCSS = null;//
-        //dirname(__FILE__)."/scripts/processCSS.php";
-//        if (!file_exists($proxyFileScriptProcessCSS)
-//                && \RPI\Utilities\Build\Content\scripts\ProcessCSS::hasPostProcessing()) {
-//            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-//                "CSS variables and blocks are not supported for ".$proxyType." (".
-//                basename($outputFilename)."). Ensure 'build/scripts/".
-//                basename($proxyFileScriptProcessCSS)."' exists.",
-//                LOG_ERR
-//            );
-//        }
-
         $proxyFile = $outputPath."/proxy.php";
-        if (file_exists($proxyFileScriptProcessCSS)) {
-            file_put_contents($proxyFile, file_get_contents($proxyFileScriptProcessCSS));
-            file_put_contents($proxyFile, "\RPI\Utilities\Build\Content\scripts\ProcessCSS::\$buildPath = \"{$this->buildPath}\";", FILE_APPEND);
-            file_put_contents($proxyFile, "?>", FILE_APPEND);
-            file_put_contents($proxyFile, file_get_contents($proxyFileScript), FILE_APPEND);
-        } else {
-            file_put_contents($proxyFile, file_get_contents($proxyFileScript));
-        }
+        $scriptPath = $outputPath.self::makeRelativePath(__DIR__."/../", $outputPath);
+        $output = <<<EOT
+<?php
+require_once "{$scriptPath}../vendor/autoload.php";
+require_once "{$scriptPath}Autoload.php";
+\$GLOBALS["configuration-file"] = "{$project->configurationFile}";
+?>
+EOT;
+        file_put_contents($proxyFile, $output);
+        file_put_contents($proxyFile, file_get_contents($proxyFileScript), FILE_APPEND);
 
         $debugFilename = $outputPath."/".
             pathinfo($outputFilename, PATHINFO_FILENAME).".".
