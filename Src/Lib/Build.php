@@ -456,8 +456,7 @@ CONTENT;
         }
         $output = <<<EOT
 <?php
-require_once "{$scriptPath}../vendor/autoload.php";
-require_once "{$scriptPath}Autoload.php";
+\$GLOBALS["autoloader"] = "{$scriptPath}Autoload.php";
 \$GLOBALS["configuration-file"] = "{$project->configurationFile}";
 ?>
 EOT;
