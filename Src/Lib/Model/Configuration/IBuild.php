@@ -43,4 +43,9 @@ interface IBuild
      * @return string
      */
     public function getExternalDependenciesNames();
+    
+    /**
+     * @return string
+     */
+    public function getDebugPath();
 }

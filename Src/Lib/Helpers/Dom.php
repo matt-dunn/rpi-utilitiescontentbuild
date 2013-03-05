@@ -147,7 +147,7 @@ class Dom
         if (!isset($parent)) {
             $attributes = array();
             foreach ($xml->attributes() as $name => $value) {
-                $attributes[$name] = trim($value);
+                $attributes[$name] = self::parseType($value);
             }
             
             if (substr($xml->getName(), 0, 1) != "_") {
@@ -196,5 +196,4 @@ class Dom
 
         return $value;
     }
-    
 }

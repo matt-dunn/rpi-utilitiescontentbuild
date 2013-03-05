@@ -25,9 +25,9 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
         $outputFilename,
-        $debugPath,
         $buffer
     ) {
+        $debugPath = $build->debugPath;
         $spriteOutputFilename = dirname($outputFilename)."/I/Sprites/".$build->name.".png";
         $debugSpriteOutputFilename = $debugPath."/I/Sprites/".$build->name.".png";
         

@@ -81,11 +81,11 @@ class Processor
         return $this;
     }
     
-    public function preProcess(\RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build, $inputFilename, $outputFilename, $debugPath, $buffer)
+    public function preProcess(\RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build, $inputFilename, $outputFilename, $buffer)
     {
         foreach($this->processors as $processor) {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Preprocess '".get_class($processor)."'", LOG_DEBUG);
-            $buffer = $processor->preProcess($this, $build, $inputFilename, $outputFilename, $debugPath, $buffer);
+            $buffer = $processor->preProcess($this, $build, $inputFilename, $outputFilename, $buffer);
         }
         
         return $buffer;

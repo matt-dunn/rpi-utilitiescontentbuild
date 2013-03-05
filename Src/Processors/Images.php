@@ -5,6 +5,7 @@ namespace RPI\Utilities\ContentBuild\Processors;
 class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
     private $imageFiles = array();
+    private $timestamp = null;
     
     public function getOptions()
     {
@@ -15,6 +16,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
     ) {
+        $this->timestamp = microtime(true) - 1;
     }
     
     public function preProcess(
@@ -22,10 +24,10 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
         $outputFilename,
-        $debugPath,
         $buffer
     ) {
         $files = $this->imageFiles;
+        $debugPath = $build->debugPath;
         
         preg_replace_callback(
             "/url\((.*?)\)/sim",
@@ -45,7 +47,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
             },
             $buffer
         );
-        
+
         $this->imageFiles = array_merge($this->imageFiles, $files);
         
         return $buffer;
@@ -54,8 +56,6 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
     public function process(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         $inputFilename,
-        $outputFilename,
-        $debugPath,
         $buffer
     ) {
         return $buffer;
@@ -72,38 +72,23 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
             self::copyCSSImageFiles($this->imageFiles);
         }
 
-        // TODO: cleanup...
-//        $basePaths = array();
-//        $outputBasePath = realpath(dirname($project->configurationFile).$project->basePath);
-//        foreach ($project->builds as $build) {
-//            if ($build->type == "css") {
-//                $basePaths[$outputBasePath.$build->outputDirectory] = true;
-//                if ($this->includeDebug) {
-//                    $debugPath = self::getDebugPath($outputBasePath.$build->outputDirectory, $build->type);
-//                    $basePaths[$debugPath."/"] = true;
-//                }
-//            }
-//        }
-//        
-//        $imagePaths = array();
-//        if (count($this->imageFiles) > 0) {
-//            foreach($this->imageFiles as $image) {
-//                $imagePaths[strtolower($image["destinationFile"])] = true;
-//                if (isset($image["destinationFileDebug"])) {
-//                    $imagePaths[strtolower($image["destinationFileDebug"])] = true;
-//                }
-//                \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Processed image: {$image["destinationFile"]}", LOG_DEBUG);
-//            }
-//        } else {
-//            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("No images processed", LOG_DEBUG);
-//        }
-//        
-//        if (count($imagePaths) > 0) {
-//            $basePaths = array_keys($basePaths);
-//            foreach($basePaths as $basePath) {
-//                self::cleanupImages($imagePaths, $basePath);
-//            }
-//        }
+        $basePaths = array();
+        foreach ($project->builds as $build) {
+            if ($build->type == "css") {
+                $basePaths[$project->basePath."/".$build->outputDirectory] = true;
+                if ($project->includeDebug) {
+                    $basePaths[$build->debugPath."/"] = true;
+                }
+            }
+        }
+        
+        if (count($basePaths) > 0) {
+            $basePaths = array_keys($basePaths);
+            foreach($basePaths as $basePath) {
+                \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Cleaning images in '$basePath'", LOG_DEBUG);
+                self::cleanupImages($basePath, $this->timestamp);
+            }
+        }
     }
     
     
@@ -126,18 +111,17 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
             umask($oldumask);
         }
 
-        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Copying '$sourceImageFile' to '$destImageFile'", LOG_DEBUG);
+        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Copying '$sourceImageFile' to '$destImageFile'", LOG_NOTICE);
         copy($sourceImageFile, $destImageFile);
     }
     
-    private static function cleanupImages(array $files, $basePath)
+    private static function cleanupImages($basePath, $timestamp)
     {
-        $filesSearch = array();
-        \RPI\Framework\Helpers\FileUtils::find($basePath, "/.*\.(png|gif|jpg|jpeg)/", $filesSearch, true, false);
+        $filesSearch = \RPI\Utilities\ContentBuild\Lib\Helpers\FileUtils::find($basePath, "/.*\.(png|gif|jpg|jpeg)/", true);
         $existingFiles = array_keys($filesSearch);
         
         foreach ($existingFiles as $existingFile) {
-            if (!isset($files[strtolower($existingFile)])) {
+            if (filemtime($existingFile) < $timestamp) {
                 \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Deleting unused file '$existingFile'", LOG_INFO);
                 unlink($existingFile);
             }

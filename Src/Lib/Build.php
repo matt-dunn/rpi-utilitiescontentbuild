@@ -39,12 +39,6 @@ class Build
     
     /**
      *
-     * @var boolean
-     */
-    private $includeDebug = true;
-    
-    /**
-     *
      * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
      */
     private $project = null;
@@ -67,8 +61,7 @@ class Build
     {
         \RPI\Utilities\ContentBuild\Lib\Exception\Handler::$displayShutdownInformation = true;
 
-        $this->basePath = realpath(dirname($this->configurationFile).$this->project->basePath);
-        $this->webroot = realpath($this->basePath."/".$this->project->appRoot);
+        $this->webroot = realpath($this->project->basePath."/".$this->project->appRoot);
 
         foreach ($this->project->builds as $build) {
             $this->buildDependencies($this->project, $build);
@@ -78,13 +71,14 @@ class Build
         
         foreach ($this->project->builds as $build) {
             $outputFilename =
-                $this->basePath."/".
+                $this->project->basePath."/".
                 $build->outputDirectory.
                 $this->project->prefix.".".
                 $build->version."-".
                 $this->project->name."-".
                 $build->name.".".
                 $build->type;
+            
             $this->processBuild($this->project, $build, $outputFilename, $build->outputDirectory);
         }
         
@@ -101,16 +95,12 @@ class Build
             unlink($outputFilename);
         }
 
-        $debugPath = null;
-        if ($this->includeDebug) {
-            // Debug support
-            $debugPath = self::getDebugPath(dirname($outputFilename), $build->type);
-            if (!file_exists($debugPath)) {
-                \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Creating debug path: ".$debugPath, LOG_DEBUG);
-                $oldumask = umask(0);
-                mkdir($debugPath, 0755, true);
-                umask($oldumask);
-            }
+        $debugPath = $build->debugPath;;
+        if (isset($debugPath) && !file_exists($debugPath)) {
+            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Creating debug path: ".$debugPath, LOG_DEBUG);
+            $oldumask = umask(0);
+            mkdir($debugPath, 0755, true);
+            umask($oldumask);
         }
 
         $files = $this->buildFiles[$build->name."_".$build->type];
@@ -143,7 +133,7 @@ class Build
             
             // TODO: should this call preProcessCSS/preProcessJs etc?
             if ($build->type == "css") {
-                $buffer = $this->processor->preProcess($build, $file, $outputFilename, $debugPath, $buffer);
+                $buffer = $this->processor->preProcess($build, $file, $outputFilename, $buffer);
 
                 $buffer = $this->processor->process($file, $buffer);
             }
@@ -151,7 +141,7 @@ class Build
             file_put_contents($outputFilename, $buffer, FILE_APPEND);
         }
 
-        if ($this->includeDebug) {
+        if ($project->includeDebug) {
             $parts = pathinfo($outputFilename);
             $debugFilename = $parts["dirname"]."/".$parts["filename"]."-min.".$parts["extension"];
             switch ($build->type) {
@@ -193,7 +183,7 @@ class Build
         if (parse_url($file, PHP_URL_SCHEME) == "http") {
             return $file;
         } else {
-            return $this->basePath."/".$build->buildDirectory.$file;
+            return $project->basePath."/".$build->buildDirectory.$file;
         }
     }
     

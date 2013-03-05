@@ -53,6 +53,12 @@ class Project extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements 
      */
     private $processors = null;
     
+    /**
+     *
+     * @var boolean
+     */
+    private $includeDebug = true;
+    
     function __construct($configurationFile)
     {
         if (!file_exists($configurationFile)) {
@@ -68,7 +74,10 @@ class Project extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements 
         $doc->load($configurationFile);
         
         $config = \RPI\Utilities\ContentBuild\Lib\Helpers\Dom::deserialize(simplexml_import_dom($doc));
-        
+
+        if (isset($config["@"]["includeDebug"])) {
+            $this->includeDebug = $config["@"]["includeDebug"];
+        }
         if (isset($config["@"]["name"])) {
             $this->name = $config["@"]["name"];
         }
@@ -79,7 +88,7 @@ class Project extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements 
             $this->appRoot = $config["@"]["appRoot"];
         }
         if (isset($config["@"]["basePath"])) {
-            $this->basePath = $config["@"]["basePath"];
+            $this->basePath = realpath(dirname($this->configurationFile).$config["@"]["basePath"]);
         }
         
         if (!isset($config["build"][0])) {
@@ -87,7 +96,7 @@ class Project extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements 
         }
         
         foreach ($config["build"] as $build) {
-            $this->builds[] = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Build($build);
+            $this->builds[] = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Build($this, $build);
         }
         
         if (isset($config["processors"], $config["processors"]["processor"])) {
@@ -176,8 +185,21 @@ class Project extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements 
         return $this->configurationFile;
     }
 
+    /**
+     * 
+     * @return \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProcessor[]
+     */
     public function getProcessors()
     {
         return $this->processors;
+    }
+
+    /**
+     * 
+     * @return boolean
+     */
+    public function getIncludeDebug()
+    {
+        return $this->includeDebug;
     }
 }

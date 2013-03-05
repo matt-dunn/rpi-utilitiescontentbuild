@@ -35,7 +35,10 @@ class Handler
     {
         $exitStatus = 0;
         
-        if (self::$displayShutdownInformation) {
+        $error = error_get_last();
+        if (isset($error)) {
+            self::log("ERROR (shutdown): ".$error["message"]." - ".$error["file"]."#".$error["line"], LOG_ERR, true);
+        } elseif (self::$displayShutdownInformation) {
             if (self::$errorCount > 0) {
                 self::log("********** SCRIPT FAILED - WITH ".self::$errorCount." ERRORS/WARNINGS:", LOG_ERR, true);
                 $exitStatus = 1;

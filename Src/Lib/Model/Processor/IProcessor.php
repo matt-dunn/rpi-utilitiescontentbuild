@@ -14,7 +14,6 @@ interface IProcessor
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
         $outputFilename,
-        $debugPath,
         $buffer
     );
     

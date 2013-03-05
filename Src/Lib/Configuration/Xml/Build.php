@@ -60,7 +60,13 @@ class Build extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements \R
      */
     private $version = null;
     
-    public function __construct(array $buildDetails)
+    /**
+     *
+     * @var string
+     */
+    private $debugPath = null;
+    
+    public function __construct(\RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project, array $buildDetails)
     {
         if (isset($buildDetails["@"]["name"])) {
             $this->name = $buildDetails["@"]["name"];
@@ -82,6 +88,18 @@ class Build extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements \R
         }
         if (isset($buildDetails["@"]["externalDependenciesNames"])) {
             $this->externalDependenciesNames = $buildDetails["@"]["externalDependenciesNames"];
+        }
+        
+        if ($project->includeDebug) {
+            $outputPath = $project->basePath."/".$this->outputDirectory;
+
+            if (substr($outputPath, strlen($outputPath) - 1, 1) == "/") {
+                $outputPath = substr($outputPath, 0, strlen($outputPath) - 1);
+            }
+
+            $debugPathParts = explode("/", $outputPath);
+            unset($debugPathParts[count($debugPathParts) - 1]);
+            $this->debugPath = join("/", $debugPathParts)."/__debug/".$this->type;
         }
         
         if (!isset($buildDetails["files"][0])) {
@@ -163,5 +181,14 @@ class Build extends \RPI\Utilities\ContentBuild\Lib\Helpers\Object implements \R
     public function getExternalDependenciesNames()
     {
         return $this->externalDependenciesNames;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getDebugPath()
+    {
+        return $this->debugPath;
     }
 }

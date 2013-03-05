@@ -22,7 +22,6 @@ class Comments implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProce
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
         $outputFilename,
-        $debugPath,
         $buffer
     ) {
         $buffer = preg_replace_callback(

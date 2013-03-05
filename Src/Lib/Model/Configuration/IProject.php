@@ -5,6 +5,11 @@ namespace RPI\Utilities\ContentBuild\Lib\Model\Configuration;
 interface IProject
 {
     /**
+     * @return boolean
+     */
+    public function getIncludeDebug();
+    
+    /**
      * @return string
      */
     public function getConfigurationFile();
