@@ -105,7 +105,14 @@ class Processor extends Object
         foreach ($this->getProcessors() as $processor) {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Preprocess '".get_class($processor)."'", LOG_DEBUG);
             if ($build->type == "css") {
-                $buffer = $processor->preProcess($this, $this->project, $build, $inputFilename, $outputFilename, $buffer);
+                $buffer = $processor->preProcess(
+                    $this,
+                    $this->project,
+                    $build,
+                    $inputFilename,
+                    $outputFilename,
+                    $buffer
+                );
             
                 $buffer = $processor->process($this, $this->project, $inputFilename, $buffer);
             }
