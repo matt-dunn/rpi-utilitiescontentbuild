@@ -25,6 +25,9 @@ class Handler
 
     public static function setLogLevel($level)
     {
+        if (!is_numeric($level) || $level < 0 || $level > 5) {
+            throw new \Exception("Invalid log level. Specify a value between 0 and 5");
+        }
         self::$logLevel = $level;
     }
 
@@ -161,7 +164,11 @@ class Handler
      */
     public static function handleExceptions(\Exception $exception)
     {
-        self::log($exception->getMessage().":".$exception->getFile()."#".$exception->getLine(), LOG_ERR);
+        if (self::$logLevel == 5) {
+            self::log($exception->getMessage().":".$exception->getFile()."#".$exception->getLine(), LOG_ERR);
+        } else {
+            self::log($exception->getMessage(), LOG_ERR);
+        }
     }
 
     /**

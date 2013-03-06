@@ -67,7 +67,7 @@ if (!isset($configurationFile)) {
 }
 
 if (!file_exists($configurationFile)) {
-    echo "No configuration file found\n\n";
+    echo "Configuration file '$configurationFile' not found\n\n";
     $getopt->showHelp();
     echo "\n";
 } else {
