@@ -2,7 +2,7 @@
 
 namespace RPI\Utilities\ContentBuild\Lib\Helpers;
 
-abstract class Object implements \Serializable
+abstract class Object
 {
     public function __get($name)
     {
@@ -60,40 +60,6 @@ abstract class Object implements \Serializable
     public function __sleep()
     {
         return $this->getProperties();
-    }
-    
-    public function serialize()
-    {
-        $properties = array();
-        
-        $reflect = new \ReflectionObject($this);
-        
-        foreach ($reflect->getMethods(\ReflectionProperty::IS_PUBLIC) as $method) {
-            $parameterCount = count($method->getParameters());
-            $methodName = $method->getName();
-            if ($parameterCount == 0 && substr($methodName, 0, 3) == "get") {
-                $value = $this->$methodName();
-                if ($value instanceof \DOMDocument) {
-                    $value = new \RPI\Framework\Helpers\Dom\SerializableDomDocumentWrapper($value);
-                }
-                $properties[lcfirst(substr($methodName, 3))] = $value;
-            }
-        }
-
-        return serialize($properties);
-    }
-    
-    public function unserialize($data)
-    {
-        $data = unserialize($data);
-        
-        foreach ($data as $name => $value) {
-            if ($value instanceof \RPI\Framework\Helpers\Dom\SerializableDomDocumentWrapper) {
-                $this->$name = $value->getDocument();
-            } else {
-                $this->$name = $value;
-            }
-        }
     }
     
     private function getProperties($getValue = false)
