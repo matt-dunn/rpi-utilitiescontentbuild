@@ -158,12 +158,7 @@ class Build
 
             $buffer = file_get_contents($file);
             
-            // TODO: should this call preProcessCSS/preProcessJs etc?
-            if ($build->type == "css") {
-                $buffer = $this->processor->preProcess($build, $file, $outputFilename, $buffer);
-
-                $buffer = $this->processor->process($file, $buffer);
-            }
+            $buffer = $this->processor->build($build, $file, $outputFilename, $buffer);
             
             file_put_contents($outputFilename, $buffer, FILE_APPEND);
         }

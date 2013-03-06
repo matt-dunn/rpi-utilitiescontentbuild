@@ -96,7 +96,7 @@ class Processor extends Object
         return $this;
     }
     
-    public function preProcess(
+    public function build(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
         $outputFilename,
@@ -104,7 +104,11 @@ class Processor extends Object
     ) {
         foreach ($this->getProcessors() as $processor) {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Preprocess '".get_class($processor)."'", LOG_DEBUG);
-            $buffer = $processor->preProcess($this, $this->project, $build, $inputFilename, $outputFilename, $buffer);
+            if ($build->type == "css") {
+                $buffer = $processor->preProcess($this, $this->project, $build, $inputFilename, $outputFilename, $buffer);
+            
+                $buffer = $processor->process($this, $this->project, $inputFilename, $buffer);
+            }
         }
         
         return $buffer;
