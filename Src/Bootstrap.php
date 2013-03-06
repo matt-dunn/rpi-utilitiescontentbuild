@@ -1,6 +1,6 @@
 <?php
 
-const CONTENT_BUILD_VERSION = "1.0.4";
+const CONTENT_BUILD_VERSION = "1.0.5";
 
 date_default_timezone_set("Europe/London");
         

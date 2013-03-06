@@ -23,6 +23,19 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         $processorIndex
     ) {
         $processor->setMetadata("sprites", null);
+        
+        \RPI\Utilities\ContentBuild\Event\Manager::addEventListener(
+            "RPI\Utilities\ContentBuild\Events\ImageCheckAvailability",
+            function (\RPI\Utilities\ContentBuild\Event $event, $params) use ($processor){
+                $sprites = $processor->getMetaData("sprites");
+                foreach ($sprites as $sprite) {
+                    if ($sprite["spritePath"] == $params["imageUri"]) {
+                        $event->srcEvent->setReturnValue(true);
+                        break;
+                    }
+                }
+            }
+        );
     }
     
     public function preProcess(

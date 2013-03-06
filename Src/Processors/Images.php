@@ -36,10 +36,20 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
             function ($matches) use ($inputFilename, &$files, $outputFilename, $debugPath) {
                 $imageUrl = realpath(dirname($inputFilename)."/".$matches[1]);
                 if ($imageUrl === false) {
-                    \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                        "Unable to locate image '{$matches[1]}' in '$inputFilename'",
-                        LOG_ERR
+                    $event = new \RPI\Utilities\ContentBuild\Events\ImageCheckAvailability(
+                        array(
+                            "imageLocation" => dirname($inputFilename)."/".$matches[1],
+                            "imageUri" => $matches[1]
+                        )
                     );
+                    \RPI\Utilities\ContentBuild\Event\Manager::fire($event);
+                    
+                    if ($event->getReturnValue() !== true) {
+                        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
+                            "Unable to locate image '{$matches[1]}' in '$inputFilename'",
+                            LOG_ERR
+                        );
+                    }
                 } else {
                     $files[$imageUrl] = array(
                         "imagePath" => $matches[1],
