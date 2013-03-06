@@ -46,6 +46,7 @@ if ($getopt->getOption("help")) {
     exit;
 } elseif ($getopt->getOption("version")) {
     echo "Version ".CONTENT_BUILD_VERSION."\n";
+    echo "PHP Version ".phpversion()."\n";
     exit;
 }
 
