@@ -161,7 +161,7 @@ class Handler
      */
     public static function handleExceptions(\Exception $exception)
     {
-        self::log($exception, LOG_ERR);
+        self::log($exception->getMessage().":".$exception->getFile()."#".$exception->getLine(), LOG_ERR);
     }
 
     /**
