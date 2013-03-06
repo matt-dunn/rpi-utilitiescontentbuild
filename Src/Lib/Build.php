@@ -214,6 +214,24 @@ class Build
         }
     }
     
+    private function getDependencyFileType($inputFilename)
+    {
+        $filesSearch = \RPI\Utilities\ContentBuild\Lib\Helpers\FileUtils::find(
+            dirname($inputFilename),
+            "/".pathinfo($inputFilename, PATHINFO_FILENAME).".dependencies\.(.*)/",
+            false
+        );
+        
+        $type = null;
+        $files = array_keys($filesSearch);
+        $dependenciesFile = reset($files);
+        if ($dependenciesFile !== false) {
+            $type = pathinfo($dependenciesFile, PATHINFO_EXTENSION);
+        }
+        
+        return $type;
+    }
+    
     private function buildFileList($build, $inputFilename, $dependentFiles)
     {
         if (!self::fileExists($inputFilename)) {
@@ -234,46 +252,57 @@ class Build
             $this->buildFiles[$buildType] = Array();
         }
 
-        $dependencesFile = dirname($inputFilename)."/".pathinfo($inputFilename, PATHINFO_FILENAME).".dependencies.xml";
-        if (file_exists($dependencesFile)) {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                "Found dependencies file: ".$dependencesFile,
-                LOG_NOTICE
-            );
-
-            if (array_search($inputFilename, $dependentFiles) !== false) {
-                $dependencesFile = dirname(
-                    end($dependentFiles)
-                )."/".pathinfo(end($dependentFiles), PATHINFO_FILENAME).".dependencies.xml";
-                throw new \Exception(
-                    "Circular reference detected in [".$build->name."] - Problem file: ".
-                    $inputFilename." in ".$dependencesFile
+        $dependenciesFileType = $this->getDependencyFileType($inputFilename);
+        if (isset($dependenciesFileType)) {
+            $dependenciesFile =
+                dirname($inputFilename)."/".pathinfo($inputFilename, PATHINFO_FILENAME).
+                ".dependencies.".$dependenciesFileType;
+            if (file_exists($dependenciesFile)) {
+                \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
+                    "Found dependencies file: ".$dependenciesFile,
+                    LOG_NOTICE
                 );
-            }
 
-            array_push($dependentFiles, $inputFilename);
-
-            $dependency = new \RPI\Utilities\ContentBuild\Lib\Dependencies\Xml\Dependency($dependencesFile);
-        
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                "Processing ".count($dependency->files)." dependencies",
-                LOG_DEBUG
-            );
-
-            foreach ($dependency->files as $dependency) {
-                $filename = realpath(dirname($inputFilename)."/".$dependency);
-                if (file_exists($filename)) {
-                    \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                        "Found dependency '".$filename."' - ".$inputFilename,
-                        LOG_DEBUG
-                    );
-                    $this->buildFileList($build, $filename, $dependentFiles);
-                    $buildTypeDependency = $build->name."_".pathinfo($filename, PATHINFO_EXTENSION);
-                    $this->addUniqueFileToList($build, $filename, $buildTypeDependency);
-                } else {
+                if (array_search($inputFilename, $dependentFiles) !== false) {
+                    $dependenciesFile = dirname(
+                        end($dependentFiles)
+                    )."/".pathinfo(end($dependentFiles), PATHINFO_FILENAME).".dependencies.".$dependenciesFileType;
                     throw new \Exception(
-                        "Cannot find file '".dirname($inputFilename)."/".$dependency."'"
+                        "Circular reference detected in [".$build->name."] - Problem file: ".
+                        $inputFilename." in ".$dependenciesFile
                     );
+                }
+
+                array_push($dependentFiles, $inputFilename);
+
+                $dependencyClassname =
+                    "\\RPI\\Utilities\\ContentBuild\\Lib\\Dependencies\\".ucfirst($dependenciesFileType)."\\Dependency";
+                if (!class_exists($dependencyClassname)) {
+                    throw new \Exception("Dependency type '$dependenciesFileType' not supported");
+                }
+                
+                $dependency = new $dependencyClassname($dependenciesFile);
+
+                \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
+                    "Processing ".count($dependency->files)." dependencies",
+                    LOG_DEBUG
+                );
+
+                foreach ($dependency->files as $dependency) {
+                    $filename = realpath(dirname($inputFilename)."/".$dependency);
+                    if (file_exists($filename)) {
+                        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
+                            "Found dependency '".$filename."' - ".$inputFilename,
+                            LOG_DEBUG
+                        );
+                        $this->buildFileList($build, $filename, $dependentFiles);
+                        $buildTypeDependency = $build->name."_".pathinfo($filename, PATHINFO_EXTENSION);
+                        $this->addUniqueFileToList($build, $filename, $buildTypeDependency);
+                    } else {
+                        throw new \Exception(
+                            "Cannot find file '".dirname($inputFilename)."/".$dependency."'"
+                        );
+                    }
                 }
             }
         }
