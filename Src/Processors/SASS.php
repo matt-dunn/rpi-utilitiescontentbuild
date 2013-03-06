@@ -38,7 +38,7 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
     ) {
         if (pathinfo($inputFilename, PATHINFO_EXTENSION) == "scss") {
             $output = null;
-            $ret = -1;
+            $ret = null;
             
             $cachepath = dirname($project->configurationFile)."/.sass-cache";
 

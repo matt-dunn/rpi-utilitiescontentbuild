@@ -46,9 +46,11 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         $outputFilename,
         $buffer
     ) {
-        $debugPath = $build->debugPath;
         $spriteOutputFilename = dirname($outputFilename)."/I/Sprites/".$build->name.".png";
-        $debugSpriteOutputFilename = $debugPath."/I/Sprites/".$build->name.".png";
+        $debugSpriteOutputFilename = null;
+        if (isset($build->debugPath)) {
+            $debugSpriteOutputFilename = $build->debugPath."/I/Sprites/".$build->name.".png";
+        }
         
         $sprites = $processor->getMetaData("sprites");
         if ($sprites === false) {
@@ -153,14 +155,17 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                                 umask($oldumask);
                             }
                 
-                            if (!file_exists(dirname($debugSpriteOutputFilename))) {
-                                $oldumask = umask(0);
-                                mkdir(dirname($debugSpriteOutputFilename), 0755, true);
-                                umask($oldumask);
-                            }
-                            
                             imagepng($im, $spriteOutputFilename);
-                            copy($spriteOutputFilename, $debugSpriteOutputFilename);
+                            
+                            if (isset($debugSpriteOutputFilename)) {
+                                if (!file_exists(dirname($debugSpriteOutputFilename))) {
+                                    $oldumask = umask(0);
+                                    mkdir(dirname($debugSpriteOutputFilename), 0755, true);
+                                    umask($oldumask);
+                                }
+
+                                copy($spriteOutputFilename, $debugSpriteOutputFilename);
+                            }
 
                             imagedestroy($im);
                             imagedestroy($im2);
@@ -205,7 +210,6 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                 "/(#sprite\:\s*url\((.*?)\)\s*;)/sim",
                 function ($matches) use ($inputFilename, $sprites) {
                     $spriteImage = realpath(dirname($inputFilename)."/".$matches[2]);
-                    $spriteData = null;
                     if (isset($sprites, $sprites[$spriteImage])) {
                         $spriteData = $sprites[$spriteImage];
 
