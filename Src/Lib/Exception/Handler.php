@@ -54,8 +54,8 @@ class Handler
                 self::log("SCRIPT SUCCESSFUL", LOG_INFO);
             }
 
-            for ($i = 0; $i < count(self::$warnings); $i++) {
-                self::log(self::$warnings[$i]["message"], self::$warnings[$i]["severity"], true);
+            foreach (self::$warnings as $warning) {
+                self::log($warning["message"], $warning["severity"], true);
             }
 
             self::log(
@@ -109,7 +109,7 @@ class Handler
             if (self::$displayShutdownInformation
                 && !$dislayError
                 && ($severity == LOG_CRIT || $severity == LOG_WARNING || $severity == LOG_ERR)) {
-                array_push(self::$warnings, array("message" => $msg, "severity" => $severity));
+                self::$warnings[$msg] = array("message" => $msg, "severity" => $severity);
             } elseif ($dislayError || (self::$logLevel == 0 || $logLevel <= self::$logLevel)) {
                 $t = microtime(true);
                 $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
