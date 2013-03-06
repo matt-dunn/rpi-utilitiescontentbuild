@@ -487,20 +487,29 @@ CONTENT;
             throw new \Exception("Unable to locate proxy script file: ".$proxyFileScript);
         }
 
+        $bootstrap = "<?php\n// Version: ".CONTENT_BUILD_VERSION."\n\n";
         $proxyFile = $outputPath."/proxy.php";
-        $scriptPath = null;
         if (\Phar::running() !== "") {
-            $scriptPath = __DIR__."/../";
+            $pharname = pathinfo($_SERVER["PHP_SELF"], PATHINFO_FILENAME).".phar";
+            $bootstrap .= <<<EOT
+Phar::loadPhar("{$_SERVER["PHP_SELF"]}", "{$pharname}");
+\$GLOBALS["autoloader"] = "phar://{$pharname}/Src/Autoload.php";
+
+EOT;
         } else {
             $scriptPath = $outputPath.self::makeRelativePath(__DIR__."/../", $outputPath);
-        }
-        $output = <<<EOT
-<?php
+            $bootstrap .= <<<EOT
 \$GLOBALS["autoloader"] = "{$scriptPath}Autoload.php";
+
+EOT;
+        }
+        
+        $bootstrap .= <<<EOT
 \$GLOBALS["configuration-file"] = "{$project->configurationFile}";
 ?>
 EOT;
-        file_put_contents($proxyFile, $output);
+        
+        file_put_contents($proxyFile, $bootstrap);
         file_put_contents($proxyFile, file_get_contents($proxyFileScript), FILE_APPEND);
 
         $debugFilename = $outputPath."/".
