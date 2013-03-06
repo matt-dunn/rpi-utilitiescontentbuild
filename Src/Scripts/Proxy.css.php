@@ -15,17 +15,27 @@ if (isset($GLOBALS["configuration-file"])) {
     $seg = sem_get("12131313121");
     sem_acquire($seg);
 
-    require_once $GLOBALS["autoloader"];
+    try {
+        if (!file_exists($GLOBALS["autoloader"])) {
+            throw new Exception("Cannot locate autoloader '".$GLOBALS["autoloader"]."'");
+        }
+        
+        require_once $GLOBALS["autoloader"];
 
-    \RPI\Utilities\ContentBuild\Autoload::init();
+        \RPI\Utilities\ContentBuild\Autoload::init();
 
-    \RPI\Utilities\ContentBuild\Lib\Exception\Handler::set("ContentBuild");
+        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::set("ContentBuild");
 
-    $project = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Project($GLOBALS["configuration-file"]);
+        $project = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Project($GLOBALS["configuration-file"]);
 
-    $processor = new \RPI\Utilities\ContentBuild\Lib\Processor($project);
+        $processor = new \RPI\Utilities\ContentBuild\Lib\Processor($project);
 
-    echo $processor->process($file, file_get_contents($file));
+        echo $processor->process($file, file_get_contents($file));
+    } catch (\Exception $ex) {
+        openlog("ProcessCSS (php)", LOG_NDELAY, LOG_USER);
+        syslog(LOG_ERR, $ex->getMessage());
+        closelog();
+    }
 
     sem_release($seg);
 } else {
