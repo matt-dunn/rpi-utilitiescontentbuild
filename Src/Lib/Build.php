@@ -73,6 +73,15 @@ class Build
         
         $this->webroot = realpath($this->project->basePath."/".$this->project->appRoot);
 
+        // Ensure the following processors are always run:
+        if (!isset($this->processor->processors["RPI\Utilities\ContentBuild\Processors\Comments"])) {
+            $this->processor->add(new \RPI\Utilities\ContentBuild\Processors\Comments());
+        }
+        
+        if (!isset($this->processor->processors["RPI\Utilities\ContentBuild\Processors\Images"])) {
+            $this->processor->add(new \RPI\Utilities\ContentBuild\Processors\Images());
+        }
+        
         foreach ($this->project->builds as $build) {
             $this->buildDependencies($this->project, $build);
         }

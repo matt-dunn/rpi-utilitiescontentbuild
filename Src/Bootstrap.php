@@ -2,6 +2,8 @@
 
 const CONTENT_BUILD_VERSION = "1.0.2";
 
+date_default_timezone_set("Europe/London");
+        
 require_once __DIR__."/../vendor/autoload.php";
 require_once __DIR__."/Autoload.php";
 
@@ -73,5 +75,6 @@ if (!file_exists($configurationFile)) {
     $processor = new \RPI\Utilities\ContentBuild\Lib\Processor($project);
 
     $build = new \RPI\Utilities\ContentBuild\Lib\Build($project, $processor);
+    
     $build->run();
 }

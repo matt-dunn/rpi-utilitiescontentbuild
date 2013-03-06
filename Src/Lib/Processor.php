@@ -2,13 +2,15 @@
 
 namespace RPI\Utilities\ContentBuild\Lib;
 
-class Processor
+use \RPI\Utilities\ContentBuild\Lib\Helpers\Object;
+
+class Processor extends Object
 {
     /**
      *
      * @var \RPI\Utilities\ContentBuild\Lib\Model\IProcessor[]
      */
-    private $processors = array();
+    private $processors = null;
     
     /**
      *
@@ -33,29 +35,6 @@ class Processor
         $this->project = $project;
         
         $this->metadataFilename = dirname($project->configurationFile)."/.metadata";
-        
-        if (isset($project->processors)) {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Processors configured:'", LOG_INFO);
-            foreach ($project->processors as $processor) {
-                \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("  Creating '{$processor->type}'", LOG_INFO);
-                $instance = new \ReflectionClass($processor->type);
-                $constructor = $instance->getConstructor();
-                if (isset($constructor)) {
-                    $this->add($instance->newInstanceArgs($processor->params));
-                } else {
-                    $this->add($instance->newInstance());
-                }
-            }
-        }
-
-        // Ensure the following processors are always run:
-        if (!isset($this->processors["RPI\Utilities\ContentBuild\Processors\Comments"])) {
-            $this->add(new \RPI\Utilities\ContentBuild\Processors\Comments());
-        }
-        
-        if (!isset($this->processors["RPI\Utilities\ContentBuild\Processors\Images"])) {
-            $this->add(new \RPI\Utilities\ContentBuild\Processors\Images());
-        }
     }
     
     /**
@@ -66,7 +45,12 @@ class Processor
      */
     public function add(\RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor $processor)
     {
+        if (!isset($this->processors)) {
+            $this->getProcessors();
+        }
+        
         $this->processors[get_class($processor)] = $processor;
+        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("  Creating '".get_class($processor)."'", LOG_INFO);
         
         return $this;
     }
@@ -77,12 +61,29 @@ class Processor
      */
     public function getProcessors()
     {
+        if (!isset($this->processors)) {
+            $this->processors = array();
+            
+            if (isset($this->project->processors)) {
+                \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Reading processors from configuration'", LOG_DEBUG);
+                foreach ($this->project->processors as $processor) {
+                    $instance = new \ReflectionClass($processor->type);
+                    $constructor = $instance->getConstructor();
+                    if (isset($constructor)) {
+                        $this->add($instance->newInstanceArgs($processor->params));
+                    } else {
+                        $this->add($instance->newInstance());
+                    }
+                }
+            }
+        }
+        
         return $this->processors;
     }
     
     public function init()
     {
-        foreach ($this->processors as $processor) {
+        foreach ($this->getProcessors() as $processor) {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Init '".get_class($processor)."'", LOG_DEBUG);
             $processor->init($this, $this->project);
         }
@@ -96,7 +97,7 @@ class Processor
         $outputFilename,
         $buffer
     ) {
-        foreach ($this->processors as $processor) {
+        foreach ($this->getProcessors() as $processor) {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Preprocess '".get_class($processor)."'", LOG_DEBUG);
             $buffer = $processor->preProcess($this, $build, $inputFilename, $outputFilename, $buffer);
         }
@@ -106,7 +107,7 @@ class Processor
     
     public function process($inputFilename, $buffer)
     {
-        foreach ($this->processors as $processor) {
+        foreach ($this->getProcessors() as $processor) {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Process '".get_class($processor)."'", LOG_DEBUG);
             $buffer = $processor->process($this, $inputFilename, $buffer);
         }
@@ -116,7 +117,7 @@ class Processor
     
     public function complete()
     {
-        foreach ($this->processors as $processor) {
+        foreach ($this->getProcessors() as $processor) {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Complete '".get_class($processor)."'", LOG_DEBUG);
             $processor->complete($this, $this->project);
         }

@@ -15,6 +15,8 @@ class Handler
     private static $ident = null;
     public static $displayShutdownInformation = false;
     
+    private static $processCharacter = null;
+    
     private function __construct()
     {
     }
@@ -56,13 +58,13 @@ class Handler
                 self::log(self::$warnings[$i], LOG_ERR, true);
             }
 
-            self::log("Duration: ".number_format(microtime(true) - self::$startTime, 2)." seconds\r\n", LOG_INFO);
+            self::log("Duration: ".number_format(microtime(true) - self::$startTime, 2)." seconds\r\n", LOG_INFO, false, true);
         }
-        
+
         exit($exitStatus);
     }
 
-    public static function log($msg, $severity = LOG_INFO, $dislayError = false)
+    public static function log($msg, $severity = LOG_INFO, $dislayError = false, $lastMessage = false)
     {
         $logLevelType = null;
         $logLevel = 0;
@@ -98,19 +100,46 @@ class Handler
 
         $fullMessage = (isset($logLevelType) ? "[".$logLevelType."] " : "").$msg;
 
-        $t = microtime(true);
-        $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
-        $timestamp = new \DateTime(date("Y-m-d H:i:s.".$micro, $t));
-
         if (self::isCli()) {
             if (self::$displayShutdownInformation
                 && !$dislayError
                 && ($severity == LOG_CRIT || $severity == LOG_WARNING || $severity == LOG_ERR)) {
                 array_push(self::$warnings, $msg);
             } elseif ($dislayError || (self::$logLevel == 0 || $logLevel <= self::$logLevel)) {
-                fwrite(STDOUT, $timestamp->format("Y-m-d H:i:s.u").": ".$fullMessage."\r\n");
+                $t = microtime(true);
+                $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
+                $timestamp = new \DateTime(date("Y-m-d H:i:s.".$micro, $t));
+                
+                if (isset(self::$processCharacter)) {
+                    self::$processCharacter = null;
+                    echo "\033[2D";
+                }
+                
+                fwrite(STDOUT, $timestamp->format("Y-m-d H:i:s").": ".$fullMessage."\r\n");
             } else {
-                echo ".";
+                if (!isset(self::$processCharacter)) {
+                    self::$processCharacter = "|";
+                }
+                
+                echo "\033[2D";
+                if (!$lastMessage) {
+                    echo self::$processCharacter." ";
+
+                    switch (self::$processCharacter) {
+                        case "|":
+                            self::$processCharacter = "/";
+                            break;
+                        case "/":
+                            self::$processCharacter = "-";
+                            break;
+                        case "-":
+                            self::$processCharacter = "\\";
+                            break;
+                        case "\\":
+                            self::$processCharacter = "|";
+                            break;
+                    }
+                }
             }
         } elseif ($severity == LOG_CRIT || $severity == LOG_WARNING || $severity == LOG_ERR) {
             openlog(self::$ident." (php)", LOG_NDELAY, LOG_USER);
