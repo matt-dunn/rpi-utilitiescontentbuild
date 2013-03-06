@@ -31,7 +31,10 @@ class Dependency extends Object implements \RPI\Utilities\ContentBuild\Lib\Model
         }
         
         foreach ($dependencies["dependency"] as $dependency) {
-            $this->files[] = $dependency["@"]["name"];
+            $this->files[] = array(
+                "name" => $dependency["@"]["name"],
+                "type" => (isset($dependency["@"]["type"]) ? $dependency["@"]["type"] : null)
+            );
         }
     }
     

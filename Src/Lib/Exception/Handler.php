@@ -58,7 +58,12 @@ class Handler
                 self::log(self::$warnings[$i], LOG_ERR, true);
             }
 
-            self::log("Duration: ".number_format(microtime(true) - self::$startTime, 2)." seconds\r\n", LOG_INFO, false, true);
+            self::log(
+                "Duration: ".number_format(microtime(true) - self::$startTime, 2)." seconds\r\n",
+                LOG_INFO,
+                false,
+                true
+            );
         }
 
         exit($exitStatus);

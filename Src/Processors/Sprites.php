@@ -2,6 +2,10 @@
 
 namespace RPI\Utilities\ContentBuild\Processors;
 
+/**
+ * TODO: check #sprite:url(...); syntax
+ */
+
 class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
     const MAX_SPRITE_WIDTH = 1024;
@@ -15,13 +19,15 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
 
     public function init(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
-        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
+        $processorIndex
     ) {
         $processor->setMetadata("sprites", null);
     }
     
     public function preProcess(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
         $outputFilename,
@@ -39,7 +45,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         $maxSpriteWidth = self::MAX_SPRITE_WIDTH;
         
         preg_replace_callback(
-            "/^\s*(#sprite\:\s*(.*?);)/sim",
+            "/(#sprite\:\s*url\((.*?)\)\s*;)/sim",
             function ($matches) use (
                 $inputFilename,
                 $outputFilename,
@@ -51,7 +57,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                 ) {
                 if (!file_exists(dirname($inputFilename)."/".$matches[2])) {
                     \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                        "Unable to locate image '{$matches[2]}' in '$inputFilename'",
+                        "Unable to locate sprite image '{$matches[2]}' in '$inputFilename'",
                         LOG_ERR
                     );
                 } else {
@@ -176,13 +182,14 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
     
     public function process(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         $inputFilename,
         $buffer
     ) {
         $sprites = $processor->getMetaData("sprites");
         if (isset($sprites)) {
             $buffer = preg_replace_callback(
-                "/(#sprite\:\s*(.*?);)/sim",
+                "/(#sprite\:\s*url\((.*?)\)\s*;)/sim",
                 function ($matches) use ($inputFilename, $sprites) {
                     $spriteImage = realpath(dirname($inputFilename)."/".$matches[2]);
                     $spriteData = null;
@@ -202,11 +209,14 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                         // does not break (e.g. when using firebug)
                         return "background:url({$spriteData["spritePath"]}) no-repeat {$offsetX}px {$offsetY}px;".
                             "width:{$spriteData["width"]}px;height:{$spriteData["height"]}px;content:'';";
+                    } else {
+                        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
+                            "Unable to locate sprite image '{$matches[2]}' in '$inputFilename'",
+                            LOG_ERR
+                        );
                     }
 
                     return "";
-                    return "SPRITE:".  dirname($inputFilename)." - ".print_r($spriteData, true);
-
                 },
                 $buffer
             );

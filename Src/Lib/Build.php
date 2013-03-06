@@ -85,7 +85,7 @@ class Build
         foreach ($this->project->builds as $build) {
             $this->buildDependencies($this->project, $build);
         }
-        
+
         $this->processor->init();
         
         foreach ($this->project->builds as $build) {
@@ -289,18 +289,25 @@ class Build
                 );
 
                 foreach ($dependency->files as $dependency) {
-                    $filename = realpath(dirname($inputFilename)."/".$dependency);
+                    $filename = realpath(dirname($inputFilename)."/".$dependency["name"]);
                     if (file_exists($filename)) {
                         \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
                             "Found dependency '".$filename."' - ".$inputFilename,
                             LOG_DEBUG
                         );
                         $this->buildFileList($build, $filename, $dependentFiles);
-                        $buildTypeDependency = $build->name."_".pathinfo($filename, PATHINFO_EXTENSION);
+                        
+                        $buildTypeDependency = null;
+                        if (isset($dependency["type"])) {
+                            $buildTypeDependency = $build->name."_".$dependency["type"];
+                        } else {
+                            $buildTypeDependency = $build->name."_".pathinfo($filename, PATHINFO_EXTENSION);
+                        }
+                        
                         $this->addUniqueFileToList($build, $filename, $buildTypeDependency);
                     } else {
                         throw new \Exception(
-                            "Cannot find file '".dirname($inputFilename)."/".$dependency."'"
+                            "Cannot find file '".dirname($inputFilename)."/".$dependency["name"]."'"
                         );
                     }
                 }
