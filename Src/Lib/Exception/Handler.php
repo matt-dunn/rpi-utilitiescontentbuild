@@ -55,7 +55,7 @@ class Handler
             }
 
             for ($i = 0; $i < count(self::$warnings); $i++) {
-                self::log(self::$warnings[$i], LOG_ERR, true);
+                self::log(self::$warnings[$i]["message"], self::$warnings[$i]["severity"], true);
             }
 
             self::log(
@@ -109,7 +109,7 @@ class Handler
             if (self::$displayShutdownInformation
                 && !$dislayError
                 && ($severity == LOG_CRIT || $severity == LOG_WARNING || $severity == LOG_ERR)) {
-                array_push(self::$warnings, $msg);
+                array_push(self::$warnings, array("message" => $msg, "severity" => $severity));
             } elseif ($dislayError || (self::$logLevel == 0 || $logLevel <= self::$logLevel)) {
                 $t = microtime(true);
                 $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
