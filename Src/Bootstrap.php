@@ -1,6 +1,7 @@
 <?php
 
-const CONTENT_BUILD_VERSION = "1.1.3";
+require_once __DIR__."/Constants.php";
+require_once __DIR__."/Functions.php";
 
 date_default_timezone_set("Europe/London");
         
@@ -21,21 +22,6 @@ $getopt = new Getopt(
         array("v", "version", Getopt::NO_ARGUMENT, "Version information")
     )
 );
-
-function displayHeader()
-{
-    $header = <<<EOT
-       ___         _           _   ___      _ _    _ 
-      / __|___ _ _| |_ ___ _ _| |_| _ )_  _(_) |__| |
-     | (__/ _ \ ' \  _/ -_) ' \  _| _ \ || | | / _` |
-      \___\___/_||_\__\___|_||_\__|___/\_,_|_|_\__,_|
-
-
-EOT;
-
-    echo $header;
-    echo "v".CONTENT_BUILD_VERSION."\n\n";
-}
 
 try {
     $getopt->parse();
