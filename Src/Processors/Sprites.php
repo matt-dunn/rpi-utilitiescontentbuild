@@ -22,6 +22,16 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         $processorIndex
     ) {
+        $sprites = $processor->getMetadata("sprites");
+        foreach ($sprites as $sprite) {
+            if (file_exists($sprite["spriteName"])) {
+                unlink($sprite["spriteName"]);
+            }
+            if (file_exists($sprite["spriteDebugName"])) {
+                unlink($sprite["spriteDebugName"]);
+            }
+        }
+
         $processor->setMetadata("sprites", null);
         
         \RPI\Utilities\ContentBuild\Event\Manager::addEventListener(
