@@ -5,6 +5,13 @@ namespace RPI\Utilities\ContentBuild\Processors;
 class Comments implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
     private $hasProcessed = false;
+    const VERSION = "1.0.1";
+
+    public function getVersion()
+    {
+        return "v".self::VERSION;
+    }
+    
     
     public function getOptions()
     {

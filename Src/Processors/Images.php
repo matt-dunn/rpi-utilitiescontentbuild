@@ -6,6 +6,13 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
 {
     private $imageFiles = array();
     private $timestamp = null;
+    const VERSION = "1.0.8";
+
+    public function getVersion()
+    {
+        return "v".self::VERSION;
+    }
+    
     
     public function getOptions()
     {

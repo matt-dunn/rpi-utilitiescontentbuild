@@ -4,6 +4,8 @@ namespace RPI\Utilities\ContentBuild\Lib\Model\Processor;
 
 interface IProcessor
 {
+    public function getVersion();
+    
     public function init(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,

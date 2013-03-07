@@ -9,6 +9,12 @@ namespace RPI\Utilities\ContentBuild\Processors;
 class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
     const MAX_SPRITE_WIDTH = 1024;
+    const VERSION = "1.0.5";
+
+    public function getVersion()
+    {
+        return "v".self::VERSION;
+    }
     
     public function getOptions()
     {

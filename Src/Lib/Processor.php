@@ -50,7 +50,7 @@ class Processor extends Object
         }
         
         $this->processors[get_class($processor)] = $processor;
-        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("  Creating '".get_class($processor)."'", LOG_INFO);
+        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("  Creating '".get_class($processor)."' ({$processor->getVersion()})", LOG_INFO);
         
         return $this;
     }

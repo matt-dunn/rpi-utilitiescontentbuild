@@ -1,6 +1,6 @@
 <?php
 
-const CONTENT_BUILD_VERSION = "1.1.2";
+const CONTENT_BUILD_VERSION = "1.1.3";
 
 date_default_timezone_set("Europe/London");
         
@@ -22,33 +22,40 @@ $getopt = new Getopt(
     )
 );
 
-$header = <<<EOT
-   ___         _           _   ___      _ _    _ 
-  / __|___ _ _| |_ ___ _ _| |_| _ )_  _(_) |__| |
- | (__/ _ \ ' \  _/ -_) ' \  _| _ \ || | | / _` |
-  \___\___/_||_\__\___|_||_\__|___/\_,_|_|_\__,_|
+function displayHeader()
+{
+    $header = <<<EOT
+       ___         _           _   ___      _ _    _ 
+      / __|___ _ _| |_ ___ _ _| |_| _ )_  _(_) |__| |
+     | (__/ _ \ ' \  _/ -_) ' \  _| _ \ || | | / _` |
+      \___\___/_||_\__\___|_||_\__|___/\_,_|_|_\__,_|
 
 
 EOT;
 
-echo $header;
+    echo $header;
+    echo "v".CONTENT_BUILD_VERSION."\n\n";
+}
 
 try {
     $getopt->parse();
 } catch (\UnexpectedValueException $ex) {
+    displayHeader();
     echo $ex->getMessage()."\r\n";
     exit(1);
 }
 
 if ($getopt->getOption("help")) {
+    displayHeader();
     $getopt->showHelp();
     echo "\n";
     exit;
 } elseif ($getopt->getOption("version")) {
-    echo "Version ".CONTENT_BUILD_VERSION."\n";
-    echo "PHP Version ".phpversion()."\n";
+    echo "ContentBuild v".CONTENT_BUILD_VERSION."\n";
     exit;
 }
+
+displayHeader();
 
 $logLevel = $getopt->getOption("loglevel");
 if (isset($logLevel)) {
