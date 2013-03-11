@@ -12,30 +12,50 @@ class FileUtils
     {
     }
 
+    /**
+     * 
+     * @param string $basePath
+     * @param string $includes      Pipe delimited list of patterns
+     * @param string $excludes      Pipe delimited list of patterns
+     * @param boolean $recursive
+     * 
+     * @return array
+     */
     public static function find(
-        $path,
-        $pattern,
+        $basePath,
+        $includes,
+        $excludes = null,
         $recursive = true
     ) {
         $files = array();
-        self::findFiles(realpath($path), $pattern, $files, $recursive);
-        return $files;
-    }
-
-    private static function findFiles($path, $pattern, array &$files, $recursive)
-    {
-        if (file_exists($path)) {
-            $path = rtrim(str_replace("\\", "/", $path), '/') . '/';
-            $dir = dir($path);
+        
+        if (file_exists($basePath)) {
+            $dir = dir($basePath);
             while (false !== ($entry = $dir->read())) {
-                $fullname = $path . $entry;
+                $fullname = rtrim($basePath, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$entry;
                 if ($recursive && $entry != '.' && $entry != '..' && substr($entry, 0, 1) != "." && is_dir($fullname)) {
-                    self::findFiles($fullname, $pattern, $files, $recursive);
-                } elseif (is_file($fullname) && preg_match($pattern, $entry)) {
+                    $files += self::find($fullname, $includes, $excludes, $recursive);
+                } elseif (is_file($fullname)
+                    && self::isMatch(explode("|", $includes), $fullname)
+                    && (!isset($excludes) || (isset($excludes) && !self::isMatch(explode("|", $excludes), $fullname)))
+                ) {
                     $files[$fullname] = filemtime($fullname);
                 }
             }
             $dir->close();
         }
+        
+        return $files;
+    }
+    
+    private static function isMatch(array $patterns, $file)
+    {
+        foreach ($patterns as $pattern) {
+            if (fnmatch($pattern, $file)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

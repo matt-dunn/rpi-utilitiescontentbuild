@@ -213,7 +213,8 @@ class Build
     {
         $filesSearch = \RPI\Utilities\ContentBuild\Lib\Helpers\FileUtils::find(
             dirname($inputFilename),
-            "/".pathinfo($inputFilename, PATHINFO_FILENAME).".dependencies\.(.*)/",
+            "*".pathinfo($inputFilename, PATHINFO_FILENAME).".dependencies.*",
+            null,
             false
         );
         

@@ -144,8 +144,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
     {
         $filesSearch = \RPI\Utilities\ContentBuild\Lib\Helpers\FileUtils::find(
             $basePath,
-            "/.*\.(png|gif|jpg|jpeg)/",
-            true
+            "*.png|*.gif|*.jpg|*.jpeg"
         );
         $existingFiles = array_keys($filesSearch);
         
