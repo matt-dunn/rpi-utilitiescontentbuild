@@ -16,7 +16,7 @@
         },
         {
             "type": "composer",
-            "url": "http://www.red-pixel.co.uk"
+            "url": "http://packages.red-pixel.co.uk"
         }
     ],
     "require": {
