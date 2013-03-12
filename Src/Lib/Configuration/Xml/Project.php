@@ -96,7 +96,7 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
             $this->basePath = realpath(dirname($this->configurationFile).$config["@"]["basePath"]);
         }
         
-        if (!isset($config["build"][0])) {
+        if (!is_array($config["build"]) || !isset($config["build"][0])) {
             $config["build"] = array($config["build"]);
         }
         
@@ -105,7 +105,7 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
         }
         
         if (isset($config["processors"], $config["processors"]["processor"])) {
-            if (!isset($config["processors"]["processor"][0])) {
+            if (!is_array($config["processors"]["processor"]) || !isset($config["processors"]["processor"][0])) {
                 $config["processors"]["processor"] = array($config["processors"]["processor"]);
             }
             
@@ -114,7 +114,7 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
             foreach ($config["processors"]["processor"] as $processor) {
                 $params = null;
                 if (isset($processor["param"])) {
-                    if (!isset($processor["param"][0])) {
+                    if (!is_array($processor["param"]) || !isset($processor["param"][0])) {
                         $processor["param"] = array($processor["param"]);
                     }
                     $params = array();

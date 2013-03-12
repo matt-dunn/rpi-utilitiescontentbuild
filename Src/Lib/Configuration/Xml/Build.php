@@ -106,7 +106,7 @@ class Build extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Conf
             $this->debugPath = join("/", $debugPathParts)."/__debug/".$this->type;
         }
         
-        if (!isset($buildDetails["files"][0])) {
+        if (!is_array($buildDetails["files"]) || !isset($buildDetails["files"][0])) {
             $buildDetails["files"] = array($buildDetails["files"]);
         }
         
