@@ -9,6 +9,7 @@ namespace RPI\Utilities\ContentBuild\Processors;
 class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
     const MAX_SPRITE_WIDTH = 1024;
+    const SPRITE_PADDING = 2;
     const VERSION = "1.0.5";
     
     private $maxSpriteWidth = self::MAX_SPRITE_WIDTH;
@@ -116,7 +117,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                             $previousSprite =
                                 \RPI\Utilities\ContentBuild\Processors\Sprites::findLastIcon($build, $sprites);
                             if ($previousSprite !== false) {
-                                $offsetX = $previousSprite["offsetX"] + $previousSprite["width"];
+                                $offsetX = $previousSprite["offsetX"] + $previousSprite["width"] + self::SPRITE_PADDING;
                                 $offsetY = $previousSprite["offsetY"];
                             }
 
@@ -127,9 +128,9 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
 
                             if ($outputSpriteWidth > $maxSpriteWidth) {
                                 $outputSpriteWidth = $imageDataSpriteOutput[0];
-                                $outputSpriteHeight = $imageDataSpriteOutput[1] + $imageDataSprite[1];
+                                $outputSpriteHeight = $imageDataSpriteOutput[1] + $imageDataSprite[1] + self::SPRITE_PADDING;
                                 $offsetX = 0;
-                                $offsetY = $imageDataSpriteOutput[1];
+                                $offsetY = $imageDataSpriteOutput[1] + self::SPRITE_PADDING;
                             }
 
                             $imOriginal = imagecreatefrompng($spriteOutputFilename);
