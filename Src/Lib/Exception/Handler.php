@@ -199,6 +199,11 @@ class Handler
      */
     public static function set($ident)
     {
+        $timezone = date_default_timezone_get();
+        if (!isset($timezone) || $timezone === false) {
+            date_default_timezone_set("Europe/London");
+        }
+
         self::$ident = $ident;
         
         ini_set("html_errors", 0);
