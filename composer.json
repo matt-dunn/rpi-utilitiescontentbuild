@@ -13,12 +13,17 @@
                     "type": "zip"
                 }
             }
+        },
+        {
+            "type": "composer",
+            "url": "http://www.red-pixel.co.uk"
         }
     ],
     "require": {
         "php": ">=5.3.0",
         "ulrichsg/getopt-php": "dev-master",
-        "yui/yuicompressor": "2.4.*"
+        "yui/yuicompressor": "2.4.*",
+        "rpi/framework": "dev-master"
     },
     "require-dev": {
         "phing/phing": "dev-master",
