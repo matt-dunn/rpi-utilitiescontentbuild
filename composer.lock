@@ -1,5 +1,5 @@
 {
-    "hash": "a8482e9ecbea98ba402be38790f9061d",
+    "hash": "6708588c16059412f47471c396320f98",
     "packages": [
         {
             "name": "ulrichsg/getopt-php",
@@ -63,7 +63,7 @@
         "phing/phing": 20
     },
     "platform": {
-        "php": ">=5.4.0"
+        "php": ">=5.3.0"
     },
     "platform-dev": [
 
