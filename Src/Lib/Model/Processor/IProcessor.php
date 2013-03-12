@@ -32,6 +32,4 @@ interface IProcessor
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
     );
-    
-    public function getOptions();
 }

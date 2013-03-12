@@ -12,12 +12,6 @@ class Comments implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProce
         return "v".self::VERSION;
     }
     
-    
-    public function getOptions()
-    {
-        return null;
-    }
-
     public function init(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,

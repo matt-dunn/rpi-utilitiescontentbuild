@@ -16,25 +16,20 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         return "v".self::VERSION;
     }
     
-    public function getOptions()
-    {
-        return array(
-            
-        );
-    }
-
     public function init(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         $processorIndex
     ) {
         $sprites = $processor->getMetadata("sprites");
-        foreach ($sprites as $sprite) {
-            if (file_exists($sprite["spriteName"])) {
-                unlink($sprite["spriteName"]);
-            }
-            if (file_exists($sprite["spriteDebugName"])) {
-                unlink($sprite["spriteDebugName"]);
+        if (isset($sprites) && $sprites !== false) {
+            foreach ($sprites as $sprite) {
+                if (file_exists($sprite["spriteName"])) {
+                    unlink($sprite["spriteName"]);
+                }
+                if (file_exists($sprite["spriteDebugName"])) {
+                    unlink($sprite["spriteDebugName"]);
+                }
             }
         }
 

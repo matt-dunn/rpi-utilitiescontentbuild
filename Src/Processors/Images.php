@@ -13,12 +13,6 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         return "v".self::VERSION;
     }
     
-    
-    public function getOptions()
-    {
-        return null;
-    }
-
     public function init(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,

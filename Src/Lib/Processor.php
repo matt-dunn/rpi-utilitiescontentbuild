@@ -75,7 +75,7 @@ class Processor extends Object
                 foreach ($this->project->processors as $processor) {
                     $instance = new \ReflectionClass($processor->type);
                     $constructor = $instance->getConstructor();
-                    if (isset($constructor)) {
+                    if (isset($constructor) && count($processor->params) > 0) {
                         $this->add($instance->newInstanceArgs($processor->params));
                     } else {
                         $this->add($instance->newInstance());

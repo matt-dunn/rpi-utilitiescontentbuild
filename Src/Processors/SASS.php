@@ -16,11 +16,6 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
         return "v".self::VERSION." - ".$sassVersion;
     }
     
-    public function getOptions()
-    {
-        return null;
-    }
-
     public function init(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
