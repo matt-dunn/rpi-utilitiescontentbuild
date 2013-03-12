@@ -18,6 +18,15 @@ class Autoload
         $classPostfix = str_replace("\\", DIRECTORY_SEPARATOR, str_replace(__NAMESPACE__, "", $className));
         return __DIR__.$classPostfix.".php";
     }
+    
+    public static function getClassName($classPath)
+    {
+        return str_replace(
+            ".php",
+            "",
+            __NAMESPACE__.substr(str_replace(DIRECTORY_SEPARATOR, "\\", $classPath), strlen(__DIR__))
+        );
+    }
 
     public static function init()
     {
