@@ -23,8 +23,8 @@
         "php": ">=5.3.0",
         "ulrichsg/getopt-php": "dev-master",
         "yui/yuicompressor": "2.4.*",
-        "rpi/framework": "dev-master",
-        "rpi/components/carousel": "dev-master"
+        "rpi/framework": "dev-subtrees/RPI/Framework",
+        "rpi/components/carousel": "dev-subtrees/RPI/Components/Carousel"
     },
     "require-dev": {
         "phing/phing": "dev-master",
