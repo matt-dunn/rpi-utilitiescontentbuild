@@ -10,7 +10,19 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
 {
     const MAX_SPRITE_WIDTH = 1024;
     const VERSION = "1.0.5";
+    
+    private $maxSpriteWidth = self::MAX_SPRITE_WIDTH;
 
+    public function __construct($options = null)
+    {
+        if (isset($options, $options["maxSpriteWidth"])) {
+            $this->maxSpriteWidth = $options["maxSpriteWidth"];
+            if (!is_numeric($this->maxSpriteWidth) || $this->maxSpriteWidth < 0 || $this->maxSpriteWidth > 10000) {
+                throw new \Exception(__CLASS__.": maxSpriteWidth must be a integer between 0 and 10000");
+            }
+        }
+    }
+    
     public function getVersion()
     {
         return "v".self::VERSION;
@@ -68,7 +80,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
             $sprites = array();
         }
         
-        $maxSpriteWidth = self::MAX_SPRITE_WIDTH;
+        $maxSpriteWidth = $this->maxSpriteWidth;
         
         preg_replace_callback(
             "/(#sprite\:\s*url\((.*?)\)\s*;)/sim",
