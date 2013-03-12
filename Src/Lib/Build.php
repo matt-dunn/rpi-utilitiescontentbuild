@@ -48,7 +48,7 @@ class Build
         \RPI\Utilities\ContentBuild\Lib\Processor $processor
     ) {
         $this->project = $project;
-        $this->configurationFile = $this->project->configurationFile;
+        $this->configurationFile = realpath($this->project->configurationFile);
         $this->processor = $processor;
        
         $this->yuicompressorLocation = dirname(__FILE__)."/../../vendor/yui/yuicompressor/build/".self::COMPRESSOR_JAR;
@@ -63,6 +63,11 @@ class Build
         
         \RPI\Utilities\ContentBuild\Lib\Exception\Handler::$displayShutdownInformation = true;
         
+        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
+            "Config read from '{$this->configurationFile}'",
+            LOG_INFO
+        );
+                
         if (\Phar::running() !== "") {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Extracting yuicompressor", LOG_NOTICE);
             $tempYuiCompressorLocation = sys_get_temp_dir()."/".self::COMPRESSOR_JAR;
