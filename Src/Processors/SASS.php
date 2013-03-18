@@ -62,6 +62,14 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
         
     }
     
+    /**
+     * 
+     * @param string $command
+     * @param boolean $sendNonErrorOutput
+     * @return integer|null
+     * 
+     * @throws \Exception
+     */
     private function runSass($command, $sendNonErrorOutput = true)
     {
         $output = null;
