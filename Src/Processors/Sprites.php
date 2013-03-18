@@ -128,7 +128,9 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
 
                             if ($outputSpriteWidth > $maxSpriteWidth) {
                                 $outputSpriteWidth = $imageDataSpriteOutput[0];
-                                $outputSpriteHeight = $imageDataSpriteOutput[1] + $imageDataSprite[1] + self::SPRITE_PADDING;
+                                $outputSpriteHeight = $imageDataSpriteOutput[1]
+                                    + $imageDataSprite[1]
+                                    + self::SPRITE_PADDING;
                                 $offsetX = 0;
                                 $offsetY = $imageDataSpriteOutput[1] + self::SPRITE_PADDING;
                             }
