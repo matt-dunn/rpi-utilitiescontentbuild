@@ -1,5 +1,5 @@
 {
-    "name": "rpi/content-build",
+    "name": "rpi/utilities/contentbuild",
     "type": "library",
     "description": "Content Builder",
      "repositories": [
@@ -30,9 +30,10 @@
         "phing/phing": "dev-master",
         "phpunit/phpunit": "3.7.*"
     },
+    "target-dir": "RPI/Utilities/ContentBuild",
     "autoload": {
         "psr-0": {
-            "RPI": "src"
+            "RPI\\Utilities\\ContentBuild": "Src"
         }
     }
 }
