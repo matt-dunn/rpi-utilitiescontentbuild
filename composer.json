@@ -2,6 +2,7 @@
     "name": "rpi/utilities/contentbuild",
     "type": "library",
     "description": "CSS/JS Content Builder",
+    "license": "proprietary",
     "repositories": [
         {
             "type": "package",
