@@ -1,7 +1,7 @@
 {
     "name": "rpi/utilities/contentbuild",
     "type": "library",
-    "description": "Content Builder",
+    "description": "CSS/JS Content Builder",
     "repositories": [
         {
             "type": "package",
