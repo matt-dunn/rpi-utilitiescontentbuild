@@ -513,8 +513,9 @@ CONTENT;
         $proxyFile = $outputPath."/proxy.php";
         if (\Phar::running() !== "") {
             $pharname = pathinfo($_SERVER["PHP_SELF"], PATHINFO_FILENAME).".phar";
+            $pharPath = realpath($_SERVER["PHP_SELF"]);
             $bootstrap .= <<<EOT
-Phar::loadPhar("{$_SERVER["PHP_SELF"]}", "{$pharname}");
+Phar::loadPhar("{$pharPath}", "{$pharname}");
 \$GLOBALS["autoloader"] = "phar://{$pharname}/Src/Autoload.php";
 
 EOT;
