@@ -8,7 +8,8 @@ use \RPI\Utilities\ContentBuild\Lib\Helpers\Object;
  * @property-read string $name
  * @property-read string $prefix
  * @property-read string $appRoot
- * @property-read \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild[] $basePath
+ * @property-read string $basePath
+ * @property-read \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild[] $builds
  * @property-read string $builds
  */
 class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
@@ -57,6 +58,12 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
     
     /**
      *
+     * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IResolver[]
+     */
+    private $resolvers = null;
+    
+    /**
+     *
      * @var boolean
      */
     private $includeDebug = true;
@@ -94,6 +101,8 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
         }
         if (isset($config["@"]["basePath"])) {
             $this->basePath = realpath(dirname($this->configurationFile).$config["@"]["basePath"]);
+        } else {
+            $this->basePath = realpath(dirname($this->configurationFile)."/../../");
         }
         
         if (!is_array($config["build"]) || !isset($config["build"][0])) {
@@ -124,6 +133,32 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
                 }
                 $this->processors[] = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Processor(
                     $processor["@"]["type"],
+                    $params
+                );
+            }
+        }
+        
+        if (isset($config["uriResolvers"], $config["uriResolvers"]["uriResolver"])) {
+            if (!is_array($config["uriResolvers"]["uriResolver"])
+                || !isset($config["uriResolvers"]["uriResolver"][0])) {
+                $config["uriResolvers"]["uriResolver"] = array($config["uriResolvers"]["uriResolver"]);
+            }
+            
+            $this->resolvers = array();
+            
+            foreach ($config["uriResolvers"]["uriResolver"] as $uriResolver) {
+                $params = null;
+                if (isset($uriResolver["param"])) {
+                    if (!is_array($uriResolver["param"]) || !isset($uriResolver["param"][0])) {
+                        $uriResolver["param"] = array($uriResolver["param"]);
+                    }
+                    $params = array();
+                    foreach ($uriResolver["param"] as $param) {
+                        $params[] = $param;
+                    }
+                }
+                $this->resolvers[] = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Resolver(
+                    $uriResolver["@"]["type"],
                     $params
                 );
             }
@@ -203,6 +238,15 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
     public function getProcessors()
     {
         return $this->processors;
+    }
+
+    /**
+     * 
+     * @return \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IResolver[]
+     */
+    public function getResolvers()
+    {
+        return $this->resolvers;
     }
 
     /**

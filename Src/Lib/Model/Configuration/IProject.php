@@ -43,4 +43,9 @@ interface IProject
      * @return \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProcessor[]
      */
     public function getProcessors();
+    
+    /**
+     * @return \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IResolver[]
+     */
+    public function getResolvers();
 }

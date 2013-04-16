@@ -2,7 +2,7 @@
 
 namespace RPI\Utilities\ContentBuild\Lib\Model\Configuration;
 
-interface IProcessor
+interface IResolver
 {
     /**
      * @return string

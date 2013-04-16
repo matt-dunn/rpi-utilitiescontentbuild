@@ -30,7 +30,9 @@ if (isset($GLOBALS["configuration-file"])) {
 
         $processor = new \RPI\Utilities\ContentBuild\Lib\Processor($project);
 
-        echo $processor->process($file, file_get_contents($file));
+        $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver($project);
+        
+        echo $processor->process($resolver, $file, file_get_contents($file));
     } catch (\Exception $ex) {
         openlog("ProcessCSS (php)", LOG_NDELAY, LOG_USER);
         syslog(LOG_ERR, $ex->getMessage());

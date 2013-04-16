@@ -22,6 +22,7 @@ class Comments implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProce
     public function preProcess(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
+        \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
         $outputFilename,
@@ -43,6 +44,7 @@ class Comments implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProce
     public function process(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
+        \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         $inputFilename,
         $buffer
     ) {

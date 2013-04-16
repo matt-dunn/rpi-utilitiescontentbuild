@@ -38,6 +38,7 @@ interface IProcessor
      * 
      * @param \RPI\Utilities\ContentBuild\Lib\Processor $processor
      * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
+     * @param \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver
      * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build
      * @param string $inputFilename
      * @param string $outputFilename
@@ -46,6 +47,7 @@ interface IProcessor
     public function preProcess(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
+        \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
         $outputFilename,
@@ -57,12 +59,14 @@ interface IProcessor
      * 
      * @param \RPI\Utilities\ContentBuild\Lib\Processor $processor
      * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
+     * @param \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver
      * @param string $inputFilename
      * @param string $buffer
      */
     public function process(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
+        \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         $inputFilename,
         $buffer
     );

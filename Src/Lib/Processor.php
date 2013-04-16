@@ -8,7 +8,7 @@ class Processor extends Object
 {
     /**
      *
-     * @var \RPI\Utilities\ContentBuild\Lib\Model\IProcessor[]
+     * @var \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor[]
      */
     private $processors = null;
     
@@ -60,7 +60,7 @@ class Processor extends Object
     
     /**
      * 
-     * @return \RPI\Utilities\ContentBuild\Lib\Model\IProcessor[]
+     * @return \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor[]
      */
     public function getProcessors()
     {
@@ -101,6 +101,7 @@ class Processor extends Object
     
     public function build(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
+        \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         $inputFilename,
         $outputFilename,
         $buffer
@@ -111,24 +112,28 @@ class Processor extends Object
                 $buffer = $processor->preProcess(
                     $this,
                     $this->project,
+                    $resolver,
                     $build,
                     $inputFilename,
                     $outputFilename,
                     $buffer
                 );
             
-                $buffer = $processor->process($this, $this->project, $inputFilename, $buffer);
+                $buffer = $processor->process($this, $this->project, $resolver, $inputFilename, $buffer);
             }
         }
         
         return $buffer;
     }
     
-    public function process($inputFilename, $buffer)
-    {
+    public function process(
+        \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
+        $inputFilename,
+        $buffer
+    ) {
         foreach ($this->getProcessors() as $processor) {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Process '".get_class($processor)."'", LOG_DEBUG);
-            $buffer = $processor->process($this, $this->project, $inputFilename, $buffer);
+            $buffer = $processor->process($this, $this->project, $resolver, $inputFilename, $buffer);
         }
         
         return $buffer;

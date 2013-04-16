@@ -65,6 +65,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
     public function preProcess(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
+        \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
         $outputFilename,
@@ -92,16 +93,20 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                 &$sprites,
                 $spriteOutputFilename,
                 $debugSpriteOutputFilename,
-                $maxSpriteWidth
+                $maxSpriteWidth,
+                $resolver,
+                $project
                 ) {
-                if (!file_exists(dirname($inputFilename)."/".$matches[2])) {
+                $spriteFilename = $resolver->realpath($project, $matches[2]);
+                if ($spriteFilename === false) {
+                    $spriteFilename = realpath(dirname($inputFilename)."/".$matches[2]);
+                }
+                if (!file_exists($spriteFilename)) {
                     \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
                         "Unable to locate sprite image '{$matches[2]}' in '$inputFilename'",
                         LOG_ERR
                     );
                 } else {
-                    $spriteFilename = realpath(dirname($inputFilename)."/".$matches[2]);
-                    
                     if (!isset($sprites[$spriteFilename])) {
                         \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
                             "Creating Sprite image ' $spriteFilename'",
@@ -227,6 +232,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
     public function process(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
+        \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         $inputFilename,
         $buffer
     ) {
@@ -234,8 +240,11 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         if (isset($sprites)) {
             $buffer = preg_replace_callback(
                 "/(#sprite\:\s*url\((.*?)\)\s*;)/sim",
-                function ($matches) use ($inputFilename, $sprites) {
-                    $spriteImage = realpath(dirname($inputFilename)."/".$matches[2]);
+                function ($matches) use ($inputFilename, $sprites, $project, $resolver) {
+                    $spriteImage = $resolver->realpath($project, $matches[2]);
+                    if ($spriteImage === false) {
+                        $spriteImage = realpath(dirname($inputFilename)."/".$matches[2]);
+                    }
                     if (isset($sprites, $sprites[$spriteImage])) {
                         $spriteData = $sprites[$spriteImage];
 

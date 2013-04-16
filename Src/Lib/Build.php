@@ -15,6 +15,12 @@ class Build
     
     /**
      *
+     * @var \RPI\Utilities\ContentBuild\Lib\UriResolver
+     */
+    private $resolver = null;
+    
+    /**
+     *
      * @var string
      */
     private $configurationFile = null;
@@ -24,12 +30,6 @@ class Build
      * @var string
      */
     private $yuicompressorLocation = null;
-    
-    /**
-     *
-     * @var string
-     */
-    private $basePath = null;
     
     /**
      *
@@ -45,11 +45,13 @@ class Build
     
     public function __construct(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
-        \RPI\Utilities\ContentBuild\Lib\Processor $processor
+        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
+        \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver
     ) {
         $this->project = $project;
         $this->configurationFile = realpath($this->project->configurationFile);
         $this->processor = $processor;
+        $this->resolver = $resolver;
        
         $this->yuicompressorLocation = dirname(__FILE__)."/../../vendor/yui/yuicompressor/build/".self::COMPRESSOR_JAR;
         if (!file_exists($this->yuicompressorLocation)) {
@@ -161,9 +163,13 @@ class Build
                 umask($oldumask);
             }
 
-            $buffer = file_get_contents($file);
-            
-            $buffer = $this->processor->build($build, $file, $outputFilename, $buffer);
+            $buffer = $this->processor->build(
+                $build,
+                $this->resolver,
+                $file,
+                $outputFilename,
+                file_get_contents($file)
+            );
             
             file_put_contents($outputFilename, $buffer, FILE_APPEND);
         }
@@ -197,7 +203,12 @@ class Build
         if (isset($build->files)) {
             foreach ($build->files as $file) {
                 $dependentFiles = array();
-                $this->buildFileList($build, $this->getInputFileName($project, $build, $file), $dependentFiles);
+                $this->buildFileList(
+                    $project,
+                    $build,
+                    $this->getInputFileName($project, $build, $file),
+                    $dependentFiles
+                );
             }
         }
     }
@@ -205,13 +216,14 @@ class Build
     private function getInputFileName(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
-        $file
+        $file,
+        $basePath = null
     ) {
-        if (parse_url($file, PHP_URL_SCHEME) == "http") {
-            return $file;
-        } else {
-            return $project->basePath."/".$build->buildDirectory.$file;
+        $realpath = $this->resolver->realpath($project, $file);
+        if ($realpath === false) {
+            $realpath = realpath((isset($basePath) ? $basePath : $project->basePath)."/".$build->buildDirectory.$file);
         }
+        return $realpath;
     }
     
     private function getDependencyFileType($inputFilename)
@@ -233,8 +245,12 @@ class Build
         return $type;
     }
     
-    private function buildFileList($build, $inputFilename, $dependentFiles)
-    {
+    private function buildFileList(
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
+        $inputFilename,
+        $dependentFiles
+    ) {
         if (!self::fileExists($inputFilename)) {
             throw new \Exception("Unable to locate input file '$inputFilename'");
         }
@@ -290,13 +306,13 @@ class Build
                 );
 
                 foreach ($dependency->files as $dependency) {
-                    $filename = realpath(dirname($inputFilename)."/".$dependency["name"]);
+                    $filename = $this->getInputFileName($project, $build, $dependency["name"], dirname($inputFilename));
                     if (file_exists($filename)) {
                         \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
                             "Found dependency '".$filename."' - ".$inputFilename,
                             LOG_DEBUG
                         );
-                        $this->buildFileList($build, $filename, $dependentFiles);
+                        $this->buildFileList($project, $build, $filename, $dependentFiles);
                         
                         $buildTypeDependency = null;
                         if (isset($dependency["type"])) {
@@ -308,7 +324,7 @@ class Build
                         $this->addUniqueFileToList($build, $filename, $buildTypeDependency);
                     } else {
                         throw new \Exception(
-                            "Cannot find file '".dirname($inputFilename)."/".$dependency["name"]."'"
+                            "Cannot find file '$filename' in '$dependenciesFile'"
                         );
                     }
                 }
@@ -667,17 +683,6 @@ EOT;
         } else {
             return file_exists($uri);
         }
-    }
-    
-    private static function getDebugPath($outputPath, $buildType)
-    {
-        if (substr($outputPath, strlen($outputPath) - 1, 1) == "/") {
-            $outputPath = substr($outputPath, 0, strlen($outputPath) - 1);
-        }
-        
-        $debugPathParts = explode("/", $outputPath);
-        unset($debugPathParts[count($debugPathParts) - 1]);
-        return join("/", $debugPathParts)."/__debug/".$buildType;
     }
     
     private static function makeRelativePath($referencePath, $actualPath)

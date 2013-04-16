@@ -26,8 +26,10 @@ if ($options !== false && isset($options["configurationFile"])) {
     $project = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Project($options["configurationFile"]);
 
     $processor = new \RPI\Utilities\ContentBuild\Lib\Processor($project);
+    
+    $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver($project);
 
-    $build = new \RPI\Utilities\ContentBuild\Lib\Build($project, $processor);
+    $build = new \RPI\Utilities\ContentBuild\Lib\Build($project, $processor, $resolver);
     
     $build->run();
 }
