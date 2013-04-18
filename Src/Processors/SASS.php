@@ -4,11 +4,24 @@ namespace RPI\Utilities\ContentBuild\Processors;
 
 class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
-    const VERSION = "1.0.2";
+    const VERSION = "1.0.3";
 
-    public function getVersion()
+    /**
+     *
+     * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
+     */
+    private $project = null;
+
+    public function __construct(
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
+        array $options = null
+    ) {
+        $this->project = $project;
+    }
+    
+    public static function getVersion()
     {
-        $output = $this->runSass("-v", false);
+        $output = self::runSass("-v", false);
         $sassVersion = "Unable to get SASS version information";
         if (isset($output)) {
             $sassVersion = $output[0];
@@ -18,7 +31,6 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
     
     public function init(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
-        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         $processorIndex
     ) {
         if ($processorIndex != 0) {
@@ -28,7 +40,6 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
     
     public function preProcess(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
-        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
@@ -40,7 +51,6 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
     
     public function process(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
-        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         $inputFilename,
         $buffer
@@ -48,8 +58,8 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
         if (pathinfo($inputFilename, PATHINFO_EXTENSION) == "scss") {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Compiling SASS '$inputFilename'", LOG_INFO);
             
-            $cachepath = dirname($project->configurationFile)."/.sass-cache";
-            $this->runSass("--update $inputFilename --cache-location $cachepath");
+            $cachepath = dirname($this->project->configurationFile)."/.sass-cache";
+            self::runSass("--update $inputFilename --cache-location $cachepath");
             
             $buffer = file_get_contents(str_replace(".scss", ".css", $inputFilename));
         }
@@ -58,8 +68,7 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
     }
     
     public function complete(
-        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
-        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
+        \RPI\Utilities\ContentBuild\Lib\Processor $processor
     ) {
         
     }
@@ -72,7 +81,7 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
      * 
      * @throws \Exception
      */
-    private function runSass($command, $sendNonErrorOutput = true)
+    private static function runSass($command, $sendNonErrorOutput = true)
     {
         $output = null;
         $ret = null;

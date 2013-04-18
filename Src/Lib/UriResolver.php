@@ -59,13 +59,12 @@ class UriResolver extends Object
                     LOG_DEBUG
                 );
                 foreach ($this->project->resolvers as $resolver) {
-                    $instance = new \ReflectionClass($resolver->type);
-                    $constructor = $instance->getConstructor();
-                    if (isset($constructor) && count($resolver->params) > 0) {
-                        $this->add($instance->newInstanceArgs($resolver->params));
-                    } else {
-                        $this->add($instance->newInstance());
+                    $params = array($this->project);
+                    if (isset($resolver->params)) {
+                        $params = array_merge($params, $resolver->params);
                     }
+                    $instance = new \ReflectionClass($resolver->type);
+                    $this->add($instance->newInstanceArgs($params));
                 }
             }
         }

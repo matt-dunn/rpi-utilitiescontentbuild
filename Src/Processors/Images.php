@@ -4,18 +4,40 @@ namespace RPI\Utilities\ContentBuild\Processors;
 
 class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
-    private $imageFiles = array();
-    private $timestamp = null;
-    const VERSION = "1.0.8";
+    const VERSION = "1.0.9";
 
-    public function getVersion()
+    /**
+     *
+     * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
+     */
+    private $project = null;
+    
+    /**
+     *
+     * @var array
+     */
+    private $imageFiles = array();
+    
+    /**
+     *
+     * @var integer
+     */
+    private $timestamp = null;
+    
+    public function __construct(
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
+        array $options = null
+    ) {
+        $this->project = $project;
+    }
+    
+    public static function getVersion()
     {
         return "v".self::VERSION;
     }
     
     public function init(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
-        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         $processorIndex
     ) {
         $this->timestamp = microtime(true) - 1;
@@ -23,7 +45,6 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
     
     public function preProcess(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
-        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
@@ -73,7 +94,6 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
     
     public function process(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
-        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         $inputFilename,
         $buffer
@@ -82,8 +102,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
     }
     
     public function complete(
-        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
-        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
+        \RPI\Utilities\ContentBuild\Lib\Processor $processor
     ) {
         if (count($this->imageFiles) > 0) {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Copying images", LOG_DEBUG);
@@ -91,10 +110,10 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         }
 
         $basePaths = array();
-        foreach ($project->builds as $build) {
+        foreach ($this->project->builds as $build) {
             if ($build->type == "css") {
-                $basePaths[$project->basePath."/".$build->outputDirectory] = true;
-                if ($project->includeDebug) {
+                $basePaths[$this->project->basePath."/".$build->outputDirectory] = true;
+                if ($this->project->includeDebug) {
                     $basePaths[$build->debugPath."/"] = true;
                 }
             }

@@ -38,36 +38,40 @@ class Command
     
     public function parse()
     {
-        try {
-            $this->getopt->parse();
-        } catch (\UnexpectedValueException $ex) {
-            displayHeader();
-            echo $ex->getMessage()."\r\n";
-            $this->getopt->showHelp();
-            exit(1);
-        }
-        
-        $options = $this->getopt->getOptions();
-        $commandValues = array();
-        
-        foreach ($this->commands as $command) {
-            $value = null;
-            if (isset($options[$command->getOptionName()])) {
-                $value = $options[$command->getOptionName()];
+        if (isset($this->getopt)) {
+            try {
+                $this->getopt->parse();
+            } catch (\UnexpectedValueException $ex) {
+                displayHeader();
+                echo $ex->getMessage()."\r\n";
+                $this->getopt->showHelp();
+                exit(1);
             }
-            
-            $ret = $command->exec($this->getopt, $value);
-            if ($ret === false) {
-                return false;
-            } elseif (isset($ret)) {
-                if (is_array($ret)) {
-                    $commandValues = array_merge($commandValues, $ret);
-                } else {
-                    $commandValues[] = $ret;
+
+            $options = $this->getopt->getOptions();
+            $commandValues = array();
+
+            foreach ($this->commands as $command) {
+                $value = null;
+                if (isset($options[$command->getOptionName()])) {
+                    $value = $options[$command->getOptionName()];
+                }
+
+                $ret = $command->exec($this->getopt, $value);
+                if ($ret === false) {
+                    return false;
+                } elseif (isset($ret)) {
+                    if (is_array($ret)) {
+                        $commandValues = array_merge($commandValues, $ret);
+                    } else {
+                        $commandValues[] = $ret;
+                    }
                 }
             }
+        
+            return $commandValues;
         }
         
-        return $commandValues;
+        return false;
     }
 }

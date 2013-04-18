@@ -82,11 +82,11 @@ class Build
 
         // Ensure the following processors are always run:
         if (!isset($this->processor->processors["RPI\Utilities\ContentBuild\Processors\Comments"])) {
-            $this->processor->add(new \RPI\Utilities\ContentBuild\Processors\Comments());
+            $this->processor->add(new \RPI\Utilities\ContentBuild\Processors\Comments($this->project));
         }
         
         if (!isset($this->processor->processors["RPI\Utilities\ContentBuild\Processors\Images"])) {
-            $this->processor->add(new \RPI\Utilities\ContentBuild\Processors\Images());
+            $this->processor->add(new \RPI\Utilities\ContentBuild\Processors\Images($this->project));
         }
         
         foreach ($this->project->builds as $build) {

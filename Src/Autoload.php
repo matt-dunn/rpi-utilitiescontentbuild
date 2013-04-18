@@ -21,10 +21,12 @@ class Autoload
     
     public static function getClassName($classPath)
     {
+        $fullPath = \RPI\Utilities\ContentBuild\Lib\Helpers\FileUtils::realPath($classPath);
+        
         return str_replace(
             ".php",
             "",
-            __NAMESPACE__.substr(str_replace(DIRECTORY_SEPARATOR, "\\", $classPath), strlen(__DIR__))
+            __NAMESPACE__.substr(str_replace(DIRECTORY_SEPARATOR, "\\", $fullPath), strlen(__DIR__))
         );
     }
 

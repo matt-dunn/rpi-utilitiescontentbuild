@@ -11,25 +11,16 @@ namespace RPI\Utilities\ContentBuild\Lib\Model\Processor;
 /**
  * Processor interface
  */
-interface IProcessor
+interface IProcessor extends \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
 {
-    /**
-     * Return processor version
-     * 
-     * @return string
-     */
-    public function getVersion();
-    
     /**
      * Initialise processor
      * 
      * @param \RPI\Utilities\ContentBuild\Lib\Processor $processor
-     * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
      * @param integer $processorIndex
      */
     public function init(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
-        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         $processorIndex
     );
     
@@ -37,7 +28,6 @@ interface IProcessor
      * Pre-process processor
      * 
      * @param \RPI\Utilities\ContentBuild\Lib\Processor $processor
-     * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
      * @param \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver
      * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build
      * @param string $inputFilename
@@ -46,7 +36,6 @@ interface IProcessor
      */
     public function preProcess(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
-        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
@@ -58,14 +47,12 @@ interface IProcessor
      * Run the processor
      * 
      * @param \RPI\Utilities\ContentBuild\Lib\Processor $processor
-     * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
      * @param \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver
      * @param string $inputFilename
      * @param string $buffer
      */
     public function process(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
-        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         $inputFilename,
         $buffer
@@ -75,10 +62,8 @@ interface IProcessor
      * Complete processor
      * 
      * @param \RPI\Utilities\ContentBuild\Lib\Processor $processor
-     * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
      */
     public function complete(
-        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
-        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
+        \RPI\Utilities\ContentBuild\Lib\Processor $processor
     );
 }

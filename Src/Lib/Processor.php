@@ -73,13 +73,12 @@ class Processor extends Object
                     LOG_DEBUG
                 );
                 foreach ($this->project->processors as $processor) {
-                    $instance = new \ReflectionClass($processor->type);
-                    $constructor = $instance->getConstructor();
-                    if (isset($constructor) && count($processor->params) > 0) {
-                        $this->add($instance->newInstanceArgs($processor->params));
-                    } else {
-                        $this->add($instance->newInstance());
+                    $params = array($this->project);
+                    if (isset($processor->params)) {
+                        $params = array_merge($params, $processor->params);
                     }
+                    $instance = new \ReflectionClass($processor->type);
+                    $this->add($instance->newInstanceArgs($params));
                 }
             }
         }
@@ -92,7 +91,7 @@ class Processor extends Object
         $index = 0;
         foreach ($this->getProcessors() as $processor) {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Init '".get_class($processor)."'", LOG_DEBUG);
-            $processor->init($this, $this->project, $index);
+            $processor->init($this, $index);
             $index++;
         }
         
@@ -111,7 +110,6 @@ class Processor extends Object
             if ($build->type == "css") {
                 $buffer = $processor->preProcess(
                     $this,
-                    $this->project,
                     $resolver,
                     $build,
                     $inputFilename,
@@ -119,7 +117,7 @@ class Processor extends Object
                     $buffer
                 );
             
-                $buffer = $processor->process($this, $this->project, $resolver, $inputFilename, $buffer);
+                $buffer = $processor->process($this, $resolver, $inputFilename, $buffer);
             }
         }
         
@@ -133,7 +131,7 @@ class Processor extends Object
     ) {
         foreach ($this->getProcessors() as $processor) {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Process '".get_class($processor)."'", LOG_DEBUG);
-            $buffer = $processor->process($this, $this->project, $resolver, $inputFilename, $buffer);
+            $buffer = $processor->process($this, $resolver, $inputFilename, $buffer);
         }
         
         return $buffer;
@@ -143,7 +141,7 @@ class Processor extends Object
     {
         foreach ($this->getProcessors() as $processor) {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Complete '".get_class($processor)."'", LOG_DEBUG);
-            $processor->complete($this, $this->project);
+            $processor->complete($this);
         }
         
         return $this;

@@ -2,15 +2,8 @@
 
 namespace RPI\Utilities\ContentBuild\Lib\Model\UriResolver;
 
-interface IUriResolver
+interface IUriResolver extends \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
 {
-    /**
-     * Return processor version
-     * 
-     * @return string
-     */
-    public function getVersion();
-    
     /**
      * @return string
      */

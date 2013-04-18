@@ -8,14 +8,25 @@ namespace RPI\Utilities\ContentBuild\Processors;
 
 class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
+    const VERSION = "1.0.6";
+    
+    /**
+     *
+     * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
+     */
+    private $project = null;
+    
     const MAX_SPRITE_WIDTH = 1024;
     const SPRITE_PADDING = 2;
-    const VERSION = "1.0.5";
     
     private $maxSpriteWidth = self::MAX_SPRITE_WIDTH;
 
-    public function __construct($options = null)
-    {
+    public function __construct(
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
+        array $options = null
+    ) {
+        $this->project = $project;
+        
         if (isset($options, $options["maxSpriteWidth"])) {
             $this->maxSpriteWidth = $options["maxSpriteWidth"];
             if (!is_numeric($this->maxSpriteWidth) || $this->maxSpriteWidth < 0 || $this->maxSpriteWidth > 10000) {
@@ -24,14 +35,13 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         }
     }
     
-    public function getVersion()
+    public static function getVersion()
     {
         return "v".self::VERSION;
     }
     
     public function init(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
-        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         $processorIndex
     ) {
         $sprites = $processor->getMetadata("sprites");
@@ -64,7 +74,6 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
     
     public function preProcess(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
-        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
@@ -83,6 +92,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         }
         
         $maxSpriteWidth = $this->maxSpriteWidth;
+        $project = $this->project;
         
         preg_replace_callback(
             "/(#sprite\:\s*url\((.*?)\)\s*;)/sim",
@@ -231,13 +241,13 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
     
     public function process(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
-        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         $inputFilename,
         $buffer
     ) {
         $sprites = $processor->getMetaData("sprites");
         if (isset($sprites)) {
+            $project = $this->project;
             $buffer = preg_replace_callback(
                 "/(#sprite\:\s*url\((.*?)\)\s*;)/sim",
                 function ($matches) use ($inputFilename, $sprites, $project, $resolver) {
@@ -278,8 +288,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
     }
     
     public function complete(
-        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
-        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
+        \RPI\Utilities\ContentBuild\Lib\Processor $processor
     ) {
         
     }
