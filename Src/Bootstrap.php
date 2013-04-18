@@ -10,16 +10,15 @@ require_once __DIR__."/Autoload.php";
 
 \RPI\Utilities\ContentBuild\Lib\Exception\Handler::set("ContentBuild");
 
-$commandClasses = \RPI\Utilities\ContentBuild\Lib\Helpers\FileUtils::find(__DIR__."/Command", "*.php");
-
-$availableCommands = array();
-foreach(array_keys($commandClasses) as $commandClass) {
-    $className = \RPI\Utilities\ContentBuild\Autoload::getClassName($commandClass);
-    $availableCommands[] = new $className();
-}
-
-$commands = new \RPI\Utilities\ContentBuild\Command($availableCommands);
-$options = $commands->parse();
+$commands = new \RPI\Utilities\ContentBuild\Command(
+    array(
+        new \RPI\Utilities\ContentBuild\Command\Help(),
+        new \RPI\Utilities\ContentBuild\Command\Version(),
+        new \RPI\Utilities\ContentBuild\Command\Extensions(),
+        new \RPI\Utilities\ContentBuild\Command\LogLevel(),
+        new \RPI\Utilities\ContentBuild\Command\Config()
+    )
+);$options = $commands->parse();
 
 if ($options !== false && isset($options["configurationFile"])) {
     displayHeader();

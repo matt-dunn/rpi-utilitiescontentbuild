@@ -38,7 +38,7 @@ class Extensions implements \RPI\Utilities\ContentBuild\ICommand
             echo "Processors:\n";
             $this->getDetails(__DIR__."/../Processors");
             
-            echo "URI Resolvers:\n";
+            echo "\nURI Resolvers:\n";
             $this->getDetails(__DIR__."/../UriResolvers");
             return false;
         }
