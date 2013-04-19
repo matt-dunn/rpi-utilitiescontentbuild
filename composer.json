@@ -32,7 +32,7 @@
         }
     },
     "bin": [
-        "bin/contentbuild.phar"
+        "bin/contentbuild"
     ],
     "minimum-stability": "dev"
 }
