@@ -18,7 +18,8 @@ $commands = new \RPI\Utilities\ContentBuild\Command(
         new \RPI\Utilities\ContentBuild\Command\LogLevel(),
         new \RPI\Utilities\ContentBuild\Command\Config()
     )
-);$options = $commands->parse();
+);
+$options = $commands->parse();
 
 if ($options !== false && isset($options["configurationFile"])) {
     displayHeader();

@@ -30,20 +30,20 @@ class Config implements \RPI\Utilities\ContentBuild\ICommand
         return $this->optionDetails["name"];
     }
 
-    public function exec(\Ulrichsg\Getopt $getopt, $value)
+    public function exec(\Ulrichsg\Getopt $getopt, $configurationFile, array $operands)
     {
-        $configurationFile = $value;
-        
-        if (!isset($configurationFile)) {
-            if (file_exists(getcwd()."/"."ui.build.xml")) {
-                $configurationFile = getcwd()."/"."ui.build.xml";
-            }
-        } else {
-            if (!file_exists($configurationFile)) {
-                $configurationFile = getcwd()."/".$configurationFile;
-            }
+        if (!isset($configurationFile) && isset($operands[0])) {
+            $configurationFile = $operands[0];
         }
-
+        
+        if (!file_exists($configurationFile)) {
+            $configurationFile = getcwd()."/"."ui.build.xml";
+        }
+        
+        if (!file_exists($configurationFile)) {
+            $configurationFile = getcwd()."/".$configurationFile;
+        }
+        
         if (!file_exists($configurationFile)) {
             if (isset($configurationFile) && $configurationFile != "") {
                 echo "Configuration file '$configurationFile' not found\n";
@@ -52,7 +52,7 @@ class Config implements \RPI\Utilities\ContentBuild\ICommand
             }
             return false;
         }
-        
-        return array("configurationFile" => $configurationFile);
+
+        return array("configurationFile" => realpath($configurationFile));
     }
 }

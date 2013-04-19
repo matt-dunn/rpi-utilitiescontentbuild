@@ -10,5 +10,5 @@ interface ICommand
     
     public function getOptionName();
     
-    public function exec(\Ulrichsg\Getopt $getopt, $value);
+    public function exec(\Ulrichsg\Getopt $getopt, $value, array $operands);
 }

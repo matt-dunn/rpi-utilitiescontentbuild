@@ -30,7 +30,7 @@ class LogLevel implements \RPI\Utilities\ContentBuild\ICommand
         return $this->optionDetails["name"];
     }
 
-    public function exec(\Ulrichsg\Getopt $getopt, $value)
+    public function exec(\Ulrichsg\Getopt $getopt, $value, array $operands)
     {
         if (isset($value)) {
             \RPI\Utilities\ContentBuild\Lib\Exception\Handler::setLogLevel($value);

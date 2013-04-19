@@ -49,6 +49,7 @@ class Command
             }
 
             $options = $this->getopt->getOptions();
+            $operands = $this->getopt->getOperands();
             $commandValues = array();
 
             foreach ($this->commands as $command) {
@@ -57,7 +58,7 @@ class Command
                     $value = $options[$command->getOptionName()];
                 }
 
-                $ret = $command->exec($this->getopt, $value);
+                $ret = $command->exec($this->getopt, $value, $operands);
                 if ($ret === false) {
                     return false;
                 } elseif (isset($ret)) {

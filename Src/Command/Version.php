@@ -30,7 +30,7 @@ class Version implements \RPI\Utilities\ContentBuild\ICommand
         return $this->optionDetails["name"];
     }
 
-    public function exec(\Ulrichsg\Getopt $getopt, $value)
+    public function exec(\Ulrichsg\Getopt $getopt, $value, array $operands)
     {
         if (isset($value)) {
             echo "ContentBuild v".CONTENT_BUILD_VERSION."\n";
