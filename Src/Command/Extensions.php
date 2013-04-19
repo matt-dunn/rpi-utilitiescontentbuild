@@ -50,7 +50,7 @@ class Extensions implements \RPI\Utilities\ContentBuild\ICommand
         $classes = array_keys($classes);
         asort($classes);
         
-        foreach($classes as $class) {
+        foreach ($classes as $class) {
             $className = \RPI\Utilities\ContentBuild\Autoload::getClassName($class);
             echo "    $className: ".$className::getVersion()."\n";
         }
