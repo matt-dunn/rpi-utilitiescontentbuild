@@ -31,5 +31,8 @@
             "RPI\\Utilities\\ContentBuild": "Src"
         }
     },
+    "bin": [
+        "bin/contentbuild.phar"
+    ],
     "minimum-stability": "dev"
 }
