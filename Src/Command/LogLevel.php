@@ -33,8 +33,13 @@ class LogLevel implements \RPI\Utilities\ContentBuild\ICommand
     public function exec(\Ulrichsg\Getopt $getopt, $value, array $operands)
     {
         if (isset($value)) {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::setLogLevel($value);
-            return array("logLevel" => $value);
+            try {
+                \RPI\Utilities\ContentBuild\Lib\Exception\Handler::setLogLevel($value);
+                return array("logLevel" => $value);
+            } catch (\Exception $ex) {
+                echo $ex->getMessage()."\n";
+                return false;
+            }
         }
     }
 }

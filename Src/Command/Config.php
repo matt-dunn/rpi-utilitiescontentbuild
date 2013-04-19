@@ -35,13 +35,13 @@ class Config implements \RPI\Utilities\ContentBuild\ICommand
         if (!isset($configurationFile) && isset($operands[0])) {
             $configurationFile = $operands[0];
         }
-        
-        if (!file_exists($configurationFile)) {
+
+        if (!isset($configurationFile) || $configurationFile == "") {
             $configurationFile = getcwd()."/"."ui.build.xml";
         }
-        
-        if (!file_exists($configurationFile)) {
-            $configurationFile = getcwd()."/".$configurationFile;
+
+        if (!is_file($configurationFile) && file_exists($configurationFile."/"."ui.build.xml")) {
+            $configurationFile = $configurationFile."/"."ui.build.xml";
         }
         
         if (!file_exists($configurationFile)) {

@@ -167,12 +167,18 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
 
     private function validateConfigurationFile($configurationFile)
     {
-        $doc = new \DOMDocument();
-        $doc->load($configurationFile);
-        if (!\RPI\Utilities\ContentBuild\Lib\Helpers\Dom::validateSchema(
-            $doc,
-            dirname(__FILE__)."/Configuration/Schema.xsd"
-        )) {
+        try {
+            $doc = new \DOMDocument();
+            $doc->load($configurationFile);
+            if (!\RPI\Utilities\ContentBuild\Lib\Helpers\Dom::validateSchema(
+                $doc,
+                dirname(__FILE__)."/Configuration/Schema.xsd"
+            )) {
+                exit(2);
+            }
+        } catch (\Exception $ex) {
+            echo "Invalid config file '$configurationFile'. In addition:\n";
+            echo "{$ex->getMessage()}\n";
             exit(2);
         }
     }
