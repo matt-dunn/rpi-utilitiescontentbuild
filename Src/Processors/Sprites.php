@@ -91,6 +91,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
             $sprites = array();
         }
         
+        $spritePadding = self::SPRITE_PADDING;
         $maxSpriteWidth = $this->maxSpriteWidth;
         $project = $this->project;
         
@@ -105,7 +106,8 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                 $debugSpriteOutputFilename,
                 $maxSpriteWidth,
                 $resolver,
-                $project
+                $project,
+                $spritePadding
                 ) {
                 $spriteFilename = $resolver->realpath($project, $matches[2]);
                 if ($spriteFilename === false) {
@@ -132,7 +134,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                             $previousSprite =
                                 \RPI\Utilities\ContentBuild\Processors\Sprites::findLastIcon($build, $sprites);
                             if ($previousSprite !== false) {
-                                $offsetX = $previousSprite["offsetX"] + $previousSprite["width"] + self::SPRITE_PADDING;
+                                $offsetX = $previousSprite["offsetX"] + $previousSprite["width"] + $spritePadding;
                                 $offsetY = $previousSprite["offsetY"];
                             }
 
@@ -145,9 +147,9 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                                 $outputSpriteWidth = $imageDataSpriteOutput[0];
                                 $outputSpriteHeight = $imageDataSpriteOutput[1]
                                     + $imageDataSprite[1]
-                                    + self::SPRITE_PADDING;
+                                    + $spritePadding;
                                 $offsetX = 0;
-                                $offsetY = $imageDataSpriteOutput[1] + self::SPRITE_PADDING;
+                                $offsetY = $imageDataSpriteOutput[1] + $spritePadding;
                             }
 
                             $imOriginal = imagecreatefrompng($spriteOutputFilename);
