@@ -21,7 +21,7 @@ class Autoload
     
     public static function getClassName($classPath)
     {
-        $fullPath = \RPI\Utilities\ContentBuild\Lib\Helpers\FileUtils::realPath($classPath);
+        $fullPath = \RPI\Framework\Helpers\FileUtils::realPath($classPath);
         
         return str_replace(
             ".php",

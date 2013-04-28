@@ -14,21 +14,24 @@
                     "type": "zip"
                 }
             }
+        },
+        {
+            "type": "composer",
+            "url": "http://packages.red-pixel.co.uk/"
         }
     ],
     "require": {
-        "php": ">=5.3.0"
+        "php": ">=5.3.0",
+        "rpi/framework": "dev-master"
     },
     "require-dev": {
         "ulrichsg/getopt-php": "dev-master",
         "yui/yuicompressor": "2.4.7",
-        "phing/phing": "dev-master",
         "phpunit/phpunit": "3.7.*"
     },
-    "target-dir": "RPI/Utilities/ContentBuild",
     "autoload": {
         "psr-0": {
-            "RPI\\Utilities\\ContentBuild": "Src"
+            "RPI\\Utilities\\ContentBuild": "Src/"
         }
     },
     "bin": [

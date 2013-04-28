@@ -2,7 +2,7 @@
 
 namespace RPI\Utilities\ContentBuild\Lib;
 
-use \RPI\Utilities\ContentBuild\Lib\Helpers\Object;
+use \RPI\Framework\Helpers\Object;
 
 class UriResolver extends Object
 {

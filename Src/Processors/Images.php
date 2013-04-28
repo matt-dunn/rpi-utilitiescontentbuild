@@ -65,7 +65,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
                             "imageUri" => $matches[1]
                         )
                     );
-                    \RPI\Utilities\ContentBuild\Event\Manager::fire($event);
+                    \RPI\Framework\Event\Manager::fire($event);
                     
                     if ($event->getReturnValue() !== true) {
                         \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
@@ -157,7 +157,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
     
     private static function cleanupImages($basePath, $timestamp)
     {
-        $filesSearch = \RPI\Utilities\ContentBuild\Lib\Helpers\FileUtils::find(
+        $filesSearch = \RPI\Framework\Helpers\FileUtils::find(
             $basePath,
             "*.png|*.gif|*.jpg|*.jpeg"
         );

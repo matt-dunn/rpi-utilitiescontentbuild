@@ -46,7 +46,7 @@ class Extensions implements \RPI\Utilities\ContentBuild\ICommand
     
     private function getDetails($basePath)
     {
-        $classes = \RPI\Utilities\ContentBuild\Lib\Helpers\FileUtils::find($basePath, "*.php");
+        $classes = \RPI\Framework\Helpers\FileUtils::find($basePath, "*.php");
         $classes = array_keys($classes);
         asort($classes);
         
