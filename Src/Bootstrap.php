@@ -3,7 +3,6 @@
 require_once __DIR__."/Constants.php";
 require_once __DIR__."/Functions.php";
 
-require_once __DIR__."/../vendor/autoload.php";
 require_once __DIR__."/Autoload.php";
 
 \RPI\Utilities\ContentBuild\Autoload::init();
