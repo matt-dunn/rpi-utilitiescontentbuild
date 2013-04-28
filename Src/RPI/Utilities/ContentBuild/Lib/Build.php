@@ -64,7 +64,7 @@ class Build
             $this->includeDebug = $options["debug-include"];
         }
        
-        $this->yuicompressorLocation = dirname(__FILE__)."/../../vendor/yui/yuicompressor/build/".self::COMPRESSOR_JAR;
+        $this->yuicompressorLocation = __DIR__."/../../../../../vendor/yui/yuicompressor/build/".self::COMPRESSOR_JAR;
         if (!file_exists($this->yuicompressorLocation)) {
             throw new \Exception("Unable to find yuicompressor (".$this->yuicompressorLocation.")");
         }
