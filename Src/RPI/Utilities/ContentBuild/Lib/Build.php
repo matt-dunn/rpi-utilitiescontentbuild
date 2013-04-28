@@ -527,7 +527,7 @@ CONTENT;
             $pharPath = realpath($_SERVER["PHP_SELF"]);
             $bootstrap .= <<<EOT
 Phar::loadPhar("{$pharPath}", "{$pharname}");
-\$GLOBALS["autoloader"] = "phar://{$pharname}/Src/Autoload.php";
+\$GLOBALS["autoloader"] = "phar://{$pharname}/Src/RPI/Utilities/ContentBuild/Autoload.php";
 
 EOT;
         } else {
