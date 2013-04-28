@@ -16,6 +16,7 @@ $commands = new \RPI\Utilities\ContentBuild\Command(
         new \RPI\Utilities\ContentBuild\Command\Version(),
         new \RPI\Utilities\ContentBuild\Command\Extensions(),
         new \RPI\Utilities\ContentBuild\Command\LogLevel(),
+        new \RPI\Utilities\ContentBuild\Command\Options\IncludeDebug(),
         new \RPI\Utilities\ContentBuild\Command\Config()
     )
 );
@@ -30,7 +31,7 @@ if ($options !== false && isset($options["configurationFile"])) {
     
     $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver($project);
 
-    $build = new \RPI\Utilities\ContentBuild\Lib\Build($project, $processor, $resolver);
+    $build = new \RPI\Utilities\ContentBuild\Lib\Build($project, $processor, $resolver, $options);
     
     $build->run();
 }

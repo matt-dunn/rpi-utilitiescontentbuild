@@ -43,15 +43,26 @@ class Build
      */
     private $project = null;
     
+    /**
+     *
+     * @var boolean
+     */
+    private $includeDebug = true;
+    
     public function __construct(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
-        \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver
+        \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
+        array $options = null
     ) {
         $this->project = $project;
         $this->configurationFile = realpath($this->project->configurationFile);
         $this->processor = $processor;
         $this->resolver = $resolver;
+        
+        if (isset($options["debug-include"])) {
+            $this->includeDebug = $options["debug-include"];
+        }
        
         $this->yuicompressorLocation = dirname(__FILE__)."/../../vendor/yui/yuicompressor/build/".self::COMPRESSOR_JAR;
         if (!file_exists($this->yuicompressorLocation)) {
@@ -174,7 +185,7 @@ class Build
             file_put_contents($outputFilename, $buffer, FILE_APPEND);
         }
 
-        if ($project->includeDebug) {
+        if ($this->includeDebug && $project->includeDebug) {
             $parts = pathinfo($outputFilename);
             $debugFilename = $parts["dirname"]."/".$parts["filename"]."-min.".$parts["extension"];
             switch ($build->type) {

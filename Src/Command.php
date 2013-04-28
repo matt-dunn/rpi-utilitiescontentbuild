@@ -69,7 +69,7 @@ class Command
                     }
                 }
             }
-        
+
             return $commandValues;
         }
         
