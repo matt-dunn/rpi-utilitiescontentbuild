@@ -22,7 +22,7 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "rpi/framework": "dev-master"
+        "rpi/foundation": "dev-master"
     },
     "require-dev": {
         "ulrichsg/getopt-php": "dev-master",

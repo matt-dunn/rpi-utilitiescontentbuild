@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "95b78000661bc483facb4b562256de34",
+    "hash": "31e67a1f28f0d7638416c0b3a4428d6c",
     "packages": [
         {
             "name": "psr/log",
@@ -44,12 +44,12 @@
             "time": "2012-12-21 11:40:51"
         },
         {
-            "name": "rpi/framework",
+            "name": "rpi/foundation",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git@git.assembla.com:rpi-framework.git",
-                "reference": "48f1b9b6724de860600b7a3c1cb4f5c6a4eedf06"
+                "url": "git@git.assembla.com:rpi-foundation.git",
+                "reference": "66f5c10196c255963e34b33e887e6793e9df33c0"
             },
             "require": {
                 "ext-apc": "*",
@@ -61,22 +61,19 @@
                 "ext-xml": "*",
                 "ext-xsl": "*",
                 "php": ">=5.3.3",
-                "psr/log": "~1.0",
-                "rpi/jquery": "1.9.*",
-                "rpi/schemas": "dev-master"
+                "psr/log": "~1.0"
             },
             "require-dev": {
                 "firephp/firephp-core": "dev-master",
                 "rpi/test-harness": "dev-master"
             },
             "suggest": {
-                "ext-gd": "May be used by other libraries to manipulate images",
-                "ext-xslcache": "Boost performance of XSL transformations"
+                "ext-gd": "May be used by other libraries to manipulate images"
             },
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "RPI\\Framework": "Src/"
+                    "RPI\\Foundation": "Src/"
                 }
             },
             "license": [
@@ -88,56 +85,9 @@
                     "email": "matt@red-pixel.co.uk"
                 }
             ],
-            "description": "RPI Core Framework",
+            "description": "RPI Core Foundation",
             "homepage": "http://packages.red-pixel.co.uk/",
-            "time": "2013-04-28 17:25:53"
-        },
-        {
-            "name": "rpi/jquery",
-            "version": "1.9.1",
-            "source": {
-                "type": "git",
-                "url": "git@git.assembla.com:rpi-jquery.git",
-                "reference": "1.9.1"
-            },
-            "type": "library",
-            "license": [
-                "MIT"
-            ],
-            "description": "jQuery component",
-            "keywords": [
-                "component",
-                "jquery"
-            ],
-            "time": "2013-04-11 19:24:12"
-        },
-        {
-            "name": "rpi/schemas",
-            "version": "dev-master",
-            "target-dir": "RPI/Schemas",
-            "source": {
-                "type": "git",
-                "url": "git@git.assembla.com:rpi-schemas.git",
-                "reference": "0d33a66b06fdb074f2e6f0988269f8b47af461e7"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "RPI\\Schemas": ""
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Matt Dunn",
-                    "email": "matt@red-pixel.co.uk"
-                }
-            ],
-            "description": "RPI Schemas",
-            "homepage": "http://packages.red-pixel.co.uk/",
-            "time": "2013-04-25 16:25:56"
+            "time": "2013-04-29 12:22:59"
         }
     ],
     "packages-dev": [
@@ -599,7 +549,7 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "rpi/framework": 20,
+        "rpi/foundation": 20,
         "ulrichsg/getopt-php": 20
     },
     "platform": {

@@ -58,9 +58,9 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
 
         $processor->setMetadata("sprites", null);
         
-        \RPI\Framework\Event\Manager::addEventListener(
+        \RPI\Foundation\Event\Manager::addEventListener(
             "RPI\Utilities\ContentBuild\Events\ImageCheckAvailability",
-            function (\RPI\Framework\Event $event, $params) use ($processor) {
+            function (\RPI\Foundation\Event $event, $params) use ($processor) {
                 $sprites = $processor->getMetaData("sprites");
                 foreach ($sprites as $sprite) {
                     if ($sprite["spritePath"] == $params["imageUri"]) {

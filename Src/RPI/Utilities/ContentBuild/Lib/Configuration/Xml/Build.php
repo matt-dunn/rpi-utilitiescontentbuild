@@ -2,7 +2,7 @@
 
 namespace RPI\Utilities\ContentBuild\Lib\Configuration\Xml;
 
-use \RPI\Framework\Helpers\Object;
+use \RPI\Foundation\Helpers\Object;
 
 /**
  * @property-read string $buildDirectory

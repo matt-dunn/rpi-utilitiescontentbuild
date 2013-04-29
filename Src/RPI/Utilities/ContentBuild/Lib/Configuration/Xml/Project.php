@@ -2,7 +2,7 @@
 
 namespace RPI\Utilities\ContentBuild\Lib\Configuration\Xml;
 
-use \RPI\Framework\Helpers\Object;
+use \RPI\Foundation\Helpers\Object;
 
 /**
  * @property-read string $name
@@ -85,7 +85,7 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
         $doc = new \DOMDocument();
         $doc->load($configurationFile);
         
-        $config = \RPI\Framework\Helpers\Dom::deserialize(simplexml_import_dom($doc));
+        $config = \RPI\Foundation\Helpers\Dom::deserialize(simplexml_import_dom($doc));
 
         if (isset($config["@"]["includeDebug"])) {
             $this->includeDebug = $config["@"]["includeDebug"];
@@ -170,7 +170,7 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
         try {
             $doc = new \DOMDocument();
             $doc->load($configurationFile);
-            if (!\RPI\Framework\Helpers\Dom::validateSchema(
+            if (!\RPI\Foundation\Helpers\Dom::validateSchema(
                 $doc,
                 dirname(__FILE__)."/Configuration/Schema.xsd"
             )) {

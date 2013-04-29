@@ -239,7 +239,7 @@ class Build
     
     private function getDependencyFileType($inputFilename)
     {
-        $filesSearch = \RPI\Framework\Helpers\FileUtils::find(
+        $filesSearch = \RPI\Foundation\Helpers\FileUtils::find(
             dirname($inputFilename),
             "*".pathinfo($inputFilename, PATHINFO_FILENAME).".dependencies.*",
             null,

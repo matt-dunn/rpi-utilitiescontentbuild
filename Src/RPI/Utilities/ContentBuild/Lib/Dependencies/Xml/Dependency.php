@@ -2,7 +2,7 @@
 
 namespace RPI\Utilities\ContentBuild\Lib\Dependencies\Xml;
 
-use \RPI\Framework\Helpers\Object;
+use \RPI\Foundation\Helpers\Object;
 
 /**
  * @property-read array $files
@@ -24,7 +24,7 @@ class Dependency extends Object implements \RPI\Utilities\ContentBuild\Lib\Model
         $doc = new \DOMDocument();
         $doc->load($filename);
         
-        $dependencies = \RPI\Framework\Helpers\Dom::deserialize(simplexml_import_dom($doc));
+        $dependencies = \RPI\Foundation\Helpers\Dom::deserialize(simplexml_import_dom($doc));
         
         if (!isset($dependencies["dependency"][0])) {
             $dependencies["dependency"] = array($dependencies["dependency"]);

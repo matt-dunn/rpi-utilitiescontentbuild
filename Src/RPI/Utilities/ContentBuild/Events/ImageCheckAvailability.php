@@ -2,7 +2,7 @@
 
 namespace RPI\Utilities\ContentBuild\Events;
 
-class ImageCheckAvailability implements \RPI\Framework\Event\IEvent
+class ImageCheckAvailability implements \RPI\Foundation\Event\IEvent
 {
     private $parameters = null;
     private $returnValue = null;
