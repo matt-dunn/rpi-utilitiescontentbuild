@@ -30,14 +30,38 @@ class LogLevel implements \RPI\Utilities\ContentBuild\ICommand
         return $this->optionDetails["name"];
     }
 
-    public function exec(\Ulrichsg\Getopt $getopt, $value, array $operands)
-    {
+    public function exec(
+        \Psr\Log\LoggerInterface $logger,
+        \Ulrichsg\Getopt $getopt,
+        $value,
+        array $operands
+    ) {
         if (isset($value)) {
             try {
-                \RPI\Utilities\ContentBuild\Lib\Exception\Handler::setLogLevel($value);
+                $logLevels = array(
+                    array(
+                        \Psr\Log\LogLevel::INFO,
+                        \Psr\Log\LogLevel::ERROR
+                    ),
+                    array(
+                        \Psr\Log\LogLevel::INFO,
+                        \Psr\Log\LogLevel::ERROR,
+                        \Psr\Log\LogLevel::WARNING
+                    ),
+                    array(
+                        \Psr\Log\LogLevel::INFO,
+                        \Psr\Log\LogLevel::ERROR,
+                        \Psr\Log\LogLevel::NOTICE,
+                        \Psr\Log\LogLevel::WARNING
+                    ),
+                    null
+                );
+
+                $logger->setLogLevel($logLevels[$value]);
+                
                 return array("logLevel" => $value);
             } catch (\Exception $ex) {
-                echo $ex->getMessage()."\n";
+                $logger->error("Invalid logging level '$value'");
                 return false;
             }
         }

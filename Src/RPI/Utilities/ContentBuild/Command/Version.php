@@ -30,10 +30,14 @@ class Version implements \RPI\Utilities\ContentBuild\ICommand
         return $this->optionDetails["name"];
     }
 
-    public function exec(\Ulrichsg\Getopt $getopt, $value, array $operands)
-    {
+    public function exec(
+        \Psr\Log\LoggerInterface $logger,
+        \Ulrichsg\Getopt $getopt,
+        $value,
+        array $operands
+    ) {
         if (isset($value)) {
-            echo "ContentBuild v".CONTENT_BUILD_VERSION."\n";
+            $logger->info("ContentBuild v".CONTENT_BUILD_VERSION);
             return false;
         }
     }

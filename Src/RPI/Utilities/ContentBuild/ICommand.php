@@ -10,5 +10,10 @@ interface ICommand
     
     public function getOptionName();
     
-    public function exec(\Ulrichsg\Getopt $getopt, $value, array $operands);
+    public function exec(
+        \Psr\Log\LoggerInterface $logger,
+        \Ulrichsg\Getopt $getopt,
+        $value,
+        array $operands
+    );
 }

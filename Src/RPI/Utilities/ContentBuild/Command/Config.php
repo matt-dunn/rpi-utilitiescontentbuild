@@ -30,8 +30,12 @@ class Config implements \RPI\Utilities\ContentBuild\ICommand
         return $this->optionDetails["name"];
     }
 
-    public function exec(\Ulrichsg\Getopt $getopt, $configurationFile, array $operands)
-    {
+    public function exec(
+        \Psr\Log\LoggerInterface $logger,
+        \Ulrichsg\Getopt $getopt,
+        $configurationFile,
+        array $operands
+    ) {
         if (!isset($configurationFile) && isset($operands[0])) {
             $configurationFile = $operands[0];
         }
@@ -46,9 +50,9 @@ class Config implements \RPI\Utilities\ContentBuild\ICommand
         
         if (!file_exists($configurationFile)) {
             if (isset($configurationFile) && $configurationFile != "") {
-                echo "Configuration file '$configurationFile' not found\n";
+                $logger->error("Configuration file '$configurationFile' not found");
             } else {
-                echo "Configuration file not found\n";
+                $logger->error("Configuration file not found");
             }
             return false;
         }

@@ -49,12 +49,20 @@ class Build
      */
     private $includeDebug = true;
     
+    /**
+     *
+     * @var \Psr\Log\LoggerInterface 
+     */
+    private $logger = null;
+    
     public function __construct(
+        \Psr\Log\LoggerInterface $logger,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         array $options = null
     ) {
+        $this->logger = $logger;
         $this->project = $project;
         $this->configurationFile = realpath($this->project->configurationFile);
         $this->processor = $processor;
@@ -74,15 +82,12 @@ class Build
     {
         $cleanupYuiCompressor = false;
         
-        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::$displayShutdownInformation = true;
-        
-        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-            "Config read from '{$this->configurationFile}'",
-            LOG_INFO
+        $this->logger->info(
+            "Config read from '{$this->configurationFile}'"
         );
                 
         if (\Phar::running() !== "") {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Extracting yuicompressor", LOG_NOTICE);
+            $this->logger->notice("Extracting yuicompressor");
             $tempYuiCompressorLocation = sys_get_temp_dir()."/".self::COMPRESSOR_JAR;
             copy($this->yuicompressorLocation, $tempYuiCompressorLocation);
             $this->yuicompressorLocation = $tempYuiCompressorLocation;
@@ -122,9 +127,8 @@ class Build
         $this->processor->complete();
         
         if ($cleanupYuiCompressor) {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                "Deleting  yuicompressor '{$this->yuicompressorLocation}'",
-                LOG_DEBUG
+            $this->logger->debug(
+                "Deleting  yuicompressor '{$this->yuicompressorLocation}'"
             );
             unlink($this->yuicompressorLocation);
         }
@@ -142,7 +146,7 @@ class Build
 
         $debugPath = $build->debugPath;
         if (isset($debugPath) && !file_exists($debugPath)) {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Creating debug path: ".$debugPath, LOG_DEBUG);
+            $this->logger->debug("Creating debug path: ".$debugPath);
             $oldumask = umask(0);
             mkdir($debugPath, 0755, true);
             umask($oldumask);
@@ -151,23 +155,20 @@ class Build
         $files = $this->buildFiles[$build->name."_".$build->type];
 
         if (count($files) == 0) {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
+            $this->logger->warning(
                 "[".$build->name."] No dependencies found -
-                    check if external dependencies have already loaded all specified resources",
-                LOG_WARNING
+                    check if external dependencies have already loaded all specified resources"
             );
         }
 
         foreach ($files as $file) {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                "Processing: [".$build->name."] ".$file." => ".$outputFilename,
-                LOG_NOTICE
+            $this->logger->notice(
+                "Processing: [".$build->name."] ".$file." => ".$outputFilename
             );
 
             if (!file_exists(pathinfo($outputFilename, PATHINFO_DIRNAME))) {
-                \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                    "creating path: ".pathinfo($outputFilename, PATHINFO_DIRNAME),
-                    LOG_DEBUG
+                $this->logger->debug(
+                    "creating path: ".pathinfo($outputFilename, PATHINFO_DIRNAME)
                 );
                 $oldumask = umask(0);
                 mkdir(pathinfo($outputFilename, PATHINFO_DIRNAME), 0755, true);
@@ -265,9 +266,8 @@ class Build
         if (!self::fileExists($inputFilename)) {
             throw new \Exception("Unable to locate input file '$inputFilename'");
         }
-        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-            "Building dependencies: [".$build->name."] ".$inputFilename,
-            LOG_NOTICE
+        $this->logger->notice(
+            "Building dependencies: [".$build->name."] ".$inputFilename
         );
 
         $type = pathinfo($inputFilename, PATHINFO_EXTENSION);
@@ -286,9 +286,8 @@ class Build
                 dirname($inputFilename)."/".pathinfo($inputFilename, PATHINFO_FILENAME).
                 ".dependencies.".$dependenciesFileType;
             if (file_exists($dependenciesFile)) {
-                \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                    "Found dependencies file: ".$dependenciesFile,
-                    LOG_NOTICE
+                $this->logger->notice(
+                    "Found dependencies file: ".$dependenciesFile
                 );
 
                 if (array_search($inputFilename, $dependentFiles) !== false) {
@@ -311,17 +310,15 @@ class Build
                 
                 $dependency = new $dependencyClassname($dependenciesFile);
 
-                \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                    "Processing ".count($dependency->files)." dependencies",
-                    LOG_DEBUG
+                $this->logger->debug(
+                    "Processing ".count($dependency->files)." dependencies"
                 );
 
                 foreach ($dependency->files as $dependency) {
                     $filename = $this->getInputFileName($project, $build, $dependency["name"], dirname($inputFilename));
                     if (file_exists($filename)) {
-                        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                            "Found dependency '".$filename."' - ".$inputFilename,
-                            LOG_DEBUG
+                        $this->logger->debug(
+                            "Found dependency '".$filename."' - ".$inputFilename
                         );
                         $this->buildFileList($project, $build, $filename, $dependentFiles);
                         
@@ -355,9 +352,8 @@ class Build
                         return false;
                     }
                 } else {
-                    \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                        "[".$build->name."] Unable to locate external dependency '".$names[$i]."' for ".$filename,
-                        LOG_WARNING
+                    $this->logger->warning(
+                        "[".$build->name."] Unable to locate external dependency '".$names[$i]."' for ".$filename
                     );
                 }
             }
@@ -377,9 +373,8 @@ class Build
         $outputFilename,
         $outputPath
     ) {
-        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-            "Creating JavaScript debug code: ".$outputFilename,
-            LOG_DEBUG
+        $this->logger->debug(
+            "Creating JavaScript debug code: ".$outputFilename
         );
         $proxyFileScript = dirname(__FILE__)."/../Scripts/Proxy.js.php";
         if (!file_exists($proxyFileScript)) {
@@ -513,7 +508,7 @@ CONTENT;
         $outputFilename,
         $outputPath
     ) {
-        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Creating CSS debug code: ".$outputFilename, LOG_DEBUG);
+        $this->logger->debug("Creating CSS debug code: ".$outputFilename);
 
         $proxyFileScript = dirname(__FILE__)."/../Scripts/Proxy.css.php";
         if (!file_exists($proxyFileScript)) {
@@ -527,13 +522,13 @@ CONTENT;
             $pharPath = realpath($_SERVER["PHP_SELF"]);
             $bootstrap .= <<<EOT
 Phar::loadPhar("{$pharPath}", "{$pharname}");
-\$GLOBALS["autoloader"] = "phar://{$pharname}/Src/RPI/Utilities/ContentBuild/Autoload.php";
+\$GLOBALS["autoloader"] = "phar://{$pharname}/vendor/autoload.php";
 
 EOT;
         } else {
-            $scriptPath = $outputPath.self::makeRelativePath(__DIR__."/../", $outputPath);
+            $scriptPath = realpath($outputPath.self::makeRelativePath(__DIR__."/../../../../../", $outputPath));
             $bootstrap .= <<<EOT
-\$GLOBALS["autoloader"] = "{$scriptPath}Autoload.php";
+\$GLOBALS["autoloader"] = "{$scriptPath}/vendor/autoload.php";
 
 EOT;
         }
@@ -646,12 +641,12 @@ EOT;
             unlink($outputFilename);
         }
         if (file_exists($filename)) {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Compressing: ".$outputFilename."...", LOG_NOTICE);
+            $this->logger->notice("Compressing: ".$outputFilename."...");
 
             $options = "";
-            if (\RPI\Utilities\ContentBuild\Lib\Exception\Handler::getLogLevel() == LOG_DEBUG) {
-                $options = " --verbose";
-            }
+//            if (\RPI\Utilities\ContentBuild\Lib\Exception\Handler::getLogLevel() == LOG_DEBUG) {
+//                $options = " --verbose";
+//            }
             system(
                 "java -jar ".$this->yuicompressorLocation.$options." --type ".$type." ".
                 $filename." -o ".$outputFilename,
@@ -662,7 +657,7 @@ EOT;
             }
             unlink($filename);
         } else {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Nothing to compress: ".$outputFilename, LOG_DEBUG);
+            $this->logger->debug("Nothing to compress: ".$outputFilename);
         }
     }
     

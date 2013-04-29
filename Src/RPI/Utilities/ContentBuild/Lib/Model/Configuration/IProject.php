@@ -48,4 +48,10 @@ interface IProject
      * @return \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IResolver[]
      */
     public function getResolvers();
+    
+    /**
+     * 
+     * @return \Psr\Log\LoggerInterface
+     */
+    public function getLogger();
 }

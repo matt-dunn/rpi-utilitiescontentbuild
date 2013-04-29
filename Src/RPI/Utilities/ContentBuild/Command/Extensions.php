@@ -30,29 +30,45 @@ class Extensions implements \RPI\Utilities\ContentBuild\ICommand
         return $this->optionDetails["name"];
     }
 
-    public function exec(\Ulrichsg\Getopt $getopt, $value, array $operands)
-    {
+    public function exec(
+        \Psr\Log\LoggerInterface $logger,
+        \Ulrichsg\Getopt $getopt,
+        $value,
+        array $operands
+    ) {
         if (isset($value)) {
-            displayHeader();
+            displayHeader($logger);
 
-            echo "Processors:\n";
-            $this->getDetails(__DIR__."/../Processors");
+            $logger->info("Processors:");
+            $this->getDetails($logger, __DIR__."/../Processors");
             
-            echo "\nURI Resolvers:\n";
-            $this->getDetails(__DIR__."/../UriResolvers");
+            $logger->info("Resolvers:");
+            $this->getDetails($logger, __DIR__."/../UriResolvers");
             return false;
         }
     }
     
-    private function getDetails($basePath)
+    private function getDetails(\Psr\Log\LoggerInterface $logger, $basePath)
     {
         $classes = \RPI\Foundation\Helpers\FileUtils::find($basePath, "*.php");
         $classes = array_keys($classes);
         asort($classes);
         
         foreach ($classes as $class) {
-            $className = \RPI\Utilities\ContentBuild\Autoload::getClassName($class);
-            echo "    $className: ".$className::getVersion()."\n";
+            $className = self::getClassName($class);
+            $logger->info("    $className: ".$className::getVersion());
         }
+    }
+    
+    private static function getClassName($classPath)
+    {
+        $fullPath = \RPI\Foundation\Helpers\FileUtils::realPath($classPath);
+        $basePath = \RPI\Foundation\Helpers\FileUtils::realPath(__DIR__."/../../../../");
+        
+        return str_replace(
+            ".php",
+            "",
+            substr(str_replace(DIRECTORY_SEPARATOR, "\\", $fullPath), strlen($basePath))
+        );
     }
 }

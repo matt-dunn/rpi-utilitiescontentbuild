@@ -30,8 +30,17 @@ class Processor extends Object
      */
     private $metadata = null;
     
-    public function __construct(\RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project)
-    {
+    /**
+     *
+     * @var \Psr\Log\LoggerInterface 
+     */
+    private $logger = null;
+    
+    public function __construct(
+        \Psr\Log\LoggerInterface $logger,
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
+    ) {
+        $this->logger = $logger;
         $this->project = $project;
         
         $this->metadataFilename = dirname($project->configurationFile)."/.metadata";
@@ -50,9 +59,8 @@ class Processor extends Object
         }
         
         $this->processors[get_class($processor)] = $processor;
-        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-            "Creating '".get_class($processor)."' ({$processor->getVersion()})",
-            LOG_INFO
+        $this->logger->info(
+            "Creating '".get_class($processor)."' ({$processor->getVersion()})"
         );
         
         return $this;
@@ -68,9 +76,8 @@ class Processor extends Object
             $this->processors = array();
             
             if (isset($this->project->processors)) {
-                \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                    "Reading processors from configuration'",
-                    LOG_DEBUG
+                $this->logger->debug(
+                    "Reading processors from configuration '{$this->project->configurationFile}'"
                 );
                 foreach ($this->project->processors as $processor) {
                     $params = array($this->project);
@@ -90,7 +97,7 @@ class Processor extends Object
     {
         $index = 0;
         foreach ($this->getProcessors() as $processor) {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Init '".get_class($processor)."'", LOG_DEBUG);
+            $this->logger->debug("Init '".get_class($processor)."'");
             $processor->init($this, $index);
             $index++;
         }
@@ -106,7 +113,7 @@ class Processor extends Object
         $buffer
     ) {
         foreach ($this->getProcessors() as $processor) {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Preprocess '".get_class($processor)."'", LOG_DEBUG);
+            $this->logger->debug("Preprocess '".get_class($processor)."'");
             if ($build->type == "css") {
                 $buffer = $processor->preProcess(
                     $this,
@@ -130,7 +137,7 @@ class Processor extends Object
         $buffer
     ) {
         foreach ($this->getProcessors() as $processor) {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Process '".get_class($processor)."'", LOG_DEBUG);
+            $this->logger->debug("Process '".get_class($processor)."'");
             $buffer = $processor->process($this, $resolver, $inputFilename, $buffer);
         }
         
@@ -140,7 +147,7 @@ class Processor extends Object
     public function complete()
     {
         foreach ($this->getProcessors() as $processor) {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Complete '".get_class($processor)."'", LOG_DEBUG);
+            $this->logger->debug("Complete '".get_class($processor)."'");
             $processor->complete($this);
         }
         

@@ -30,10 +30,14 @@ class Help implements \RPI\Utilities\ContentBuild\ICommand
         return $this->optionDetails["name"];
     }
 
-    public function exec(\Ulrichsg\Getopt $getopt, $value, array $operands)
-    {
+    public function exec(
+        \Psr\Log\LoggerInterface $logger,
+        \Ulrichsg\Getopt $getopt,
+        $value,
+        array $operands
+    ) {
         if (isset($value)) {
-            displayHeader();
+            displayHeader($logger);
             $getopt->showHelp();
             return false;
         }

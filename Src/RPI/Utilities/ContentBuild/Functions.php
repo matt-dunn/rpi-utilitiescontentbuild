@@ -1,6 +1,6 @@
 <?php
 
-function displayHeader()
+function displayHeader(\Psr\Log\LoggerInterface $logger)
 {
     $header = <<<EOT
        ___         _           _   ___      _ _    _ 
@@ -11,6 +11,6 @@ function displayHeader()
 
 EOT;
 
-    echo $header;
-    echo "v".CONTENT_BUILD_VERSION."\n\n";
+    $logger->info($header);
+    $logger->info("v".CONTENT_BUILD_VERSION);
 }

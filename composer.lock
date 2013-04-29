@@ -49,7 +49,7 @@
             "source": {
                 "type": "git",
                 "url": "git@git.assembla.com:rpi-foundation.git",
-                "reference": "66f5c10196c255963e34b33e887e6793e9df33c0"
+                "reference": "062c369113dff2ba1cad51ba38115f1821c571b3"
             },
             "require": {
                 "ext-apc": "*",
@@ -87,7 +87,7 @@
             ],
             "description": "RPI Core Foundation",
             "homepage": "http://packages.red-pixel.co.uk/",
-            "time": "2013-04-29 12:22:59"
+            "time": "2013-04-29 18:23:05"
         }
     ],
     "packages-dev": [

@@ -68,16 +68,24 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
      */
     private $includeDebug = true;
     
-    public function __construct($configurationFile)
-    {
+    /**
+     *
+     * @var \Psr\Log\LoggerInterface 
+     */
+    private $logger = null;
+    
+    public function __construct(
+        \Psr\Log\LoggerInterface $logger,
+        $configurationFile
+    ) {
         if (!file_exists($configurationFile)) {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                "Unable to locate configuration file '{$configurationFile}'",
-                LOG_ERR
+            $this->logger->error(
+                "Unable to locate configuration file '{$configurationFile}'"
             );
             exit(2);
         }
         
+        $this->logger = $logger;
         $this->configurationFile = $configurationFile;
 
         $this->validateConfigurationFile($configurationFile);
@@ -177,8 +185,7 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
                 exit(2);
             }
         } catch (\Exception $ex) {
-            echo "Invalid config file '$configurationFile'. In addition:\n";
-            echo "{$ex->getMessage()}\n";
+            $this->logger->error("Invalid config file '$configurationFile'", array("exception" => $ex));
             exit(2);
         }
     }
@@ -262,5 +269,14 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
     public function getIncludeDebug()
     {
         return $this->includeDebug;
+    }
+    
+    /**
+     * 
+     * @return \Psr\Log\LoggerInterface
+     */
+    public function getLogger()
+    {
+        return $this->logger;
     }
 }

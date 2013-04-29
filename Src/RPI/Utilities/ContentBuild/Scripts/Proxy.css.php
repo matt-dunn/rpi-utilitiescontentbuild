@@ -21,16 +21,26 @@ if (isset($GLOBALS["configuration-file"])) {
         }
         
         require_once $GLOBALS["autoloader"];
+        
+        $logger = new \RPI\Foundation\App\Logger(
+            new \RPI\Foundation\App\Logger\Handler\Syslog()
+        );
 
-        \RPI\Utilities\ContentBuild\Autoload::init();
+        $logger->setLogLevel(
+            array(
+                \Psr\Log\LogLevel::CRITICAL,
+                \Psr\Log\LogLevel::ERROR,
+                \Psr\Log\LogLevel::WARNING
+            )
+        );
 
-        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::set("ContentBuild");
+        new \RPI\Foundation\Exception\Handler($logger);
 
-        $project = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Project($GLOBALS["configuration-file"]);
+        $project = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Project($logger, $GLOBALS["configuration-file"]);
 
-        $processor = new \RPI\Utilities\ContentBuild\Lib\Processor($project);
+        $processor = new \RPI\Utilities\ContentBuild\Lib\Processor($logger, $project);
 
-        $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver($project);
+        $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver($logger, $project);
         
         echo $processor->process($resolver, $file, file_get_contents($file));
     } catch (\Exception $ex) {

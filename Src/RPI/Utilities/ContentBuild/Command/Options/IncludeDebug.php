@@ -30,11 +30,15 @@ class IncludeDebug implements \RPI\Utilities\ContentBuild\ICommand
         return $this->optionDetails["name"];
     }
 
-    public function exec(\Ulrichsg\Getopt $getopt, $value, array $operands)
-    {
+    public function exec(
+        \Psr\Log\LoggerInterface $logger,
+        \Ulrichsg\Getopt $getopt,
+        $value,
+        array $operands
+    ) {
         if (isset($value)) {
             if (!is_numeric($value) || ($value != 0 && $value != 1)) {
-                echo "Invalid value '$value'. Must be 0 or 1.\n";
+                $logger->error("Invalid value '$value'. Must be 0 or 1.\n");
                 return false;
             }
             

@@ -114,15 +114,13 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                     $spriteFilename = realpath(dirname($inputFilename)."/".$matches[2]);
                 }
                 if (!file_exists($spriteFilename)) {
-                    \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                        "Unable to locate sprite image '{$matches[2]}' in '$inputFilename'",
-                        LOG_ERR
+                    $project->getLogger()->error(
+                        "Unable to locate sprite image '{$matches[2]}' in '$inputFilename'"
                     );
                 } else {
                     if (!isset($sprites[$spriteFilename])) {
-                        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                            "Creating Sprite image ' $spriteFilename'",
-                            LOG_DEBUG
+                        $project->getLogger()->debug(
+                            "Creating Sprite image ' $spriteFilename'"
                         );
                         $imageDataSprite = getimagesize($spriteFilename);
 
@@ -213,9 +211,8 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                             imagedestroy($im);
                             imagedestroy($im2);
                         } else {
-                            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                                "Unable to create image ' $spriteFilename'",
-                                LOG_ERR
+                            $project->getLogger()->error(
+                                "Unable to create image ' $spriteFilename'"
                             );
                         }
 
@@ -274,9 +271,8 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                         return "background:url({$spriteData["spritePath"]}) no-repeat {$offsetX}px {$offsetY}px;".
                             "width:{$spriteData["width"]}px;height:{$spriteData["height"]}px;content:'';";
                     } else {
-                        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                            "Unable to locate sprite image '{$matches[2]}' in '$inputFilename'",
-                            LOG_ERR
+                        $project->getLogger()->error(
+                            "Unable to locate sprite image '{$matches[2]}' in '$inputFilename'"
                         );
                     }
 

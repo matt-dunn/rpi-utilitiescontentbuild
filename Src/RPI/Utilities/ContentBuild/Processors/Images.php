@@ -53,10 +53,11 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
     ) {
         $files = $this->imageFiles;
         $debugPath = $build->debugPath;
+        $project = $this->project;
         
         preg_replace_callback(
             "/url\((.*?)\)/sim",
-            function ($matches) use ($inputFilename, &$files, $outputFilename, $debugPath) {
+            function ($matches) use ($project, $inputFilename, &$files, $outputFilename, $debugPath) {
                 $imageUrl = realpath(dirname($inputFilename)."/".$matches[1]);
                 if ($imageUrl === false) {
                     $event = new \RPI\Utilities\ContentBuild\Events\ImageCheckAvailability(
@@ -68,9 +69,8 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
                     \RPI\Foundation\Event\Manager::fire($event);
                     
                     if ($event->getReturnValue() !== true) {
-                        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                            "Unable to locate image '{$matches[1]}' in '$inputFilename'",
-                            LOG_ERR
+                        $project->getLogger()->error(
+                            "Unable to locate image '{$matches[1]}' in '$inputFilename'"
                         );
                     }
                 } else {
@@ -105,8 +105,8 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         \RPI\Utilities\ContentBuild\Lib\Processor $processor
     ) {
         if (count($this->imageFiles) > 0) {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Copying images", LOG_DEBUG);
-            self::copyCSSImageFiles($this->imageFiles);
+            $this->project->getLogger()->debug("Copying images");
+            $this->copyCSSImageFiles($this->imageFiles);
         }
 
         $basePaths = array();
@@ -122,40 +122,39 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         if (count($basePaths) > 0) {
             $basePaths = array_keys($basePaths);
             foreach ($basePaths as $basePath) {
-                \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Cleaning images in '$basePath'", LOG_DEBUG);
-                self::cleanupImages($basePath, $this->timestamp);
+                $this->project->getLogger()->debug("Cleaning images in '$basePath'");
+                $this->cleanupImages($basePath, $this->timestamp);
             }
         }
     }
     
     
-    private static function copyCSSImageFiles(array $files)
+    private function copyCSSImageFiles(array $files)
     {
         foreach ($files as $fileDetails) {
-            self::copyCSSImageFile($fileDetails["sourceFile"], $fileDetails["destinationFile"]);
+            $this->copyCSSImageFile($fileDetails["sourceFile"], $fileDetails["destinationFile"]);
             if (isset($fileDetails["destinationFileDebug"])) {
-                self::copyCSSImageFile($fileDetails["sourceFile"], $fileDetails["destinationFileDebug"]);
+                $this->copyCSSImageFile($fileDetails["sourceFile"], $fileDetails["destinationFileDebug"]);
             }
         }
     }
     
-    private static function copyCSSImageFile($sourceImageFile, $destImageFile)
+    private function copyCSSImageFile($sourceImageFile, $destImageFile)
     {
         if (!file_exists(dirname($destImageFile))) {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Creating image path: ".$destImageFile, LOG_DEBUG);
+            $this->project->getLogger()->debug("Creating image path: ".$destImageFile);
             $oldumask = umask(0);
             mkdir(dirname($destImageFile), 0755, true);
             umask($oldumask);
         }
 
-        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-            "Copying '$sourceImageFile' to '$destImageFile'",
-            LOG_NOTICE
+        $this->project->getLogger()->notice(
+            "Copying '$sourceImageFile' to '$destImageFile'"
         );
         copy($sourceImageFile, $destImageFile);
     }
     
-    private static function cleanupImages($basePath, $timestamp)
+    private function cleanupImages($basePath, $timestamp)
     {
         $filesSearch = \RPI\Foundation\Helpers\FileUtils::find(
             $basePath,
@@ -165,9 +164,8 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         
         foreach ($existingFiles as $existingFile) {
             if (filemtime($existingFile) < $timestamp) {
-                \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                    "Deleting unused file '$existingFile'",
-                    LOG_INFO
+                $this->project->getLogger()->info(
+                    "Deleting unused file '$existingFile'"
                 );
                 unlink($existingFile);
             }

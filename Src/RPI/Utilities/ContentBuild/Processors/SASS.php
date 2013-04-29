@@ -56,7 +56,7 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
         $buffer
     ) {
         if (pathinfo($inputFilename, PATHINFO_EXTENSION) == "scss") {
-            \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log("Compiling SASS '$inputFilename'", LOG_INFO);
+            $this->project->getLogger()->info("Compiling SASS '$inputFilename'");
             
             $cachepath = dirname($this->project->configurationFile)."/.sass-cache";
             self::runSass("--update $inputFilename --cache-location $cachepath");
@@ -108,12 +108,14 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
                     );
             }
         } elseif (isset($output) && $sendNonErrorOutput) {
-            $logLevel = LOG_INFO;
             if ($ret !== 0) {
-                $logLevel = LOG_ERR;
-            }
-            foreach ($output as $line) {
-                \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log($line, $logLevel);
+                foreach ($output as $line) {
+                    $this->project->getLogger()->error($line);
+                }
+            } else {
+                foreach ($output as $line) {
+                    $this->project->getLogger()->info($line);
+                }
             }
         }
         

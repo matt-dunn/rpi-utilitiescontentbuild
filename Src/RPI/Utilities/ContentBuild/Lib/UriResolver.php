@@ -18,8 +18,17 @@ class UriResolver extends Object
      */
     private $project = null;
     
-    public function __construct(\RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project)
-    {
+    /**
+     *
+     * @var \Psr\Log\LoggerInterface 
+     */
+    private $logger = null;
+    
+    public function __construct(
+        \Psr\Log\LoggerInterface $logger,
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
+    ) {
+        $this->logger = $logger;
         $this->project = $project;
     }
     
@@ -36,9 +45,8 @@ class UriResolver extends Object
         }
         
         $this->resolvers[get_class($resolver)] = $resolver;
-        \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-            "Creating '".get_class($resolver)."' ({$resolver->getVersion()})",
-            LOG_INFO
+        $this->logger->info(
+            "Creating '".get_class($resolver)."' ({$resolver->getVersion()})"
         );
         
         return $this;
@@ -54,9 +62,8 @@ class UriResolver extends Object
             $this->resolvers = array();
             
             if (isset($this->project->resolvers)) {
-                \RPI\Utilities\ContentBuild\Lib\Exception\Handler::log(
-                    "Reading resolvers from configuration'",
-                    LOG_DEBUG
+                $this->logger->debug(
+                    "Reading resolvers from configuration '{$this->project->configurationFile}'"
                 );
                 foreach ($this->project->resolvers as $resolver) {
                     $params = array($this->project);

@@ -19,11 +19,21 @@ class Command
     private $getopt = null;
     
     /**
+     *
+     * @var \Psr\Log\LoggerInterface 
+     */
+    private $logger = null;
+    
+    /**
      * 
+     * @param \Psr\Log\LoggerInterface $logger
      * @param \RPI\Utilities\ContentBuild\ICommand[] $commands
      */
-    public function __construct(array $commands)
-    {
+    public function __construct(
+        \Psr\Log\LoggerInterface $logger,
+        array $commands
+    ) {
+        $this->logger = $logger;
         $this->commands = $commands;
         
         if (count($this->commands) > 0) {
@@ -42,8 +52,8 @@ class Command
             try {
                 $this->getopt->parse();
             } catch (\UnexpectedValueException $ex) {
-                displayHeader();
-                echo $ex->getMessage()."\r\n";
+                displayHeader($this->logger);
+                $this->logger->error($ex->getMessage());
                 $this->getopt->showHelp();
                 exit(1);
             }
@@ -58,7 +68,7 @@ class Command
                     $value = $options[$command->getOptionName()];
                 }
 
-                $ret = $command->exec($this->getopt, $value, $operands);
+                $ret = $command->exec($this->logger, $this->getopt, $value, $operands);
                 if ($ret === false) {
                     return false;
                 } elseif (isset($ret)) {
