@@ -4,7 +4,7 @@ namespace RPI\Utilities\ContentBuild\Command;
 
 use Ulrichsg\Getopt;
 
-class Help implements \RPI\Utilities\ContentBuild\ICommand
+class Help implements \RPI\Console\ICommand
 {
     private $optionDetails = null;
     

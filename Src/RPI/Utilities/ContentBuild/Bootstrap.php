@@ -6,8 +6,8 @@ require_once __DIR__."/Functions.php";
 require_once __DIR__."/../../../../vendor/autoload.php";
 
 $logger = new \RPI\Foundation\App\Logger(
-    new \RPI\Utilities\ContentBuild\Lib\Logger\Handler\Stdout(),
-    new \RPI\Utilities\ContentBuild\Lib\Logger\Formatter\Console()
+    new \RPI\Console\Logger\Handler\Stdout(),
+    new \RPI\Console\Logger\Formatter\Console()
 );
 
 $logger->setLogLevel(
@@ -19,7 +19,7 @@ $logger->setLogLevel(
 
 new \RPI\Foundation\Exception\Handler($logger);
 
-$commands = new \RPI\Utilities\ContentBuild\Command(
+$commands = new \RPI\Console\Command(
     $logger,
     array(
         new \RPI\Utilities\ContentBuild\Command\Version(),

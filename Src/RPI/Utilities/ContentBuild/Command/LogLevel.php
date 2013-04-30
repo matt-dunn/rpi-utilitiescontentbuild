@@ -4,7 +4,7 @@ namespace RPI\Utilities\ContentBuild\Command;
 
 use Ulrichsg\Getopt;
 
-class LogLevel implements \RPI\Utilities\ContentBuild\ICommand
+class LogLevel implements \RPI\Console\ICommand
 {
     private $optionDetails = null;
     

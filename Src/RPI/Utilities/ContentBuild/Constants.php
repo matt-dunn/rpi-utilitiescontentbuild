@@ -1,3 +1,3 @@
 <?php
 
-const CONTENT_BUILD_VERSION = "1.3.17";
+const CONTENT_BUILD_VERSION = "1.3.18";

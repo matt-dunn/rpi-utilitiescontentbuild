@@ -4,7 +4,7 @@ namespace RPI\Utilities\ContentBuild\Command;
 
 use Ulrichsg\Getopt;
 
-class Config implements \RPI\Utilities\ContentBuild\ICommand
+class Config implements \RPI\Console\ICommand
 {
     private $optionDetails = null;
     
