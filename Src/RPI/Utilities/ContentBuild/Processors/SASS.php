@@ -21,12 +21,16 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
     
     public static function getVersion()
     {
-        $output = self::runSass("-v", false);
-        $sassVersion = "Unable to get SASS version information";
-        if (isset($output)) {
-            $sassVersion = $output[0];
-        }
-        return "v".self::VERSION." - ".$sassVersion;
+        try {
+            $output = self::runSass("-v", false);
+            $sassVersion = "Unable to get SASS version information";
+            if (isset($output)) {
+                $sassVersion = $output[0];
+            }
+            return "v".self::VERSION." - ".$sassVersion;
+        } catch (\RPI\Utilities\ContentBuild\Processors\SASS\Exceptions\NotInstalled $ex) {
+            return "SASS not installed. Try 'sudo gem install sass'";
+        } 
     }
     
     public function init(
@@ -87,7 +91,7 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
         $ret = null;
 
         exec(
-            "sass $command",
+            "sass $command 2>&1 1> /dev/stdout",
             $output,
             $ret
         );
@@ -98,11 +102,13 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
                     throw new \Exception("Permission problems running SASS");
                     break;
                 case 127:
-                    throw new \Exception("SASS not installed or cannot be found. Check installation of SASS.");
+                    throw new \RPI\Utilities\ContentBuild\Processors\SASS\Exceptions\NotInstalled(
+                        "SASS not installed or cannot be found. Check installation of SASS."
+                    );
                     break;
                 default:
                     throw new \Exception(
-                        "There was a problem compiling SASS '$inputFilename'. ".
+                        "There was a problem compiling SASS '$command'. ".
                         "Could be a write permission problem. Returned '$ret' and output:".
                         print_r($output, true)
                     );
