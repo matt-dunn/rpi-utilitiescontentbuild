@@ -50,7 +50,7 @@ class Extensions implements \RPI\Console\ICommand
     
     private function getDetails(\Psr\Log\LoggerInterface $logger, $basePath)
     {
-        $classes = \RPI\Foundation\Helpers\FileUtils::find($basePath, "*.php");
+        $classes = \RPI\Foundation\Helpers\FileUtils::find($basePath, "*.php", null, false);
         $classes = array_keys($classes);
         asort($classes);
         
