@@ -237,11 +237,11 @@ class Empir extends CLI_Interface {
             } else {
                 $pharPhpOptions .= " -dphar.require_hash=0";
             }
-            
+
             $copyrightYear = date("Y");
             
             $stub = <<<EOT
-#!/usr/bin/env php{$pharPhpOptions}\n<?php
+#!/usr/bin/env php{$pharPhpOptions}\r\n<?php
 /*
  * (c) {$copyrightYear} RPI
  */
