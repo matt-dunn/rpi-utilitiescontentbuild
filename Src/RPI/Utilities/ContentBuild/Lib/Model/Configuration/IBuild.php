@@ -2,6 +2,19 @@
 
 namespace RPI\Utilities\ContentBuild\Lib\Model\Configuration;
 
+/**
+ * @property-read string $buildDirectory
+ * @property-read array $files
+ * @property-read string $name
+ * @property-read string $outputDirectory
+ * @property-read string $outputFilename
+ * @property-read string $externalDependenciesNames
+ * @property-read string $type
+ * @property-read string $version
+ * @property-read string $target
+ * @property-read string $media
+ * @property-read string $debugPath
+ */
 interface IBuild
 {
     /**
@@ -43,6 +56,16 @@ interface IBuild
      * @return string
      */
     public function getExternalDependenciesNames();
+    
+    /**
+     * @return string
+     */
+    public function getMedia();
+    
+    /**
+     * @return string
+     */
+    public function getTarget();
     
     /**
      * @return string

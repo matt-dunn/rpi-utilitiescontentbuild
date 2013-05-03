@@ -5,7 +5,7 @@ namespace RPI\Utilities\ContentBuild\Lib;
 class Build
 {
     const COMPRESSOR_JAR = "yuicompressor-2.4.7.jar";
-    CONST MAX_CSS_IMPORTS = 30;
+    const MAX_CSS_IMPORTS = 30;
     
     /**
      *
@@ -114,14 +114,14 @@ class Build
         foreach ($this->project->builds as $build) {
             $outputFilename =
                 $this->project->basePath."/".
-                $build->outputDirectory.
+                $this->project->appRoot."/".$build->outputDirectory.
                 $this->project->prefix.".".
                 $build->version."-".
                 $this->project->name."-".
                 $build->name.".".
                 $build->type;
             
-            $this->processBuild($this->project, $build, $outputFilename, $build->outputDirectory);
+            $this->processBuild($this->project, $build, $outputFilename);
         }
         
         $this->processor->complete();
@@ -137,8 +137,7 @@ class Build
     private function processBuild(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
-        $outputFilename,
-        $outputDirectory
+        $outputFilename
     ) {
         if (is_file($outputFilename)) {
             unlink($outputFilename);
@@ -186,6 +185,15 @@ class Build
             file_put_contents($outputFilename, $buffer, FILE_APPEND);
         }
 
+        $this->writeIncludeFile(
+            $build,
+            dirname($outputFilename),
+            self::makeRelativePath(
+                dirname($outputFilename),
+                realpath($this->webroot)
+            )."/".pathinfo($outputFilename, PATHINFO_FILENAME)."-min.".pathinfo($outputFilename, PATHINFO_EXTENSION)
+        );
+        
         if ($this->includeDebug && $project->includeDebug) {
             $parts = pathinfo($outputFilename);
             $debugFilename = $parts["dirname"]."/".$parts["filename"]."-min.".$parts["extension"];
@@ -197,8 +205,17 @@ class Build
                     $this->writeDebugFileJs($project, $build, $files, $debugFilename, $debugPath);
                     break;
             }
+            
+            $this->writeIncludeFile(
+                $build,
+                $build->debugPath,
+                self::makeRelativePath(
+                    $build->debugPath,
+                    realpath($this->webroot)
+                )."/".pathinfo($outputFilename, PATHINFO_FILENAME)."-min.".pathinfo($outputFilename, PATHINFO_EXTENSION)
+            );
         }
-
+        
         $parts = pathinfo($outputFilename);
         if (!isset($build->outputFilename)) {
             $outputMiniFilename = $parts["dirname"]."/".$parts["filename"]."-min.".$parts["extension"];
@@ -206,6 +223,46 @@ class Build
             $outputMiniFilename = $parts["dirname"]."/".$build->outputFilename;
         }
         $this->miniFile($outputFilename, $build->type, $outputMiniFilename);
+    }
+    
+    private function writeIncludeFile(
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
+        $outputPath,
+        $fileSource
+    ) {
+        static $processedPaths = array();
+        
+        $target = $build->target;
+        if (!isset($target)) {
+            $target = "head-all";
+        }
+        
+        $outputFilename = $outputPath."/$target.html";
+        
+        if (!isset($processedPaths[$outputFilename]) && file_exists($outputFilename)) {
+            unlink($outputFilename);
+        }
+        
+        $html = null;
+        if ($build->type == "css") {
+            $media = "";
+            if (isset($build->media)) {
+                $media = " media=\"{$build->media}\"";
+            }
+            
+            $html = <<<EOT
+<link rel="stylesheet" type="text/css" href="{$fileSource}"{$media} />\r\n
+EOT;
+        } elseif ($build->type == "js") {
+            $html = <<<EOT
+<script type="text/javascript" src="{$fileSource}"> </script>\r\n
+EOT;
+        }
+        
+        if (isset($html)) {
+            file_put_contents($outputFilename, $html, FILE_APPEND);
+            $processedPaths[$outputFilename] = true;
+        }
     }
     
     private function buildDependencies(
@@ -234,6 +291,10 @@ class Build
         $realpath = $this->resolver->realpath($project, $file);
         if ($realpath === false) {
             $realpath = realpath((isset($basePath) ? $basePath : $project->basePath)."/".$build->buildDirectory.$file);
+        }
+        
+        if (!self::fileExists($realpath)) {
+            throw new \Exception("Unable to locate input file '$file'");
         }
         return $realpath;
     }

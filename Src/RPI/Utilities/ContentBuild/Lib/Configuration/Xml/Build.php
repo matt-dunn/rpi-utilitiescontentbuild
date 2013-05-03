@@ -7,10 +7,15 @@ use \RPI\Foundation\Helpers\Object;
 /**
  * @property-read string $buildDirectory
  * @property-read array $files
- * @property-read $name $buildDirectory
- * @property-read $outputDirectory $buildDirectory
- * @property-read $type $buildDirectory
- * @property-read $version $buildDirectory
+ * @property-read string $name
+ * @property-read string $outputDirectory
+ * @property-read string $outputFilename
+ * @property-read string $externalDependenciesNames
+ * @property-read string $type
+ * @property-read string $version
+ * @property-read string $target
+ * @property-read string $media
+ * @property-read string $debugPath
  */
 class Build extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild
 {
@@ -66,6 +71,18 @@ class Build extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Conf
      *
      * @var string
      */
+    private $target = null;
+    
+    /**
+     *
+     * @var string
+     */
+    private $media = null;
+    
+    /**
+     *
+     * @var string
+     */
     private $debugPath = null;
     
     public function __construct(
@@ -93,9 +110,15 @@ class Build extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Conf
         if (isset($buildDetails["@"]["externalDependenciesNames"])) {
             $this->externalDependenciesNames = $buildDetails["@"]["externalDependenciesNames"];
         }
+        if (isset($buildDetails["@"]["target"])) {
+            $this->target = $buildDetails["@"]["target"];
+        }
+        if (isset($buildDetails["@"]["media"])) {
+            $this->media = $buildDetails["@"]["media"];
+        }
         
         if ($project->includeDebug) {
-            $outputPath = $project->basePath."/".$this->outputDirectory;
+            $outputPath = $project->basePath."/".$project->appRoot."/".$this->outputDirectory;
 
             if (substr($outputPath, strlen($outputPath) - 1, 1) == "/") {
                 $outputPath = substr($outputPath, 0, strlen($outputPath) - 1);
@@ -186,6 +209,25 @@ class Build extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Conf
     {
         return $this->externalDependenciesNames;
     }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getMedia()
+    {
+        return $this->media;
+    }
+
 
     /**
      * 
