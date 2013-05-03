@@ -10,7 +10,6 @@ namespace RPI\Utilities\ContentBuild\Lib\Model\Configuration;
  * @property-read string $outputFilename
  * @property-read string $externalDependenciesNames
  * @property-read string $type
- * @property-read string $version
  * @property-read string $target
  * @property-read string $media
  * @property-read string $debugPath
@@ -36,11 +35,6 @@ interface IBuild
      * @return string
      */
     public function getType();
-    
-    /**
-     * @return string
-     */
-    public function getVersion();
     
     /**
      * @return string

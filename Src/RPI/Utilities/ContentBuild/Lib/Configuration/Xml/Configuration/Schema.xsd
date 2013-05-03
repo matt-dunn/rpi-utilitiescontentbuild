@@ -78,7 +78,6 @@
 			<xs:attribute name="name" use="required" type="xs:normalizedString"/>
 			<xs:attribute name="outputDirectory" use="optional" type="xs:normalizedString"/>
 			<xs:attribute name="type" use="required" type="RPI:contentType"/>
-			<xs:attribute name="version" use="required" type="xs:normalizedString"/>
             
 			<xs:attribute name="media" use="optional" type="xs:normalizedString"/>
 			<xs:attribute name="target" use="optional" type="xs:normalizedString"/>

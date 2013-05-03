@@ -12,7 +12,6 @@ use \RPI\Foundation\Helpers\Object;
  * @property-read string $outputFilename
  * @property-read string $externalDependenciesNames
  * @property-read string $type
- * @property-read string $version
  * @property-read string $target
  * @property-read string $media
  * @property-read string $debugPath
@@ -65,12 +64,6 @@ class Build extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Conf
      *
      * @var string
      */
-    private $version = null;
-    
-    /**
-     *
-     * @var string
-     */
     private $target = null;
     
     /**
@@ -91,9 +84,6 @@ class Build extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Conf
     ) {
         if (isset($buildDetails["@"]["name"])) {
             $this->name = $buildDetails["@"]["name"];
-        }
-        if (isset($buildDetails["@"]["version"])) {
-            $this->version = $buildDetails["@"]["version"];
         }
         if (isset($buildDetails["@"]["type"])) {
             $this->type = $buildDetails["@"]["type"];
@@ -181,15 +171,6 @@ class Build extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Conf
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * 
-     * @return string
-     */
-    public function getVersion()
-    {
-        return $this->version;
     }
 
     /**

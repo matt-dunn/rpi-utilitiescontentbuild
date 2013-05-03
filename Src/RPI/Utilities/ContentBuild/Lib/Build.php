@@ -116,7 +116,6 @@ class Build
                 $this->project->basePath."/".
                 $this->project->appRoot."/".$build->outputDirectory.
                 $this->project->prefix.".".
-                $build->version."-".
                 $this->project->name."-".
                 $build->name.".".
                 $build->type;
@@ -191,7 +190,8 @@ class Build
             self::makeRelativePath(
                 dirname($outputFilename),
                 realpath($this->webroot)
-            )."/".pathinfo($outputFilename, PATHINFO_FILENAME)."-min.".pathinfo($outputFilename, PATHINFO_EXTENSION)
+            )."/".pathinfo($outputFilename, PATHINFO_FILENAME)."-min.".pathinfo($outputFilename, PATHINFO_EXTENSION),
+            $outputFilename
         );
         
         if ($this->includeDebug && $project->includeDebug) {
@@ -228,19 +228,24 @@ class Build
     private function writeIncludeFile(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $outputPath,
-        $fileSource
+        $fileSource,
+        $outputFilename = null
     ) {
         static $processedPaths = array();
-        
+
         $target = $build->target;
         if (!isset($target)) {
             $target = "head-all";
         }
         
-        $outputFilename = $outputPath."/$target.html";
+        $outputTargetFilename = $outputPath."/$target.html";
         
-        if (!isset($processedPaths[$outputFilename]) && file_exists($outputFilename)) {
-            unlink($outputFilename);
+        if (!isset($processedPaths[$outputTargetFilename]) && file_exists($outputTargetFilename)) {
+            unlink($outputTargetFilename);
+        }
+ 
+        if (isset($outputFilename)) {
+            $fileSource .= "?".hash_file("md5", $outputFilename);
         }
         
         $html = null;
@@ -260,8 +265,8 @@ EOT;
         }
         
         if (isset($html)) {
-            file_put_contents($outputFilename, $html, FILE_APPEND);
-            $processedPaths[$outputFilename] = true;
+            file_put_contents($outputTargetFilename, $html, FILE_APPEND);
+            $processedPaths[$outputTargetFilename] = true;
         }
     }
     
