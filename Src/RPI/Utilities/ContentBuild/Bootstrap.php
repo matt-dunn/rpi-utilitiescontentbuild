@@ -3,7 +3,13 @@
 require_once __DIR__."/Constants.php";
 require_once __DIR__."/Functions.php";
 
-require_once __DIR__."/../../../../vendor/autoload.php";
+if (file_exists(__DIR__."/../../../../../../autoload.php")) {
+    // Global autoload
+    require_once __DIR__."/../../../../../../autoload.php";
+} else {
+    // Local package autoload
+    require_once __DIR__."/../../../../vendor/autoload.php";
+}
 
 $logger = new \RPI\Foundation\App\Logger(
     new \RPI\Console\Logger\Handler\Stdout(),
