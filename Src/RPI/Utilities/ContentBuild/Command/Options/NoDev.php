@@ -4,18 +4,18 @@ namespace RPI\Utilities\ContentBuild\Command\Options;
 
 use Ulrichsg\Getopt;
 
-class IncludeDebug implements \RPI\Console\ICommand
+class NoDev implements \RPI\Console\ICommand
 {
     private $optionDetails = null;
     
     public function __construct()
     {
         $this->optionDetails = array(
-            "name" => "debug-include",
+            "name" => "no-dev",
             "option" => array(
-                "d",
-                "debug-include",
-                Getopt::REQUIRED_ARGUMENT, "Include debug information - 0 or 1"
+                null,
+                "no-dev",
+                Getopt::NO_ARGUMENT, "Do not generate any debug code"
             )
         );
     }
@@ -42,7 +42,7 @@ class IncludeDebug implements \RPI\Console\ICommand
                 return false;
             }
             
-            return array("debug-include" => ($value == 1));
+            return array("debug-include" => ($value != 1));
         }
     }
 }

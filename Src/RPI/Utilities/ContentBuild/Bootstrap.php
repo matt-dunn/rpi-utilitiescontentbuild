@@ -32,7 +32,7 @@ $commands = new \RPI\Console\Command(
         new \RPI\Utilities\ContentBuild\Command\LogLevel(),
         new \RPI\Utilities\ContentBuild\Command\Help(),
         new \RPI\Utilities\ContentBuild\Command\Extensions(),
-        new \RPI\Utilities\ContentBuild\Command\Options\IncludeDebug(),
+        new \RPI\Utilities\ContentBuild\Command\Options\NoDev(),
         new \RPI\Utilities\ContentBuild\Command\Config()
     )
 );

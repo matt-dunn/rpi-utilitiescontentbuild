@@ -22,7 +22,6 @@
 			<xs:attribute name="appRoot" use="required" type="xs:normalizedString"/>
 			<xs:attribute name="name" use="required" type="xs:normalizedString"/>
 			<xs:attribute name="prefix" use="required" type="xs:normalizedString"/>
-			<xs:attribute name="includeDebug" use="optional" type="xs:boolean"/>
 			<xs:attribute name="basePath" use="optional" type="xs:normalizedString"/>
 		</xs:complexType>
 	</xs:element>
