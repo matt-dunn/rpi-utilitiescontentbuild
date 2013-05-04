@@ -12,8 +12,8 @@ if (parse_url($_GET["f"], PHP_URL_SCHEME) == "http") {
 }
 
 if (isset($GLOBALS["configuration-file"])) {
-//    $seg = sem_get("12131313121");
-//    sem_acquire($seg);
+    //$seg = sem_get("12131313121");
+    //sem_acquire($seg);
 
     try {
         if (!file_exists($GLOBALS["autoloader"])) {
@@ -36,7 +36,10 @@ if (isset($GLOBALS["configuration-file"])) {
 
         new \RPI\Foundation\Exception\Handler($logger);
 
-        $project = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Project($logger, $GLOBALS["configuration-file"]);
+        $project = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Project(
+            $logger,
+            $GLOBALS["configuration-file"]
+        );
 
         $processor = new \RPI\Utilities\ContentBuild\Lib\Processor($logger, $project);
 
@@ -49,7 +52,7 @@ if (isset($GLOBALS["configuration-file"])) {
         closelog();
     }
 
-//    sem_release($seg);
+    //sem_release($seg);
 } else {
     echo file_get_contents($file);
 }
