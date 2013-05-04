@@ -96,15 +96,6 @@ class Build
         
         $this->webroot = realpath($this->project->basePath."/".$this->project->appRoot);
 
-        // Ensure the following processors are always run:
-        if (!isset($this->processor->processors["RPI\Utilities\ContentBuild\Processors\Comments"])) {
-            $this->processor->add(new \RPI\Utilities\ContentBuild\Processors\Comments($this->project));
-        }
-        
-        if (!isset($this->processor->processors["RPI\Utilities\ContentBuild\Processors\Images"])) {
-            $this->processor->add(new \RPI\Utilities\ContentBuild\Processors\Images($this->project));
-        }
-        
         foreach ($this->project->builds as $build) {
             $this->buildDependencies($this->project, $build);
         }
@@ -240,6 +231,10 @@ class Build
         
         $outputTargetFilename = $outputPath."/$target.html";
         
+        $this->logger->debug(
+            "Generating include file '$outputTargetFilename'"
+        );
+            
         if (!isset($processedPaths[$outputTargetFilename]) && file_exists($outputTargetFilename)) {
             unlink($outputTargetFilename);
         }
@@ -709,19 +704,27 @@ EOT;
         if (file_exists($filename)) {
             $this->logger->notice("Compressing: ".$outputFilename."...");
 
-            $options = "";
-//            if (\RPI\Utilities\ContentBuild\Lib\Exception\Handler::getLogLevel() == LOG_DEBUG) {
-//                $options = " --verbose";
-//            }
-            system(
+            $options = "  --verbose";
+            
+            $output = null;
+            $ret = null;
+            
+            exec(
                 "java -jar ".$this->yuicompressorLocation.$options." --type ".$type." ".
-                $filename." -o ".$outputFilename,
+                $filename." -o ".$outputFilename." 2>&1 1> /dev/stdout",
+                $output,
                 $ret
             );
-            if ($ret != 0) {
-                throw new \Exception("ERROR COMPRESSING FILE (returned $ret): ".$filename);
-            }
+            
             unlink($filename);
+            
+            if ($ret != 0) {
+                throw new \Exception(
+                    "ERROR COMPRESSING FILE (returned $ret): ".$filename.". In addition: ".implode("\r\n    ", $output)
+                );
+            } elseif (isset($output) && count($output) > 0) {
+                $this->logger->debug("YUI Compressor returned this for '$filename': ".implode("\r\n    ", $output));
+            }
         } else {
             $this->logger->debug("Nothing to compress: ".$outputFilename);
         }
@@ -758,7 +761,7 @@ EOT;
         }
     }
     
-    private static function makeRelativePath($referencePath, $actualPath)
+    public static function makeRelativePath($referencePath, $actualPath)
     {
         $ref = explode("/", str_replace("\\", "/", $referencePath));
         $act = explode("/", str_replace("\\", "/", $actualPath));
