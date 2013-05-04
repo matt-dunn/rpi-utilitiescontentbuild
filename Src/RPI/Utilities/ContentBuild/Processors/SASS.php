@@ -30,7 +30,7 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
             return "v".self::VERSION." - ".$sassVersion;
         } catch (\RPI\Utilities\ContentBuild\Processors\SASS\Exceptions\NotInstalled $ex) {
             return "SASS not installed. Try 'sudo gem install sass'";
-        } 
+        }
     }
     
     public function init(

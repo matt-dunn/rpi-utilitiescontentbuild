@@ -291,9 +291,6 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         
     }
     
-    
-    
-    
     public static function findLastIcon($build, array $sprites)
     {
         $sprites = array_reverse($sprites);
