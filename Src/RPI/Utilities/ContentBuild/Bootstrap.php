@@ -23,7 +23,7 @@ $logger->setLogLevel(
     )
 );
 
-new \RPI\Foundation\Exception\Handler($logger);
+new \RPI\Console\Exception\Handler($logger);
 
 $commands = new \RPI\Console\Command(
     $logger,
