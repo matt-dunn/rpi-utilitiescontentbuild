@@ -49,7 +49,7 @@
             "source": {
                 "type": "git",
                 "url": "git@git.assembla.com:rpi-console.git",
-                "reference": "6cf86fb02a00f97a5929d125c08171b708457649"
+                "reference": "216d2628dd1a46757e00fd109af07036337a88e3"
             },
             "require": {
                 "php": ">=5.3.0",
@@ -69,7 +69,7 @@
                 "proprietary"
             ],
             "description": "CSS/JS Content Builder",
-            "time": "2013-04-30 19:14:15"
+            "time": "2013-05-04 15:09:23"
         },
         {
             "name": "rpi/foundation",
@@ -77,7 +77,7 @@
             "source": {
                 "type": "git",
                 "url": "git@git.assembla.com:rpi-foundation.git",
-                "reference": "322862d34f45d400c487d8c5a86c1cbf336995f1"
+                "reference": "590e074c78648a0b18b3d8f91f6e3cee5e7ae030"
             },
             "require": {
                 "ext-apc": "*",
@@ -115,7 +115,7 @@
             ],
             "description": "RPI Core Foundation",
             "homepage": "http://packages.red-pixel.co.uk/",
-            "time": "2013-05-04 12:53:07"
+            "time": "2013-05-04 15:09:59"
         },
         {
             "name": "ulrichsg/getopt-php",
