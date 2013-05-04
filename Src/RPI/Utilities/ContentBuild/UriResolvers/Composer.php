@@ -61,15 +61,51 @@ class Composer implements \RPI\Utilities\ContentBuild\Lib\Model\UriResolver\IUri
         $uri
     ) {
         $pathParts = parse_url($uri);
-        if (isset($pathParts["scheme"], $pathParts["host"], $pathParts["path"])
-            && $pathParts["scheme"] == $this->getScheme()) {
+        if (isset($pathParts["scheme"], $pathParts["host"], $pathParts["path"])) {
             $package = $pathParts["host"].$pathParts["path"];
             $fragment = $pathParts["fragment"];
+            
             return realpath(
                 $this->vendorPath.DIRECTORY_SEPARATOR.
                 $package.DIRECTORY_SEPARATOR.
                 $fragment
             );
+        }
+        
+        return false;
+    }
+    
+    public function getRelativePath(
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
+        $uri
+    ) {
+        $pathParts = parse_url($uri);
+        if (isset($pathParts["fragment"])) {
+            $relativePath = $pathParts["fragment"];
+            if (isset($pathParts["scheme"], $pathParts["host"], $pathParts["path"])) {
+                $package = $pathParts["host"].$pathParts["path"];
+                $packagePath = $this->vendorPath.DIRECTORY_SEPARATOR.$package;
+                $packageDetails = "$packagePath/composer.json";
+
+                if (file_exists($packageDetails)) {
+                    $details = json_decode(file_get_contents($packageDetails), true);
+                    if (isset($details["autoload"], $details["autoload"]["psr-0"])) {
+                        $codePath = ltrim(
+                            rtrim(
+                                reset($details["autoload"]["psr-0"]),
+                                DIRECTORY_SEPARATOR
+                            ),
+                            DIRECTORY_SEPARATOR
+                        ).DIRECTORY_SEPARATOR;
+
+                        if (substr($relativePath, 0, strlen($codePath)) == $codePath) {
+                            $relativePath = substr($relativePath, strlen($codePath));
+                        }
+                    }
+                }
+            }
+            
+            return $relativePath;
         }
         
         return false;
