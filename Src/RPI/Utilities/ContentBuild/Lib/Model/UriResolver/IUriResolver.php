@@ -20,4 +20,16 @@ interface IUriResolver extends \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         $uri
     );
+    
+    /**
+     * 
+     * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
+     * @param string $uri
+     * 
+     * @return boolean|string
+     */
+    public function getRelativePath(
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
+        $uri
+    );
 }

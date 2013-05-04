@@ -86,9 +86,32 @@ class UriResolver extends Object
         $scheme = parse_url($uri, PHP_URL_SCHEME);
         if ($scheme != "") {
             foreach ($this->getResolvers() as $resolver) {
-                $realpath = $resolver->realpath($project, $uri);
-                if ($realpath !== false) {
-                    return $realpath;
+                if ($resolver->getScheme() == $scheme) {
+                    $realpath = $resolver->realpath($project, $uri);
+                    if ($realpath !== false) {
+                        return $realpath;
+                    }
+                }
+            }
+
+            throw new \Exception("Unable to resolve path '$uri'");
+        }
+        
+        return false;
+    }
+    
+    public function getRelativePath(
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
+        $uri
+    ) {
+        $scheme = parse_url($uri, PHP_URL_SCHEME);
+        if ($scheme != "") {
+            foreach ($this->getResolvers() as $resolver) {
+                if ($resolver->getScheme() == $scheme) {
+                    $relativePath = $resolver->getRelativePath($project, $uri);
+                    if ($relativePath !== false) {
+                        return $relativePath;
+                    }
                 }
             }
 
