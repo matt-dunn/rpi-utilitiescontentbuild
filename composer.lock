@@ -49,7 +49,7 @@
             "source": {
                 "type": "git",
                 "url": "git@git.assembla.com:rpi-console.git",
-                "reference": "216d2628dd1a46757e00fd109af07036337a88e3"
+                "reference": "52bcc19685348a80ffd4981fca361477eaea84dd"
             },
             "require": {
                 "php": ">=5.3.0",
@@ -69,7 +69,7 @@
                 "proprietary"
             ],
             "description": "CSS/JS Content Builder",
-            "time": "2013-05-04 15:09:23"
+            "time": "2013-05-04 18:06:19"
         },
         {
             "name": "rpi/foundation",
