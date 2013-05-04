@@ -4,7 +4,7 @@ namespace RPI\Utilities\ContentBuild\Processors;
 
 class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
-    const VERSION = "1.0.9";
+    const VERSION = "1.0.10";
 
     /**
      *
@@ -40,6 +40,10 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         $processorIndex
     ) {
+        if ($processorIndex != count($processor->getProcessors()) - 1) {
+            throw new \Exception("Processor '".__CLASS__."' must be configured as the last processor");
+        }
+        
         $this->timestamp = microtime(true) - 1;
     }
     
@@ -55,34 +59,57 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         $debugPath = $build->debugPath;
         $project = $this->project;
         
-        preg_replace_callback(
+        $buffer = preg_replace_callback(
             "/url\((.*?)\)/sim",
-            function ($matches) use ($project, $inputFilename, &$files, $outputFilename, $debugPath) {
-                $imageUrl = realpath(dirname($inputFilename)."/".$matches[1]);
+            function ($matches) use ($resolver, $project, $inputFilename, &$files, $outputFilename, $debugPath) {
+                $imageMatch = $matches[1];
+            
+                $resolvedPath = $imageUrl = $resolver->realpath($project, $imageMatch);
+                if ($imageUrl === false) {
+                    $imageUrl = realpath(dirname($inputFilename)."/".$imageMatch);
+                }
+
                 if ($imageUrl === false) {
                     $event = new \RPI\Utilities\ContentBuild\Events\ImageCheckAvailability(
                         array(
-                            "imageLocation" => dirname($inputFilename)."/".$matches[1],
-                            "imageUri" => $matches[1]
+                            "imageLocation" => dirname($inputFilename)."/".$imageMatch,
+                            "imageUri" => $imageMatch
                         )
                     );
                     \RPI\Foundation\Event\Manager::fire($event);
                     
                     if ($event->getReturnValue() !== true) {
                         $project->getLogger()->error(
-                            "Unable to locate image '{$matches[1]}' in '$inputFilename'"
+                            "Unable to locate image '{$imageMatch}' in '$inputFilename'"
                         );
                     }
                 } else {
-                    $files[$imageUrl] = array(
-                        "imagePath" => $matches[1],
-                        "sourceDocument" => $inputFilename,
-                        "sourceFile" => $imageUrl,
-                        "destinationFile" => dirname($outputFilename)."/".str_replace("../", "", $matches[1]),
-                        "destinationFileDebug" =>
-                            (isset($debugPath) ? $debugPath."/".str_replace("../", "", $matches[1]) : null)
-                    );
+                    if ($resolvedPath !== false) {
+                        $imagePath = $resolver->getRelativePath($project, $imageMatch);
+                        
+                        $files[$imageUrl] = array(
+                            "imagePath" => $imageMatch,
+                            "sourceDocument" => $inputFilename,
+                            "sourceFile" => $imageUrl,
+                            "destinationFile" => dirname($outputFilename)."/".$imagePath,
+                            "destinationFileDebug" =>
+                                (isset($debugPath) ? $debugPath."/".$imagePath : null)
+                        );
+                        
+                        $imageMatch = $imagePath;
+                    } else {
+                        $files[$imageUrl] = array(
+                            "imagePath" => $imageMatch,
+                            "sourceDocument" => $inputFilename,
+                            "sourceFile" => $imageUrl,
+                            "destinationFile" => dirname($outputFilename)."/".str_replace("../", "", $imageMatch),
+                            "destinationFileDebug" =>
+                                (isset($debugPath) ? $debugPath."/".str_replace("../", "", $imageMatch) : null)
+                        );
+                    }
                 }
+                
+                return "url($imageMatch)";
             },
             $buffer
         );
@@ -98,7 +125,22 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         $inputFilename,
         $buffer
     ) {
-        return $buffer;
+        $project = $this->project;
+        
+        return preg_replace_callback(
+            "/url\((.*?)\)/sim",
+            function ($matches) use ($resolver, $project) {
+                $imageMatch = $matches[1];
+                
+                $imageUrl = $resolver->realpath($project, $imageMatch);
+                if ($imageUrl !== false) {
+                    $imageMatch = $resolver->getRelativePath($project, $imageMatch);
+                }
+                
+                return "url($imageMatch)";
+            },
+            $buffer
+        );
     }
     
     public function complete(
@@ -112,7 +154,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         $basePaths = array();
         foreach ($this->project->builds as $build) {
             if ($build->type == "css") {
-                $basePaths[$this->project->basePath."/".$build->outputDirectory] = true;
+                $basePaths[$this->project->basePath."/".$this->project->appRoot."/".$build->outputDirectory] = true;
                 if ($this->project->includeDebug) {
                     $basePaths[$build->debugPath."/"] = true;
                 }
@@ -124,6 +166,8 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
             foreach ($basePaths as $basePath) {
                 $this->project->getLogger()->debug("Cleaning images in '$basePath'");
                 $this->cleanupImages($basePath, $this->timestamp);
+                $this->project->getLogger()->debug("Removing empty directories in '$basePath'");
+                \RPI\Foundation\Helpers\FileUtils::removeEmptySubfolders($basePath);
             }
         }
     }
