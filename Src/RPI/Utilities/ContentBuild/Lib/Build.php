@@ -293,6 +293,10 @@ EOT;
             $realpath = realpath((isset($basePath) ? $basePath : $project->basePath)."/".$build->buildDirectory.$file);
         }
         
+        if ($realpath === false) {
+            $realpath = $file;
+        }
+        
         if (!self::fileExists($realpath)) {
             throw new \Exception("Unable to locate input file '$file'");
         }

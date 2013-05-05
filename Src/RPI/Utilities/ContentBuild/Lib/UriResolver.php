@@ -93,8 +93,6 @@ class UriResolver extends Object
                     }
                 }
             }
-
-            throw new \Exception("Unable to resolve path '$uri'");
         }
         
         return false;
@@ -114,8 +112,6 @@ class UriResolver extends Object
                     }
                 }
             }
-
-            throw new \Exception("Unable to resolve path '$uri'");
         }
         
         return false;
