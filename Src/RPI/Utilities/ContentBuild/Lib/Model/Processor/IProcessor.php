@@ -14,6 +14,16 @@ namespace RPI\Utilities\ContentBuild\Lib\Model\Processor;
 interface IProcessor extends \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
 {
     /**
+     * 
+     * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
+     * @param array $options
+     */
+    public function __construct(
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
+        array $options = null
+    );
+    
+    /**
      * Initialise processor
      * 
      * @param \RPI\Utilities\ContentBuild\Lib\Processor $processor

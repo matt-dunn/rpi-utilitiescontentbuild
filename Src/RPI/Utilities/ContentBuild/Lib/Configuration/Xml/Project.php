@@ -73,10 +73,17 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
      * @var \Psr\Log\LoggerInterface 
      */
     private $logger = null;
-    
+
+    /**
+     * 
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param string $configurationFile
+     * @param array $options
+     */
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
-        $configurationFile
+        $configurationFile,
+        array $options = null
     ) {
         if (!file_exists($configurationFile)) {
             $this->logger->error(
@@ -95,8 +102,8 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
         
         $config = \RPI\Foundation\Helpers\Dom::deserialize(simplexml_import_dom($doc));
 
-        if (isset($config["@"]["includeDebug"])) {
-            $this->includeDebug = $config["@"]["includeDebug"];
+        if (isset($options["debug-include"])) {
+            $this->includeDebug = $options["debug-include"];
         }
         if (isset($config["@"]["name"])) {
             $this->name = $config["@"]["name"];
