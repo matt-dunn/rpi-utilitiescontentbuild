@@ -29,7 +29,8 @@ class Compressor implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
         array $options = null
     ) {
         $this->project = $project;
-        $this->yuicompressorLocation = __DIR__."/../../../../../vendor/yui/yuicompressor/build/yuicompressor-".self::VERSION.".jar";
+        $this->yuicompressorLocation =
+            __DIR__."/../../../../../vendor/yui/yuicompressor/build/yuicompressor-".self::VERSION.".jar";
     }
     
     public function __destruct()
@@ -55,7 +56,7 @@ class Compressor implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
         
         if (\Phar::running() !== "" && !$this->hasExtractedComptessor) {
             $this->project->getLogger()->notice("Extracting yuicompressor");
-            $tempYuiCompressorLocation = sys_get_temp_dir()."/".self::COMPRESSOR_JAR;
+            $tempYuiCompressorLocation = sys_get_temp_dir()."/".basename($this->yuicompressorLocation);
             copy($this->yuicompressorLocation, $tempYuiCompressorLocation);
             $this->yuicompressorLocation = $tempYuiCompressorLocation;
             $this->hasExtractedComptessor = true;
@@ -87,7 +88,9 @@ class Compressor implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
                     "ERROR COMPRESSING FILE (returned $ret): ".$filename.". In addition: ".implode("\r\n    ", $output)
                 );
             } elseif (isset($output) && count($output) > 0) {
-                $this->project->getLogger()->debug("YUI Compressor returned this for '$filename': ".implode("\r\n    ", $output));
+                $this->project->getLogger()->debug(
+                    "YUI Compressor returned this for '$filename': ".implode("\r\n    ", $output)
+                );
             }
         } else {
             $this->project->getLogger()->debug("Nothing to compress: ".$outputFilename);
