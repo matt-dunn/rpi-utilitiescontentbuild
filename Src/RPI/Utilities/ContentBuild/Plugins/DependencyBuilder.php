@@ -4,19 +4,13 @@ namespace RPI\Utilities\ContentBuild\Plugins;
 
 class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
 {
-    const VERSION = "2.0.1";
+    const VERSION = "2.0.2";
     
     /**
      *
      * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
      */
     private $project = null;
-    
-    /**
-     *
-     * @var array
-     */
-    private $buildFiles = array();
     
     public function __construct(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
@@ -37,23 +31,27 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
     public function build(
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver
     ) {
-        $this->buildFiles = array();
+        $buildFiles = array();
         
         foreach ($this->project->builds as $build) {
             if (isset($build->files)) {
                 foreach ($build->files as $file) {
                     $dependentFiles = array();
-                    $this->buildFileList(
-                        $build,
-                        $resolver,
-                        $this->getInputFileName($build, $resolver, $file),
-                        $dependentFiles
+                    $buildFiles = array_merge(
+                        $buildFiles,
+                        $this->buildFileList(
+                            $build,
+                            $resolver,
+                            $this->getInputFileName($build, $resolver, $file),
+                            $dependentFiles,
+                            $buildFiles
+                        )
                     );
                 }
             }
         }
         
-        return $this->buildFiles;
+        return $buildFiles;
     }
     
     private function getInputFileName(
@@ -103,7 +101,8 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         $inputFilename,
-        $dependentFiles
+        $dependentFiles,
+        array $buildFiles = array()
     ) {
         if (!\RPI\Foundation\Helpers\FileUtils::exists($inputFilename)) {
             throw new \Exception("Unable to locate input file '$inputFilename'");
@@ -117,10 +116,6 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
             $type = $build->type;
         }
         $buildType = $build->name."_".$type;
-
-        if (!isset($this->buildFiles[$buildType])) {
-            $this->buildFiles[$buildType] = Array();
-        }
 
         $dependenciesFileType = $this->getDependencyFileType($inputFilename);
         if (isset($dependenciesFileType)) {
@@ -167,7 +162,6 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
                         $this->project->getLogger()->debug(
                             "Found dependency '".$filename."' - ".$inputFilename
                         );
-                        $this->buildFileList($build, $resolver, $filename, $dependentFiles);
                         
                         $buildTypeDependency = null;
                         if (isset($dependency["type"])) {
@@ -176,7 +170,18 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
                             $buildTypeDependency = $build->name."_".pathinfo($filename, PATHINFO_EXTENSION);
                         }
                         
-                        $this->addUniqueFileToList($build, $filename, $buildTypeDependency);
+                        $buildFiles = array_merge(
+                            $buildFiles,
+                            $this->addUniqueFileToList(
+                                $build,
+                                $filename,
+                                $buildTypeDependency,
+                                array_merge(
+                                    $buildFiles,
+                                    $this->buildFileList($build, $resolver, $filename, $dependentFiles, $buildFiles)
+                                )
+                            )
+                        );
                     } else {
                         throw new \Exception(
                             "Cannot find file '$filename' in '$dependenciesFile'"
@@ -186,17 +191,17 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
             }
         }
 
-        $this->addUniqueFileToList($build, $inputFilename, $buildType);
+        return $this->addUniqueFileToList($build, $inputFilename, $buildType, $buildFiles);
     }
     
-    private function addUniqueFileToList($build, $filename, $buildType)
+    private function addUniqueFileToList($build, $filename, $buildType, array $buildFiles)
     {
         if (isset($build->externalDependenciesNames)) {
             $names = explode(",", $build->externalDependenciesNames);
             for ($i = 0; $i < count($names); $i++) {
-                if (isset($this->buildFiles[$names[$i]."_".$build->type])) {
-                    if (array_search($filename, $this->buildFiles[$names[$i]."_".$build->type]) !== false) {
-                        return false;
+                if (isset($buildFiles[$names[$i]."_".$build->type])) {
+                    if (array_search($filename, $buildFiles[$names[$i]."_".$build->type]) !== false) {
+                        return $buildFiles;
                     }
                 } else {
                     $this->project->getLogger()->warning(
@@ -206,10 +211,14 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
             }
         }
 
-        if (array_search($filename, $this->buildFiles[$buildType]) === false) {
-            array_push($this->buildFiles[$buildType], $filename);
-
-            return true;
+        if (!isset($buildFiles[$buildType])) {
+            $buildFiles[$buildType] = array();
         }
+
+        if (array_search($filename, $buildFiles[$buildType]) === false) {
+            array_push($buildFiles[$buildType], $filename);
+        }
+        
+        return $buildFiles;
     }
 }
