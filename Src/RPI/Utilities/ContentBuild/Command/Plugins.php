@@ -4,18 +4,18 @@ namespace RPI\Utilities\ContentBuild\Command;
 
 use Ulrichsg\Getopt;
 
-class Extensions implements \RPI\Console\ICommand
+class Plugins implements \RPI\Console\ICommand
 {
     private $optionDetails = null;
     
     public function __construct()
     {
         $this->optionDetails = array(
-            "name" => "extensions",
+            "name" => "plugins",
             "option" => array(
-                "x",
-                "extensions",
-                Getopt::NO_ARGUMENT, "Display a list of all available extensions"
+                "p",
+                "plugins",
+                Getopt::NO_ARGUMENT, "Display a list of all available plugins"
             )
         );
     }
@@ -44,6 +44,10 @@ class Extensions implements \RPI\Console\ICommand
             
             $logger->info("Resolvers:");
             $this->getDetails($logger, __DIR__."/../UriResolvers");
+            
+            $logger->info("Other:");
+            $this->getDetails($logger, __DIR__."/../Plugins");
+            
             return false;
         }
     }

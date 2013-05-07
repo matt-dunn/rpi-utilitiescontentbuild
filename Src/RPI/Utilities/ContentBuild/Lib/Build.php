@@ -4,7 +4,6 @@ namespace RPI\Utilities\ContentBuild\Lib;
 
 class Build
 {
-    const COMPRESSOR_JAR = "yuicompressor-2.4.7.jar";
     const MAX_CSS_IMPORTS = 30;
     
     /**
@@ -27,9 +26,9 @@ class Build
     
     /**
      *
-     * @var string
+     * @var \RPI\Utilities\ContentBuild\Plugins\Compressor
      */
-    private $yuicompressorLocation = null;
+    private $compressor = null;
     
     /**
      *
@@ -72,28 +71,15 @@ class Build
             $this->includeDebug = $options["debug-include"];
         }
         
-        $this->yuicompressorLocation = __DIR__."/../../../../../vendor/yui/yuicompressor/build/".self::COMPRESSOR_JAR;
-        if (!file_exists($this->yuicompressorLocation)) {
-            throw new \Exception("Unable to find yuicompressor (".$this->yuicompressorLocation.")");
-        }
+        $this->compressor = new \RPI\Utilities\ContentBuild\Plugins\Compressor($project, $options);
     }
     
     public function run()
     {
-        $cleanupYuiCompressor = false;
-        
         $this->logger->info(
             "Config read from '{$this->configurationFile}'"
         );
                 
-        if (\Phar::running() !== "") {
-            $this->logger->notice("Extracting yuicompressor");
-            $tempYuiCompressorLocation = sys_get_temp_dir()."/".self::COMPRESSOR_JAR;
-            copy($this->yuicompressorLocation, $tempYuiCompressorLocation);
-            $this->yuicompressorLocation = $tempYuiCompressorLocation;
-            $cleanupYuiCompressor = true;
-        }
-        
         $this->webroot = realpath($this->project->basePath."/".$this->project->appRoot);
 
         foreach ($this->project->builds as $build) {
@@ -115,13 +101,6 @@ class Build
         }
         
         $this->processor->complete();
-        
-        if ($cleanupYuiCompressor) {
-            $this->logger->debug(
-                "Deleting  yuicompressor '{$this->yuicompressorLocation}'"
-            );
-            unlink($this->yuicompressorLocation);
-        }
     }
     
     private function processBuild(
@@ -213,7 +192,7 @@ class Build
         } else {
             $outputMiniFilename = $parts["dirname"]."/".$build->outputFilename;
         }
-        $this->miniFile($outputFilename, $build->type, $outputMiniFilename);
+        $this->compressor->compressFile($outputFilename, $build->type, $outputMiniFilename);
     }
     
     private function writeIncludeFile(
@@ -699,41 +678,6 @@ EOT;
 
     
     
-    
-    private function miniFile($filename, $type, $outputFilename)
-    {
-        if (file_exists($outputFilename)) {
-            unlink($outputFilename);
-        }
-        
-        if (file_exists($filename)) {
-            $this->logger->notice("Compressing: ".$outputFilename."...");
-
-            $options = "  --verbose";
-            
-            $output = null;
-            $ret = null;
-            
-            exec(
-                "java -jar ".$this->yuicompressorLocation.$options." --type ".$type." ".
-                $filename." -o ".$outputFilename." 2>&1 1> /dev/stdout",
-                $output,
-                $ret
-            );
-            
-            unlink($filename);
-            
-            if ($ret != 0) {
-                throw new \Exception(
-                    "ERROR COMPRESSING FILE (returned $ret): ".$filename.". In addition: ".implode("\r\n    ", $output)
-                );
-            } elseif (isset($output) && count($output) > 0) {
-                $this->logger->debug("YUI Compressor returned this for '$filename': ".implode("\r\n    ", $output));
-            }
-        } else {
-            $this->logger->debug("Nothing to compress: ".$outputFilename);
-        }
-    }
     
     private static function fileExists($uri)
     {
