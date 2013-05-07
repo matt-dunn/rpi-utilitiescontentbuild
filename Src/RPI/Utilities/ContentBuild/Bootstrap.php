@@ -41,7 +41,11 @@ $options = $commands->parse();
 if ($options !== false && isset($options["configurationFile"])) {
     displayHeader($logger);
 
-    $project = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Project($logger, $options["configurationFile"], $options);
+    $project = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Project(
+        $logger,
+        $options["configurationFile"],
+        $options
+    );
 
     $processor = new \RPI\Utilities\ContentBuild\Lib\Processor($logger, $project);
     
