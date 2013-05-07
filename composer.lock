@@ -77,7 +77,7 @@
             "source": {
                 "type": "git",
                 "url": "git@git.assembla.com:rpi-foundation.git",
-                "reference": "590e074c78648a0b18b3d8f91f6e3cee5e7ae030"
+                "reference": "d2bbc1a0166cb16e37835229bdd58e2c0a86b746"
             },
             "require": {
                 "ext-apc": "*",
@@ -115,7 +115,7 @@
             ],
             "description": "RPI Core Foundation",
             "homepage": "http://packages.red-pixel.co.uk/",
-            "time": "2013-05-04 15:09:59"
+            "time": "2013-05-07 12:44:25"
         },
         {
             "name": "ulrichsg/getopt-php",
@@ -396,12 +396,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "9cd4ff7461e18d8176d7515f803b7721054287ea"
+                "reference": "304618a7f36f57d00551428edbe4af4de5f1760c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/9cd4ff7461e18d8176d7515f803b7721054287ea",
-                "reference": "9cd4ff7461e18d8176d7515f803b7721054287ea",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/304618a7f36f57d00551428edbe4af4de5f1760c",
+                "reference": "304618a7f36f57d00551428edbe4af4de5f1760c",
                 "shasum": ""
             },
             "require": {
@@ -462,7 +462,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-05-04 11:24:19"
+            "time": "2013-05-06 09:12:15"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -470,12 +470,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "d49b5683200b5db9b1c64cb06f52f50d147891c4"
+                "reference": "8e9d897b39ca6310ccc2d81b8f29cabd5ce12786"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/d49b5683200b5db9b1c64cb06f52f50d147891c4",
-                "reference": "d49b5683200b5db9b1c64cb06f52f50d147891c4",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/8e9d897b39ca6310ccc2d81b8f29cabd5ce12786",
+                "reference": "8e9d897b39ca6310ccc2d81b8f29cabd5ce12786",
                 "shasum": ""
             },
             "require": {
@@ -511,7 +511,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2013-02-05 07:46:41"
+            "time": "2013-05-07 12:11:45"
         },
         {
             "name": "symfony/yaml",
