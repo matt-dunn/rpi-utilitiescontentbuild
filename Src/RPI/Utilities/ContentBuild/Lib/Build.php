@@ -441,7 +441,7 @@ EOT;
         $this->logger->debug(
             "Creating JavaScript debug code: ".$outputFilename
         );
-        $proxyFileScript = dirname(__FILE__)."/../Scripts/Proxy.js.php";
+        $proxyFileScript = __DIR__."/../Scripts/Proxy.js.php";
         if (!file_exists($proxyFileScript)) {
             throw new \Exception("Unable to locate proxy script file: ".$proxyFileScript);
         }
@@ -536,25 +536,25 @@ CONTENT;
             fwrite($fh, $jsCode);
 
             $proxyUrl = str_replace("\\", "/", substr(realpath($proxyFile), strlen($this->webroot)));
-            for ($i = 0; $i < count($files); $i++) {
-                $fullFilename = $files[$i];
-                if (parse_url($fullFilename, PHP_URL_SCHEME) == "http") {
-                    fwrite($fh, "@import url(\"$proxyUrl?t=css&f=".urlencode($fullFilename)."\");\r\n");
+            
+            foreach ($files as $file) {
+                if (parse_url($file, PHP_URL_SCHEME) == "http") {
+                    fwrite($fh, "@import url(\"$proxyUrl?t=css&f=".urlencode($file)."\");\r\n");
                 } else {
                     fwrite(
                         $fh,
                         "document.prepareScript(\"$proxyUrl?t=js&f=".
                         urlencode(
                             self::makeRelativePath(
-                                dirname($fullFilename),
+                                dirname($file),
                                 realpath($this->webroot)
                             )."/".
                             pathinfo(
-                                $files[$i],
+                                $file,
                                 PATHINFO_FILENAME
                             ).".".
                             pathinfo(
-                                $files[$i],
+                                $file,
                                 PATHINFO_EXTENSION
                             )
                         )."\");\r\n"
@@ -609,11 +609,13 @@ EOT;
         $debugFilename = $outputPath."/".
             pathinfo($outputFilename, PATHINFO_FILENAME).".".
             pathinfo($outputFilename, PATHINFO_EXTENSION);
+        
         $cssfiles = glob(
             dirname($debugFilename)."/".
             pathinfo($debugFilename, PATHINFO_FILENAME)."*.".
             pathinfo($debugFilename, PATHINFO_EXTENSION)
         );
+        
         foreach ($cssfiles as $cssfile) {
             unlink($cssfile);
         }
@@ -636,7 +638,6 @@ EOT;
         array $files
     ) {
         $fh = fopen($debugFilename, "w");
-        $proxyUrl = str_replace("\\", "/", substr(realpath($proxyFile), strlen($this->webroot)));
 
         fwrite(
             $fh,
@@ -676,19 +677,18 @@ EOT;
         $fh = fopen($debugFilename, "w");
 
         $proxyUrl = str_replace("\\", "/", substr(realpath($proxyFile), strlen($this->webroot)));
-        for ($i = 0; $i < count($files); $i++) {
-            $fullFilename = $files[$i];
-            if (parse_url($fullFilename, PHP_URL_SCHEME) == "http") {
-                fwrite($fh, "@import url(\"$proxyUrl?t=css&f=".urlencode($fullFilename)."\");\r\n");
+        foreach ($files as $file) {
+            if (parse_url($file, PHP_URL_SCHEME) == "http") {
+                fwrite($fh, "@import url(\"$proxyUrl?t=css&f=".urlencode($file)."\");\r\n");
             } else {
                 fwrite(
                     $fh,
                     "@import url(\"$proxyUrl?t=css&f=".
                     urlencode(
                         self::makeRelativePath(
-                            dirname($fullFilename),
+                            dirname($file),
                             realpath($this->webroot)
-                        )."/".pathinfo($files[$i], PATHINFO_FILENAME).".".pathinfo($files[$i], PATHINFO_EXTENSION)
+                        )."/".pathinfo($file, PATHINFO_FILENAME).".".pathinfo($file, PATHINFO_EXTENSION)
                     )."\");\r\n"
                 );
             }
@@ -705,6 +705,7 @@ EOT;
         if (file_exists($outputFilename)) {
             unlink($outputFilename);
         }
+        
         if (file_exists($filename)) {
             $this->logger->notice("Compressing: ".$outputFilename."...");
 
