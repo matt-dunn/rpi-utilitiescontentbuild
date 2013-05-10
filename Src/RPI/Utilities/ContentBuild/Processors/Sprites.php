@@ -8,7 +8,7 @@ namespace RPI\Utilities\ContentBuild\Processors;
 
 class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
-    const VERSION = "1.0.6";
+    const VERSION = "1.0.7";
     
     /**
      *
@@ -154,7 +154,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                             imagealphablending($imOriginal, false);
                             imagesavealpha($imOriginal, true);
 
-                            $im = imagecreatetruecolor($outputSpriteWidth, $outputSpriteHeight);
+                            $im = imagecreatetruecolor($outputSpriteWidth + $spritePadding, $outputSpriteHeight);
                             imagealphablending($im, false);
                             imagesavealpha($im, true);
                             $alpha = imagecolorallocatealpha($im, 0, 0, 0, 127);

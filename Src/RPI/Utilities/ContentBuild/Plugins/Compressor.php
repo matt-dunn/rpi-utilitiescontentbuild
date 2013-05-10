@@ -22,7 +22,7 @@ class Compressor implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
      *
      * @var boolean
      */
-    private $hasExtractedComptessor = false;
+    private $hasExtractedCompressor = false;
     
     public function __construct(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
@@ -35,7 +35,7 @@ class Compressor implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
     
     public function __destruct()
     {
-        if ($this->hasExtractedComptessor) {
+        if ($this->hasExtractedCompressor) {
             unlink($this->yuicompressorLocation);
             $this->project->getLogger()->debug(
                 "Deleted extracted yuicompressor '{$this->yuicompressorLocation}'"
@@ -54,12 +54,12 @@ class Compressor implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
             throw new \Exception("Unable to find yuicompressor (".$this->yuicompressorLocation.")");
         }
         
-        if (\Phar::running() !== "" && !$this->hasExtractedComptessor) {
+        if (\Phar::running() !== "" && !$this->hasExtractedCompressor) {
             $this->project->getLogger()->notice("Extracting yuicompressor");
             $tempYuiCompressorLocation = sys_get_temp_dir()."/".basename($this->yuicompressorLocation);
             copy($this->yuicompressorLocation, $tempYuiCompressorLocation);
             $this->yuicompressorLocation = $tempYuiCompressorLocation;
-            $this->hasExtractedComptessor = true;
+            $this->hasExtractedCompressor = true;
         }
         
         if (file_exists($outputFilename)) {
