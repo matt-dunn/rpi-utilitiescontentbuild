@@ -22,11 +22,11 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "rpi/console": "dev-master"
+        "rpi/console": "dev-master",
+        "yui/yuicompressor": "2.4.7",
+        "ulrichsg/getopt-php": "dev-master"
     },
     "require-dev": {
-        "ulrichsg/getopt-php": "dev-master",
-        "yui/yuicompressor": "2.4.7",
         "phpunit/phpunit": "3.7.*"
     },
     "autoload": {

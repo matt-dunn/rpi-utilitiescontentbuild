@@ -60,52 +60,54 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         $project = $this->project;
         
         $buffer = preg_replace_callback(
-            "/url\((.*?)\)/sim",
+            "/url\s*\(\s*'*\"*(.*?)'*\"*\s*\)/sim",
             function ($matches) use ($resolver, $project, $inputFilename, &$files, $outputFilename, $debugPath) {
                 $imageMatch = $matches[1];
-            
-                $resolvedPath = $imageUrl = $resolver->realpath($project, $imageMatch);
-                if ($imageUrl === false) {
-                    $imageUrl = realpath(dirname($inputFilename)."/".$imageMatch);
-                }
 
-                if ($imageUrl === false) {
-                    $event = new \RPI\Utilities\ContentBuild\Events\ImageCheckAvailability(
-                        array(
-                            "imageLocation" => dirname($inputFilename)."/".$imageMatch,
-                            "imageUri" => $imageMatch
-                        )
-                    );
-                    \RPI\Foundation\Event\Manager::fire($event);
-                    
-                    if ($event->getReturnValue() !== true) {
-                        $project->getLogger()->error(
-                            "Unable to locate image '{$imageMatch}' in '$inputFilename'"
-                        );
+                if (strtolower(substr($imageMatch, 0, 5)) !== "data:") {
+                    $resolvedPath = $imageUrl = $resolver->realpath($project, $imageMatch);
+                    if ($imageUrl === false) {
+                        $imageUrl = realpath(dirname($inputFilename)."/".$imageMatch);
                     }
-                } else {
-                    if ($resolvedPath !== false) {
-                        $imagePath = $resolver->getRelativePath($project, $imageMatch);
-                        
-                        $files[$imageUrl] = array(
-                            "imagePath" => $imageMatch,
-                            "sourceDocument" => $inputFilename,
-                            "sourceFile" => $imageUrl,
-                            "destinationFile" => dirname($outputFilename)."/".$imagePath,
-                            "destinationFileDebug" =>
-                                (isset($debugPath) ? $debugPath."/".$imagePath : null)
+
+                    if ($imageUrl === false) {
+                        $event = new \RPI\Utilities\ContentBuild\Events\ImageCheckAvailability(
+                            array(
+                                "imageLocation" => dirname($inputFilename)."/".$imageMatch,
+                                "imageUri" => $imageMatch
+                            )
                         );
-                        
-                        $imageMatch = $imagePath;
+                        \RPI\Foundation\Event\Manager::fire($event);
+
+                        if ($event->getReturnValue() !== true) {
+                            throw new \Exception(
+                                "Unable to locate image '{$imageMatch}' in '$inputFilename'"
+                            );
+                        }
                     } else {
-                        $files[$imageUrl] = array(
-                            "imagePath" => $imageMatch,
-                            "sourceDocument" => $inputFilename,
-                            "sourceFile" => $imageUrl,
-                            "destinationFile" => dirname($outputFilename)."/".str_replace("../", "", $imageMatch),
-                            "destinationFileDebug" =>
-                                (isset($debugPath) ? $debugPath."/".str_replace("../", "", $imageMatch) : null)
-                        );
+                        if ($resolvedPath !== false) {
+                            $imagePath = $resolver->getRelativePath($project, $imageMatch);
+
+                            $files[$imageUrl] = array(
+                                "imagePath" => $imageMatch,
+                                "sourceDocument" => $inputFilename,
+                                "sourceFile" => $imageUrl,
+                                "destinationFile" => dirname($outputFilename)."/".$imagePath,
+                                "destinationFileDebug" =>
+                                    (isset($debugPath) ? $debugPath."/".$imagePath : null)
+                            );
+
+                            $imageMatch = $imagePath;
+                        } else {
+                            $files[$imageUrl] = array(
+                                "imagePath" => $imageMatch,
+                                "sourceDocument" => $inputFilename,
+                                "sourceFile" => $imageUrl,
+                                "destinationFile" => dirname($outputFilename)."/".str_replace("../", "", $imageMatch),
+                                "destinationFileDebug" =>
+                                    (isset($debugPath) ? $debugPath."/".str_replace("../", "", $imageMatch) : null)
+                            );
+                        }
                     }
                 }
                 
@@ -128,13 +130,15 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         $project = $this->project;
         
         return preg_replace_callback(
-            "/url\((.*?)\)/sim",
+            "/url\s*\(\s*'*\"*(.*?)'*\"*\s*\)/sim",
             function ($matches) use ($resolver, $project) {
                 $imageMatch = $matches[1];
                 
-                $imageUrl = $resolver->realpath($project, $imageMatch);
-                if ($imageUrl !== false) {
-                    $imageMatch = $resolver->getRelativePath($project, $imageMatch);
+                if (strtolower(substr($imageMatch, 0, 5)) !== "data:") {
+                    $imageUrl = $resolver->realpath($project, $imageMatch);
+                    if ($imageUrl !== false) {
+                        $imageMatch = $resolver->getRelativePath($project, $imageMatch);
+                    }
                 }
                 
                 return "url($imageMatch)";

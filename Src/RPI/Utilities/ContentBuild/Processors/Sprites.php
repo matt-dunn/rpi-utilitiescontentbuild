@@ -2,10 +2,6 @@
 
 namespace RPI\Utilities\ContentBuild\Processors;
 
-/**
- * TODO: check #sprite:url(...); syntax
- */
-
 class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
     const VERSION = "1.0.7";
@@ -96,7 +92,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         $project = $this->project;
         
         preg_replace_callback(
-            "/(#sprite\:\s*url\((.*?)\)\s*;)/sim",
+            "/(#sprite\:\s*url\s*\(\s*'*\"*(.*?)'*\"*\s*\)\s*;)/sim",
             function ($matches) use (
                 $inputFilename,
                 $outputFilename,
@@ -248,7 +244,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         if (isset($sprites)) {
             $project = $this->project;
             $buffer = preg_replace_callback(
-                "/(#sprite\:\s*url\((.*?)\)\s*;)/sim",
+                "/(#sprite\:\s*url\s*\(\s*'*\"*(.*?)'*\"*\s*\)\s*;)/sim",
                 function ($matches) use ($inputFilename, $sprites, $project, $resolver) {
                     $spriteImage = $resolver->realpath($project, $matches[2]);
                     if ($spriteImage === false) {
