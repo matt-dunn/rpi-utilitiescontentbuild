@@ -187,7 +187,7 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
             $doc->load($configurationFile);
             if (!\RPI\Foundation\Helpers\Dom::validateSchema(
                 $doc,
-                dirname(__FILE__)."/Configuration/Schema.xsd"
+                dirname(__FILE__)."/Model/Schema.xsd"
             )) {
                 exit(2);
             }

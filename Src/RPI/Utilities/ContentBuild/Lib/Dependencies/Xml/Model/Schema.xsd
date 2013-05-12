@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:element name="dependencies">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="0" maxOccurs="unbounded" name="dependency" type="dependencyType"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+    <xs:complexType name="dependencyType">
+        <xs:attribute name="name" use="required" type="xs:normalizedString">
+            <xs:annotation>
+                <xs:documentation>
+                    Filename of the dependency
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="type" use="optional" type="xs:normalizedString">
+            <xs:annotation>
+                <xs:documentation>
+                    Type of file; must be specified on non-standard files, i.e. if not .js or .css
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+</xs:schema>
+

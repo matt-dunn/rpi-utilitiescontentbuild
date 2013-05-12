@@ -96,8 +96,6 @@
 	<xs:element name="files">
 		<xs:complexType>
 			<xs:attribute name="name" use="optional" type="xs:normalizedString"/>
-			<xs:attribute name="referenceName" use="optional" type="xs:normalizedString"/>
-			<xs:attribute name="type" use="optional" type="RPI:contentType"/>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

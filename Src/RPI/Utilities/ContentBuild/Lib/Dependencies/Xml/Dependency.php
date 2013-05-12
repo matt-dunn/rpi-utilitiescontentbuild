@@ -11,15 +11,27 @@ class Dependency extends Object implements \RPI\Utilities\ContentBuild\Lib\Model
 {
     /**
      *
+     * @var \Psr\Log\LoggerInterface 
+     */
+    private $logger = null;
+    
+    /**
+     *
      * @var array
      */
     private $files = array();
     
-    public function __construct($filename)
-    {
+    public function __construct(
+        \Psr\Log\LoggerInterface $logger,
+        $filename
+    ) {
         if (!file_exists($filename)) {
             throw new \Exception("Unable to locate dependencies file '$filename'");
         }
+        
+        $this->logger = $logger;
+        
+        $this->validateConfigurationFile($filename);
         
         $doc = new \DOMDocument();
         $doc->load($filename);
@@ -41,5 +53,22 @@ class Dependency extends Object implements \RPI\Utilities\ContentBuild\Lib\Model
     public function getFiles()
     {
         return $this->files;
+    }
+    
+    private function validateConfigurationFile($filename)
+    {
+        try {
+            $doc = new \DOMDocument();
+            $doc->load($filename);
+            if (!\RPI\Foundation\Helpers\Dom::validateSchema(
+                $doc,
+                dirname(__FILE__)."/Model/Schema.xsd"
+            )) {
+                exit(2);
+            }
+        } catch (\Exception $ex) {
+            $this->logger->error("Invalid dependency file '$filename'", array("exception" => $ex));
+            exit(2);
+        }
     }
 }

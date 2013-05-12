@@ -111,10 +111,11 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
             "Building dependencies: [".$build->name."] ".$inputFilename
         );
 
-        $type = pathinfo($inputFilename, PATHINFO_EXTENSION);
-        if (!isset($type) || $type === false || $type == "") {
+        $type = strtolower(pathinfo($inputFilename, PATHINFO_EXTENSION));
+        if (!($type == "css" || $type == "js")) {
             $type = $build->type;
         }
+        
         $buildType = $build->name."_".$type;
 
         $dependenciesFileType = $this->getDependencyFileType($inputFilename);
@@ -145,7 +146,7 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
                     throw new \Exception("Dependency type '$dependenciesFileType' not supported");
                 }
                 
-                $dependency = new $dependencyClassname($dependenciesFile);
+                $dependency = new $dependencyClassname($this->project->getLogger(), $dependenciesFile);
 
                 $this->project->getLogger()->debug(
                     "Processing ".count($dependency->files)." dependencies"
