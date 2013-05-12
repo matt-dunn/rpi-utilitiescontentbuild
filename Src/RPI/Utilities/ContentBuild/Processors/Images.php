@@ -4,7 +4,7 @@ namespace RPI\Utilities\ContentBuild\Processors;
 
 class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
-    const VERSION = "1.0.10";
+    const VERSION = "1.0.11";
 
     /**
      *
@@ -40,10 +40,6 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         $processorIndex
     ) {
-        if ($processorIndex != count($processor->getProcessors()) - 1) {
-            throw new \Exception("Processor '".__CLASS__."' must be configured as the last processor");
-        }
-        
         $this->timestamp = microtime(true) - 1;
     }
     
@@ -60,9 +56,9 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         $project = $this->project;
         
         $buffer = preg_replace_callback(
-            "/url\s*\(\s*'*\"*(.*?)'*\"*\s*\)/sim",
+            "/(background.*?)\s*:\s*(.*?)url\s*\(\s*'*\"*(.*?)'*\"*\s*\)/sim",
             function ($matches) use ($resolver, $project, $inputFilename, &$files, $outputFilename, $debugPath) {
-                $imageMatch = $matches[1];
+                $imageMatch = $matches[3];
 
                 if (strtolower(substr($imageMatch, 0, 5)) !== "data:") {
                     $resolvedPath = $imageUrl = $resolver->realpath($project, $imageMatch);
@@ -111,7 +107,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
                     }
                 }
                 
-                return "url($imageMatch)";
+                return "{$matches[1]}:{$matches[2]}url($imageMatch)";
             },
             $buffer
         );
@@ -130,9 +126,9 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         $project = $this->project;
         
         return preg_replace_callback(
-            "/url\s*\(\s*'*\"*(.*?)'*\"*\s*\)/sim",
+            "/(background.*?)\s*:\s*(.*?)url\s*\(\s*'*\"*(.*?)'*\"*\s*\)/sim",
             function ($matches) use ($resolver, $project) {
-                $imageMatch = $matches[1];
+                $imageMatch = $matches[3];
                 
                 if (strtolower(substr($imageMatch, 0, 5)) !== "data:") {
                     $imageUrl = $resolver->realpath($project, $imageMatch);
@@ -141,7 +137,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
                     }
                 }
                 
-                return "url($imageMatch)";
+                return "{$matches[1]}:{$matches[2]}url($imageMatch)";
             },
             $buffer
         );
