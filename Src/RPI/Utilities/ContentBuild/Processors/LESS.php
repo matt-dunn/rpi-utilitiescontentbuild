@@ -4,7 +4,7 @@ namespace RPI\Utilities\ContentBuild\Processors;
 
 class LESS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
-    const VERSION = "1.0.0";
+    const VERSION = "1.0.1";
 
     /**
      *
@@ -12,11 +12,24 @@ class LESS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
      */
     private $project = null;
 
+    /**
+     *
+     * @var array
+     */
+    private $customFunctions = null;
+    
     public function __construct(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         array $options = null
     ) {
         $this->project = $project;
+        
+        if (isset($options["custom"], $options["custom"]["function"])) {
+            $this->customFunctions = $options["custom"]["function"];
+            if (isset($this->customFunctions["@"])) {
+                $this->customFunctions = array($this->customFunctions);
+            }
+        }
     }
     
     public static function getVersion()
@@ -51,7 +64,46 @@ class LESS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
             $this->project->getLogger()->info("Compiling LESS '$inputFilename'");
             
             $less = new \lessc();
-            
+
+            if (isset($this->customFunctions)) {
+                foreach ($this->customFunctions as $function) {
+                    if (!isset($function["@"], $function["@"]["name"])) {
+                        throw new \Exception(
+                            "Custom function missing name attribute: ".
+                            str_replace("array (", "", var_export($function, true))
+                        );
+                    }
+                    
+                    if (!isset($function["@"], $function["@"]["params"])) {
+                        throw new \Exception(
+                            "Custom function missing params attribute: ".
+                            str_replace("array (", "", var_export($function, true))
+                        );
+                    }
+                    
+                    if (!isset($function["#"]) || trim($function["#"]) == "") {
+                        throw new \Exception(
+                            "Custom function missing function code: ".
+                            str_replace("array (", "", var_export($function, true))
+                        );
+                    }
+                    
+                    $functionBody = <<<EOT
+                        try {
+                            {$function["#"]}
+                        } catch (\Exception \$ex) {
+                            throw new \Exception(
+                                "Custom function '{$function["@"]["name"]}' caused an exception: ".\$ex->getMessage()
+                            );
+                        }
+EOT;
+                    $less->registerFunction(
+                        $function["@"]["name"],
+                        create_function($function["@"]["params"], $functionBody)
+                    );
+                }
+            }
+
             try {
                 // Compile and resolve @import paths
                 
