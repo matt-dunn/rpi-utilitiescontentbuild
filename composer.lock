@@ -3,8 +3,49 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "3bf1d8eacede2467f9a7a6ca2ff2d4e4",
+    "hash": "100b6e5a8f59a4e72afe42b126221121",
     "packages": [
+        {
+            "name": "leafo/lessphp",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/leafo/lessphp.git",
+                "reference": "dbb61d4beaafb0d708b79b008d0b708abeb4eae9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/leafo/lessphp/zipball/dbb61d4beaafb0d708b79b008d0b708abeb4eae9",
+                "reference": "dbb61d4beaafb0d708b79b008d0b708abeb4eae9",
+                "shasum": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.3-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "lessc.inc.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT",
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Leaf Corcoran",
+                    "email": "leafot@gmail.com",
+                    "homepage": "http://leafo.net"
+                }
+            ],
+            "description": "lessphp is a compiler for LESS written in PHP.",
+            "homepage": "http://leafo.net/lessphp/",
+            "time": "2013-05-07 23:46:12"
+        },
         {
             "name": "psr/log",
             "version": "1.0.0",
@@ -396,12 +437,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "19f1d742e0c36150001062f592c93f80aef3a9fd"
+                "reference": "a3dcfcb1347be04957d38bdb292b0ffb0e3c6cb6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/19f1d742e0c36150001062f592c93f80aef3a9fd",
-                "reference": "19f1d742e0c36150001062f592c93f80aef3a9fd",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a3dcfcb1347be04957d38bdb292b0ffb0e3c6cb6",
+                "reference": "a3dcfcb1347be04957d38bdb292b0ffb0e3c6cb6",
                 "shasum": ""
             },
             "require": {
@@ -462,7 +503,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-05-07 14:00:05"
+            "time": "2013-05-12 06:33:11"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -578,6 +619,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "rpi/console": 20,
+        "leafo/lessphp": 20,
         "ulrichsg/getopt-php": 20
     },
     "platform": {
