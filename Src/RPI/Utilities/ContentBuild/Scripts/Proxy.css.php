@@ -12,54 +12,41 @@ if (parse_url($_GET["f"], PHP_URL_SCHEME) == "http") {
 }
 
 if (isset($GLOBALS["configuration-file"])) {
+    if (!file_exists($GLOBALS["autoloader"])) {
+        throw new Exception("Cannot locate autoloader '".$GLOBALS["autoloader"]."'");
+    }
+
+    require_once $GLOBALS["autoloader"];
+
+    $logger = new \RPI\Foundation\App\Logger(
+        new \RPI\Foundation\App\Logger\Handler\Syslog()
+    );
+
+    $logger->setLogLevel(
+        array(
+            \Psr\Log\LogLevel::CRITICAL,
+            \Psr\Log\LogLevel::ERROR,
+            \Psr\Log\LogLevel::WARNING
+        )
+    );
+
+    new \RPI\Foundation\Exception\Handler($logger);
+
+    $project = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Project(
+        $logger,
+        $GLOBALS["configuration-file"]
+    );
+
+    $processor = new \RPI\Utilities\ContentBuild\Lib\Processor($logger, $project);
+
+    $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver($logger, $project);
+
     //$seg = sem_get("12131313121");
     //sem_acquire($seg);
-
-    try {
-        if (!file_exists($GLOBALS["autoloader"])) {
-            throw new Exception("Cannot locate autoloader '".$GLOBALS["autoloader"]."'");
-        }
-        
-        require_once $GLOBALS["autoloader"];
-        
-        $logger = new \RPI\Foundation\App\Logger(
-            new \RPI\Foundation\App\Logger\Handler\Syslog()
-        );
-
-        $logger->setLogLevel(
-            array(
-                \Psr\Log\LogLevel::CRITICAL,
-                \Psr\Log\LogLevel::ERROR,
-                \Psr\Log\LogLevel::WARNING
-            )
-        );
-
-        new \RPI\Foundation\Exception\Handler($logger);
-
-        $project = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Project(
-            $logger,
-            $GLOBALS["configuration-file"]
-        );
-
-        $processor = new \RPI\Utilities\ContentBuild\Lib\Processor($logger, $project);
-
-        $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver($logger, $project);
-        
-        echo $processor->process($resolver, $file, file_get_contents($file));
-    } catch (\Exception $ex) {
-        openlog("ProcessCSS (php)", LOG_NDELAY, LOG_USER);
-        syslog(LOG_ERR, $ex->getMessage());
-        closelog();
-    }
+    
+    echo $processor->process($resolver, $file, file_get_contents($file));
 
     //sem_release($seg);
 } else {
     echo file_get_contents($file);
-}
-
-$error = error_get_last();
-if (isset($error)) {
-    openlog("ProcessCSS (php)", LOG_NDELAY, LOG_USER);
-    syslog(LOG_ERR, $error["message"]);
-    closelog();
 }
