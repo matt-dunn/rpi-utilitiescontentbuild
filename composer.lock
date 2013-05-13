@@ -118,7 +118,7 @@
             "source": {
                 "type": "git",
                 "url": "git@git.assembla.com:rpi-foundation.git",
-                "reference": "d9a33477a4c11efdc8a11afd42db8b50a5712118"
+                "reference": "8f288f5062c87035cf84a7e070bce83e8725d0e8"
             },
             "require": {
                 "ext-apc": "*",
@@ -156,7 +156,7 @@
             ],
             "description": "RPI Core Foundation",
             "homepage": "http://packages.red-pixel.co.uk/",
-            "time": "2013-05-11 15:08:32"
+            "time": "2013-05-13 21:25:11"
         },
         {
             "name": "ulrichsg/getopt-php",
