@@ -37,9 +37,6 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         $processorIndex
     ) {
-        if ($processorIndex != 0) {
-            throw new \Exception("Processor '".__CLASS__."' must be configured as the first processor");
-        }
     }
     
     public function preProcess(
