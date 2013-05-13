@@ -4,7 +4,7 @@ namespace RPI\Utilities\ContentBuild\Processors;
 
 class LESS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
-    const VERSION = "1.0.1";
+    const VERSION = "1.0.2";
 
     /**
      *
@@ -63,7 +63,7 @@ class LESS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
         if (pathinfo($inputFilename, PATHINFO_EXTENSION) == "less") {
             $this->project->getLogger()->info("Compiling LESS '$inputFilename'");
             
-            $less = new \lessc();
+            $less = new \RPI\Utilities\ContentBuild\Processors\LESS\lessc();
 
             if (isset($this->customFunctions)) {
                 foreach ($this->customFunctions as $function) {
@@ -105,6 +105,20 @@ EOT;
             }
 
             try {
+                $project = $this->project;
+                
+                $less->setImportCallback(
+                    function ($url) use ($project, $resolver) {
+                        $resolvedPath = $resolver->realpath($project, $url);
+                        if ($resolvedPath !== false) {
+                            return $resolvedPath;
+                        }
+                        
+                        return null;
+                    }
+                );
+                
+                
                 // Compile and resolve @import paths
                 
                 /*
@@ -116,8 +130,6 @@ EOT;
                  * @import url('file');
                  * @import url(file);
                  */
-                
-                $project = $this->project;
                 
                 $buffer = $less->compile(
                     preg_replace_callback(
