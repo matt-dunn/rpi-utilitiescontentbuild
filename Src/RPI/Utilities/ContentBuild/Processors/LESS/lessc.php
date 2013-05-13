@@ -13,6 +13,10 @@ class lessc extends \lessc
         if (!isset($importPath) && isset($this->importCallback) && is_callable($this->importCallback)) {
             $callback = $this->importCallback;
             $importPath = $callback($url);
+            
+            if (!isset($importPath)) {
+                throw new \Exception("Unable to find import '$url'");
+            }
         }
         
         return $importPath;
