@@ -30,12 +30,6 @@ class LessCompiler extends \lessc
 
     protected function compileCSSBlock($block)
     {
-        $env = $this->pushEnv();
-
-        $selectors = $this->compileSelectors($block->tags);
-        $env->selectors = $this->multiplySelectors($selectors);
-        $out = $this->makeOutputBlock(null, $env->selectors);
-
         if ($this->debug && isset($block->props[0])) {
             $prop = $block->props[0];
             $filename = $prop[-2];
@@ -47,14 +41,10 @@ class LessCompiler extends \lessc
                 str_replace(array(".", "/"), array("\.", "\/"), realpath($filename)),
                 $line_number
             );
-            $out->parent->children [] = $outDebug;
+            $this->scope->children[] = $outDebug;
         }
 
-        $this->scope->children[] = $out;
-        $this->compileProps($block, $out);
-
-        $block->scope = $env; // mixins carry scope with them!
-        $this->popEnv();
+        return parent::compileCSSBlock($block);
     }
 
     protected function makeParser($name)
@@ -65,6 +55,7 @@ class LessCompiler extends \lessc
         return $parser;
     }
 
+    // Need to override injectVariables as it does not call makeParser
     protected function injectVariables($args)
     {
         $this->pushEnv();
