@@ -120,6 +120,18 @@ class Processor extends Object
         $outputFilename,
         $buffer
     ) {
+        $buffer = preg_replace_callback(
+            "/\/\*.*?\*\//sim",
+            function ($matches) {
+                if (substr($matches[0], 0, 3) == "/*!") {
+                    return $matches[0];
+                } else {
+                    return str_repeat("\n", substr_count($matches[0], "\n"));
+                }
+            },
+            $buffer
+        );
+            
         foreach ($this->getProcessors() as $processor) {
             $this->logger->debug("Preprocess '".get_class($processor)."'");
             if ($build->type == "css") {
@@ -144,6 +156,18 @@ class Processor extends Object
         $inputFilename,
         $buffer
     ) {
+        $buffer = preg_replace_callback(
+            "/\/\*.*?\*\//sim",
+            function ($matches) {
+                if (substr($matches[0], 0, 3) == "/*!") {
+                    return $matches[0];
+                } else {
+                    return str_repeat("\n", substr_count($matches[0], "\n"));
+                }
+            },
+            $buffer
+        );
+            
         foreach ($this->getProcessors() as $processor) {
             $this->logger->debug("Process '".get_class($processor)."'");
             $buffer = $processor->process($this, $resolver, $inputFilename, $buffer);
