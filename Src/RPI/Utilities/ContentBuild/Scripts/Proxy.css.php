@@ -41,12 +41,7 @@ if (isset($GLOBALS["configuration-file"])) {
 
     $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver($logger, $project);
 
-    //$seg = sem_get("12131313121");
-    //sem_acquire($seg);
-    
     echo $processor->process($resolver, $file, file_get_contents($file));
-
-    //sem_release($seg);
 } else {
     echo file_get_contents($file);
 }
