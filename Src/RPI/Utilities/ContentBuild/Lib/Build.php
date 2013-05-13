@@ -8,61 +8,61 @@ class Build
      *
      * @var \RPI\Utilities\ContentBuild\Lib\Processor
      */
-    private $processor = null;
+    protected $processor = null;
     
     /**
      *
      * @var \RPI\Utilities\ContentBuild\Lib\UriResolver
      */
-    private $resolver = null;
+    protected $resolver = null;
     
     /**
      *
      * @var string
      */
-    private $configurationFile = null;
+    protected $configurationFile = null;
     
     /**
      *
      * @var \RPI\Utilities\ContentBuild\Plugins\Compressor
      */
-    private $compressor = null;
+    protected $compressor = null;
     
     /**
      *
      * @var \RPI\Utilities\ContentBuild\Plugins\DebugWriter
      */
-    private $debugWriter = null;
+    protected $debugWriter = null;
     
     /**
      *
      * @var \RPI\Utilities\ContentBuild\Plugins\DependencyBuilder 
      */
-    private $dependencyBuilder = null;
+    protected $dependencyBuilder = null;
     
     /**
      *
      * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
      */
-    private $project = null;
+    protected $project = null;
     
     /**
      *
      * @var boolean
      */
-    private $includeDebug = true;
+    protected $includeDebug = true;
     
     /**
      *
      * @var \Psr\Log\LoggerInterface 
      */
-    private $logger = null;
+    protected $logger = null;
     
     /**
      *
      * @var string
      */
-    private $webroot = null;
+    protected $webroot = null;
     
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
@@ -120,7 +120,7 @@ class Build
         $this->processor->complete();
     }
     
-    private function processBuild(
+    protected function processBuild(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         array $buildFiles,
@@ -204,7 +204,7 @@ class Build
         }
     }
     
-    private function writeIncludeFile(
+    protected function writeIncludeFile(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $outputPath,
         $fileSource,

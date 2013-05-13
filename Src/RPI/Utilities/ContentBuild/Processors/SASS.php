@@ -10,7 +10,7 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
      *
      * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
      */
-    private $project = null;
+    protected $project = null;
 
     public function __construct(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
@@ -85,7 +85,7 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
      * 
      * @throws \Exception
      */
-    private static function runSass($command, $sendNonErrorOutput = true)
+    protected static function runSass($command, $sendNonErrorOutput = true)
     {
         $output = null;
         $ret = null;

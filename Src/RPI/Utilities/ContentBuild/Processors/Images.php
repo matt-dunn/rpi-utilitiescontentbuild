@@ -10,19 +10,19 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
      *
      * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
      */
-    private $project = null;
+    protected $project = null;
     
     /**
      *
      * @var array
      */
-    private $imageFiles = array();
+    protected $imageFiles = array();
     
     /**
      *
      * @var integer
      */
-    private $timestamp = null;
+    protected $timestamp = null;
     
     public function __construct(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
@@ -173,7 +173,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
     }
     
     
-    private function copyCSSImageFiles(array $files)
+    protected function copyCSSImageFiles(array $files)
     {
         foreach ($files as $fileDetails) {
             $this->copyCSSImageFile($fileDetails["sourceFile"], $fileDetails["destinationFile"]);
@@ -183,7 +183,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         }
     }
     
-    private function copyCSSImageFile($sourceImageFile, $destImageFile)
+    protected function copyCSSImageFile($sourceImageFile, $destImageFile)
     {
         if (!file_exists(dirname($destImageFile))) {
             $this->project->getLogger()->debug("Creating image path: ".$destImageFile);
@@ -198,7 +198,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         copy($sourceImageFile, $destImageFile);
     }
     
-    private function cleanupImages($basePath, $timestamp)
+    protected function cleanupImages($basePath, $timestamp)
     {
         $filesSearch = \RPI\Foundation\Helpers\FileUtils::find(
             $basePath,

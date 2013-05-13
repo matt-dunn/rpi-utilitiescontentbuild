@@ -10,19 +10,19 @@ class UriResolver extends Object
      *
      * @var \RPI\Utilities\ContentBuild\Lib\Model\UriResolver\IUriResolver[]
      */
-    private $resolvers = null;
+    protected $resolvers = null;
     
     /**
      *
      * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
      */
-    private $project = null;
+    protected $project = null;
     
     /**
      *
      * @var \Psr\Log\LoggerInterface 
      */
-    private $logger = null;
+    protected $logger = null;
     
     public function __construct(
         \Psr\Log\LoggerInterface $logger,

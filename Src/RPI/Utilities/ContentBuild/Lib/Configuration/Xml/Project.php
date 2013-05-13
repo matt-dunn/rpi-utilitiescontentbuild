@@ -18,61 +18,61 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
      *
      * @var string
      */
-    private $name = null;
+    protected $name = null;
     
     /**
      *
      * @var string
      */
-    private $prefix = null;
+    protected $prefix = null;
     
     /**
      *
      * @var string 
      */
-    private $appRoot = null;
+    protected $appRoot = null;
     
     /**
      *
      * @var string
      */
-    private $basePath = null;
+    protected $basePath = null;
     
     /**
      *
      * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild[]
      */
-    private $builds = array();
+    protected $builds = array();
     
     /**
      *
      * @var string
      */
-    private $configurationFile = null;
+    protected $configurationFile = null;
     
     /**
      *
      * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProcessor[]
      */
-    private $processors = null;
+    protected $processors = null;
     
     /**
      *
      * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IResolver[]
      */
-    private $resolvers = null;
+    protected $resolvers = null;
     
     /**
      *
      * @var boolean
      */
-    private $includeDebug = true;
+    protected $includeDebug = true;
     
     /**
      *
      * @var \Psr\Log\LoggerInterface 
      */
-    private $logger = null;
+    protected $logger = null;
 
     /**
      * 
@@ -180,7 +180,7 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
         }
     }
 
-    private function validateConfigurationFile($configurationFile)
+    protected function validateConfigurationFile($configurationFile)
     {
         try {
             $doc = new \DOMDocument();

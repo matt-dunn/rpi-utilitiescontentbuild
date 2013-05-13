@@ -6,7 +6,7 @@ use Ulrichsg\Getopt;
 
 class NoDev implements \RPI\Console\ICommand
 {
-    private $optionDetails = null;
+    protected $optionDetails = null;
     
     public function __construct()
     {

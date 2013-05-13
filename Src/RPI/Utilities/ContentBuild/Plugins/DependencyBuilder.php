@@ -10,7 +10,7 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
      *
      * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
      */
-    private $project = null;
+    protected $project = null;
     
     public function __construct(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
@@ -54,7 +54,7 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
         return $buildFiles;
     }
     
-    private function getInputFileName(
+    protected function getInputFileName(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         $file,
@@ -78,7 +78,7 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
         return $realpath;
     }
     
-    private function getDependencyFileType($inputFilename)
+    protected function getDependencyFileType($inputFilename)
     {
         $filesSearch = \RPI\Foundation\Helpers\FileUtils::find(
             dirname($inputFilename),
@@ -97,7 +97,7 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
         return $type;
     }
     
-    private function buildFileList(
+    protected function buildFileList(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         $inputFilename,
@@ -195,7 +195,7 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
         return $this->addUniqueFileToList($build, $inputFilename, $buildType, $buildFiles);
     }
     
-    private function addUniqueFileToList($build, $filename, $buildType, array $buildFiles)
+    protected function addUniqueFileToList($build, $filename, $buildType, array $buildFiles)
     {
         if (isset($build->externalDependenciesNames)) {
             $names = explode(",", $build->externalDependenciesNames);

@@ -10,19 +10,19 @@ class Compressor implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
      *
      * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
      */
-    private $project = null;
+    protected $project = null;
     
     /**
      *
      * @var string
      */
-    private $yuicompressorLocation = null;
+    protected $yuicompressorLocation = null;
     
     /**
      *
      * @var boolean
      */
-    private $hasExtractedCompressor = false;
+    protected $hasExtractedCompressor = false;
     
     public function __construct(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,

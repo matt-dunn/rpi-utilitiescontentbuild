@@ -4,7 +4,7 @@ namespace RPI\Utilities\ContentBuild\Processors;
 
 class Comments implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
-    private $hasProcessed = false;
+    protected $hasProcessed = false;
     const VERSION = "1.0.2";
 
     public function __construct(

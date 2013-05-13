@@ -6,7 +6,7 @@ use Ulrichsg\Getopt;
 
 class Version implements \RPI\Console\ICommand
 {
-    private $optionDetails = null;
+    protected $optionDetails = null;
     
     public function __construct()
     {

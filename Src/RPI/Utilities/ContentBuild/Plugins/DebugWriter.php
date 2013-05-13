@@ -12,7 +12,7 @@ class DebugWriter implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
      *
      * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
      */
-    private $project = null;
+    protected $project = null;
     
     public function __construct(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
@@ -58,7 +58,7 @@ class DebugWriter implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
         }
     }
     
-    private function writeDebugFileJs(
+    protected function writeDebugFileJs(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         array $files,
         $outputFilename,
@@ -193,7 +193,7 @@ CONTENT;
         }
     }
 
-    private function writeDebugFileCss(
+    protected function writeDebugFileCss(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         array $files,
         $outputFilename,
@@ -261,7 +261,7 @@ EOT;
         }
     }
 
-    private function writeDebugFileCssProxy(
+    protected function writeDebugFileCssProxy(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $debugFilename,
         $proxyFile,
@@ -298,7 +298,7 @@ EOT;
         fclose($fh);
     }
 
-    private function writeDebugFileCssIndividual(
+    protected function writeDebugFileCssIndividual(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $debugFilename,
         $proxyFile,

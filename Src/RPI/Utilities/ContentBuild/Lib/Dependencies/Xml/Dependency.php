@@ -13,13 +13,13 @@ class Dependency extends Object implements \RPI\Utilities\ContentBuild\Lib\Model
      *
      * @var \Psr\Log\LoggerInterface 
      */
-    private $logger = null;
+    protected $logger = null;
     
     /**
      *
      * @var array
      */
-    private $files = array();
+    protected $files = array();
     
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
@@ -55,7 +55,7 @@ class Dependency extends Object implements \RPI\Utilities\ContentBuild\Lib\Model
         return $this->files;
     }
     
-    private function validateConfigurationFile($filename)
+    protected function validateConfigurationFile($filename)
     {
         try {
             $doc = new \DOMDocument();

@@ -10,13 +10,13 @@ class Composer implements \RPI\Utilities\ContentBuild\Lib\Model\UriResolver\IUri
      *
      * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
      */
-    private $project = null;
+    protected $project = null;
     
     /**
      *
      * @var string
      */
-    private $vendorPath = null;
+    protected $vendorPath = null;
     
     public function __construct(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,

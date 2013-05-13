@@ -14,13 +14,13 @@ class Processor extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\
      *
      * @var string
      */
-    private $type = null;
+    protected $type = null;
 
     /**
      *
      * @var array
      */
-    private $params = null;
+    protected $params = null;
     
     /**
      * 

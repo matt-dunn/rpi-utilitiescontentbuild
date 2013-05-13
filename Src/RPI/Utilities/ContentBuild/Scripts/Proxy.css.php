@@ -37,7 +37,7 @@ if (isset($GLOBALS["configuration-file"])) {
         $GLOBALS["configuration-file"]
     );
 
-    $processor = new \RPI\Utilities\ContentBuild\Lib\Processor($logger, $project);
+    $processor = new \RPI\Utilities\ContentBuild\Lib\Processor($logger, $project, true);
 
     $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver($logger, $project);
 

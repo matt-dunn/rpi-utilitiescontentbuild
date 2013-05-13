@@ -6,7 +6,7 @@ use Ulrichsg\Getopt;
 
 class Plugins implements \RPI\Console\ICommand
 {
-    private $optionDetails = null;
+    protected $optionDetails = null;
     
     public function __construct()
     {
@@ -52,7 +52,7 @@ class Plugins implements \RPI\Console\ICommand
         }
     }
     
-    private function getDetails(\Psr\Log\LoggerInterface $logger, $basePath)
+    protected function getDetails(\Psr\Log\LoggerInterface $logger, $basePath)
     {
         $classes = \RPI\Foundation\Helpers\FileUtils::find($basePath, "*.php", null, false);
         $classes = array_keys($classes);
@@ -64,7 +64,7 @@ class Plugins implements \RPI\Console\ICommand
         }
     }
     
-    private static function getClassName($classPath)
+    protected static function getClassName($classPath)
     {
         $fullPath = \RPI\Foundation\Helpers\FileUtils::realPath($classPath);
         $basePath = \RPI\Foundation\Helpers\FileUtils::realPath(__DIR__."/../../../../");

@@ -22,61 +22,61 @@ class Build extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Conf
      *
      * @var string
      */
-    private $buildDirectory = null;
+    protected $buildDirectory = null;
     
     /**
      *
      * @var array
      */
-    private $files = array();
+    protected $files = array();
     
     /**
      *
      * @var string
      */
-    private $name = null;
+    protected $name = null;
     
     /**
      *
      * @var string
      */
-    private $outputDirectory = null;
+    protected $outputDirectory = null;
     
     /**
      *
      * @var string
      */
-    private $outputFilename = null;
+    protected $outputFilename = null;
     
     /**
      *
      * @var string
      */
-    private $externalDependenciesNames = null;
+    protected $externalDependenciesNames = null;
     
     /**
      *
      * @var string
      */
-    private $type = null;
+    protected $type = null;
     
     /**
      *
      * @var string
      */
-    private $target = null;
+    protected $target = null;
     
     /**
      *
      * @var string
      */
-    private $media = null;
+    protected $media = null;
     
     /**
      *
      * @var string
      */
-    private $debugPath = null;
+    protected $debugPath = null;
     
     public function __construct(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,

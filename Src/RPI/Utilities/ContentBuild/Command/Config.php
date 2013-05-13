@@ -6,7 +6,7 @@ use Ulrichsg\Getopt;
 
 class Config implements \RPI\Console\ICommand
 {
-    private $optionDetails = null;
+    protected $optionDetails = null;
     
     public function __construct()
     {

@@ -4,19 +4,19 @@ namespace RPI\Utilities\ContentBuild\Processors;
 
 class LESS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
-    const VERSION = "1.0.3";
+    const VERSION = "1.0.4";
 
     /**
      *
      * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
      */
-    private $project = null;
+    protected $project = null;
 
     /**
      *
      * @var array
      */
-    private $customFunctions = null;
+    protected $customFunctions = null;
     
     public function __construct(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
@@ -63,7 +63,8 @@ class LESS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
         if (pathinfo($inputFilename, PATHINFO_EXTENSION) == "less") {
             $this->project->getLogger()->info("Compiling LESS '$inputFilename'");
             
-            $less = new \RPI\Utilities\ContentBuild\Processors\LESS\lessc();
+            $less = new \RPI\Utilities\ContentBuild\Processors\LESS\LessCompiler();
+            $less->debug = $processor->debug;
 
             if (isset($this->customFunctions)) {
                 foreach ($this->customFunctions as $function) {
@@ -76,15 +77,13 @@ class LESS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
                     
                     if (!isset($function["@"], $function["@"]["params"])) {
                         throw new \Exception(
-                            "Custom function missing params attribute: ".
-                            str_replace("array (", "", var_export($function, true))
+                            "Custom function '{$function["@"]["name"]}' missing params attribute"
                         );
                     }
                     
                     if (!isset($function["#"]) || trim($function["#"]) == "") {
                         throw new \Exception(
-                            "Custom function missing function code: ".
-                            str_replace("array (", "", var_export($function, true))
+                            "Custom function '{$function["@"]["name"]}' missing code in function body"
                         );
                     }
                     
@@ -108,8 +107,23 @@ EOT;
                 $project = $this->project;
                 
                 $less->setImportCallback(
-                    function ($url) use ($project, $resolver) {
+                    function ($url) use ($project, $resolver, $inputFilename) {
+                        // LESS allows @import file extension (.less) to be optional
+                        if (pathinfo($url, PATHINFO_EXTENSION) == "") {
+                            $url .= ".less";
+                        }
+                        
                         $resolvedPath = $resolver->realpath($project, $url);
+                        if ($resolvedPath === false) {
+                            $resolvedPath = realpath($url);
+
+                            if ($resolvedPath === false) {
+                                $resolvedPath = realpath(
+                                    dirname($inputFilename).DIRECTORY_SEPARATOR.$url
+                                );
+                            }
+                        }
+                        
                         if ($resolvedPath !== false) {
                             return $resolvedPath;
                         }
@@ -118,52 +132,7 @@ EOT;
                     }
                 );
                 
-                
-                // Compile and resolve @import paths
-                
-                /*
-                 * LESS @import syntax:
-                 * 
-                 * @import "file";
-                 * @import 'file.less';
-                 * @import url("file");
-                 * @import url('file');
-                 * @import url(file);
-                 */
-                
-                $buffer = $less->compile(
-                    preg_replace_callback(
-                        "/@import\s*(?:url\s*\(\s*)?'*\"*(.*?)'*\"*\s*(?:\))?;/sim",
-                        function ($matches) use ($resolver, $inputFilename, $project) {
-                            $importFilename = $matches[1];
-                            
-                            // LESS allows @import file extension (.less) to be optional
-                            if (pathinfo($importFilename, PATHINFO_EXTENSION) == "") {
-                                $importFilename .= ".less";
-                            }
-
-                            $resolvedPath = $resolver->realpath($project, $importFilename);
-                            if ($resolvedPath === false) {
-                                $resolvedPath = realpath($importFilename);
-
-                                if ($resolvedPath === false) {
-                                    $resolvedPath = realpath(
-                                        dirname($inputFilename).DIRECTORY_SEPARATOR.$importFilename
-                                    );
-                                }
-                            }
-
-                            if ($resolvedPath === false) {
-                                throw new \Exception("Unable to locate imported file '{$importFilename}'");
-                            }
-                            
-                            $project->getLogger()->debug("Resolved @import '$importFilename' to\n\t'$resolvedPath'");
-                            
-                            return "@import \"$resolvedPath\";";
-                        },
-                        $buffer
-                    )
-                );
+                $buffer = $less->compile($buffer, $inputFilename);
             } catch (\Exception $ex) {
                 throw new \Exception("LESS compile error in '".realpath($inputFilename)."'", null, $ex);
             }

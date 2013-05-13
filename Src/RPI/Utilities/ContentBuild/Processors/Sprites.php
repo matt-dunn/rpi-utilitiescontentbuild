@@ -10,12 +10,12 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
      *
      * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
      */
-    private $project = null;
+    protected $project = null;
     
     const MAX_SPRITE_WIDTH = 1024;
     const SPRITE_PADDING = 2;
     
-    private $maxSpriteWidth = self::MAX_SPRITE_WIDTH;
+    protected $maxSpriteWidth = self::MAX_SPRITE_WIDTH;
 
     public function __construct(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,

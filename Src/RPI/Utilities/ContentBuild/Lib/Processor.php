@@ -10,38 +10,46 @@ class Processor extends Object
      *
      * @var \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor[]
      */
-    private $processors = null;
+    protected $processors = null;
     
     /**
      *
      * @var string
      */
-    private $metadataFilename = null;
+    protected $metadataFilename = null;
     
     /**
      *
      * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
      */
-    private $project = null;
+    protected $project = null;
     
     /**
      *
      * @var array
      */
-    private $metadata = null;
+    protected $metadata = null;
+    
+    /**
+     *
+     * @var boolean
+     */
+    public $debug = false;
     
     /**
      *
      * @var \Psr\Log\LoggerInterface 
      */
-    private $logger = null;
+    protected $logger = null;
     
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
-        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
+        $debug = false
     ) {
         $this->logger = $logger;
         $this->project = $project;
+        $this->debug = $debug;
         
         $this->metadataFilename = dirname($project->configurationFile)."/.metadata";
     }
