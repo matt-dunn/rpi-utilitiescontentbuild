@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "100b6e5a8f59a4e72afe42b126221121",
+    "hash": "5ff9c11942d5aa7b2aa58df203a72619",
     "packages": [
         {
             "name": "leafo/lessphp",
@@ -45,6 +45,58 @@
             "description": "lessphp is a compiler for LESS written in PHP.",
             "homepage": "http://leafo.net/lessphp/",
             "time": "2013-05-07 23:46:12"
+        },
+        {
+            "name": "phing/phing",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phingofficial/phing.git",
+                "reference": "7c54dc2e789fe57ae668e4e64a31cc0c38108839"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phingofficial/phing/zipball/7c54dc2e789fe57ae668e4e64a31cc0c38108839",
+                "reference": "7c54dc2e789fe57ae668e4e64a31cc0c38108839",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.0"
+            },
+            "bin": [
+                "composer/bin/phing"
+            ],
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "classes/phing/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "include-path": [
+                "classes"
+            ],
+            "license": [
+                "LGPL3"
+            ],
+            "authors": [
+                {
+                    "name": "Michiel Rook",
+                    "email": "mrook@php.net"
+                },
+                {
+                    "name": "Phing Community",
+                    "homepage": "http://www.phing.info/trac/wiki/Development/Contributors"
+                }
+            ],
+            "description": "PHing Is Not GNU make; it's a PHP project build system or build tool based on Apache Ant.",
+            "homepage": "http://www.phing.info/",
+            "keywords": [
+                "build",
+                "task",
+                "tool"
+            ],
+            "time": "2013-05-14 19:35:06"
         },
         {
             "name": "psr/log",
@@ -620,6 +672,7 @@
     "stability-flags": {
         "rpi/console": 20,
         "leafo/lessphp": 20,
+        "phing/phing": 20,
         "ulrichsg/getopt-php": 20
     },
     "platform": {

@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!-- phing build file -->
+<project name="buildphar" basedir="." default="main">
+    <target name="clean">
+        <delete file="bin/contentbuild" failonerror="false"/>
+        <delete file="bin/contentbuild.phar" failonerror="false"/>
+    </target>
+    
+    <target name="createphar">
+        <echo>
+            <fileset dir="." id="sourceFiles">
+                <include name="Src/**" />
+                <include name="vendor/autoload.php" />
+                <include name="vendor/composer/**" />
+                <include name="vendor/rpi/**" />
+                <include name="vendor/leafo/lessphp/lessc.inc.php" />
+                <include name="vendor/leafo/lessphp/lessify.inc.php" />
+                <include name="vendor/psr/log/Psr/Log/**" />
+                <include name="vendor/ulrichsg/getopt-php/src/**" />
+                <include name="vendor/yui/yuicompressor/build/yuicompressor-2.4.7.jar" />
+                <exclude name="**/Test/**"/>
+                <exclude name="**/Test.php"/>
+                <exclude name="**/build.xml"/>
+                <exclude name="**/composer.*"/>
+            </fileset>
+        </echo>
+        
+        <php expression="date('Ymd')" returnProperty="builddate" />
+        <pharpackage
+            compression="gzip"
+            destfile="bin/contentbuild.phar"
+            stub="Src/RPI/Utilities/ContentBuild/Stub.php"
+            alias="contentbuild.phar"
+            basedir=".">
+            
+            <fileset refid="sourceFiles"/>
+            
+            <metadata>
+                <element name="builddate" value="${builddate}" />
+                <element name="authors">
+                    <element name="Matt Dunn">
+                        <element name="e-mail" value="matt@red-pixel.co.uk" />
+                    </element>
+                </element>
+            </metadata>
+        </pharpackage>
+    </target>
+    
+    <target name="install">
+        <move file="bin/contentbuild.phar" tofile="bin/contentbuild" overwrite="true"/>
+        <exec command="chmod +x bin/contentbuild" />
+        <copy file="bin/contentbuild" tofile="/usr/local/bin/contentbuild" overwrite="true" />
+    </target>
+    
+    <target name="main"
+        depends="clean,createphar,install"
+    />
+</project>
