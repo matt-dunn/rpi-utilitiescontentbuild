@@ -37,8 +37,8 @@ class LessCompiler extends \lessc
 
             $outDebug = $this->makeOutputBlock(null);
             $outDebug->lines [] = sprintf(
-                "@media -sass-debug-info{filename{font-family:file\:\/\/%s}line{font-family:\%08d}}\n",
-                str_replace(array(".", "/"), array("\.", "\/"), realpath($filename)),
+                "@media -sass-debug-info{filename{font-family:file\:\/\/%s}line{font-family:\\00003%d}}\n",
+                preg_replace("/([\/:.])/", "\\\\$1", realpath($filename)),
                 $line_number
             );
             $this->scope->children[] = $outDebug;
