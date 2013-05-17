@@ -107,12 +107,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "d1113ca09a060fac85414b4d03982c34de803cd7"
+                "reference": "251c20ee1a92da0d3111157de4e6ada9523ed19b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/d1113ca09a060fac85414b4d03982c34de803cd7",
-                "reference": "d1113ca09a060fac85414b4d03982c34de803cd7",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/251c20ee1a92da0d3111157de4e6ada9523ed19b",
+                "reference": "251c20ee1a92da0d3111157de4e6ada9523ed19b",
                 "shasum": ""
             },
             "require": {
@@ -120,6 +120,9 @@
                 "phpunit/php-file-iterator": ">=1.3.0@stable",
                 "phpunit/php-text-template": ">=1.1.1@stable",
                 "phpunit/php-token-stream": ">=1.1.3@stable"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
             },
             "suggest": {
                 "ext-dom": "*",
@@ -152,7 +155,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-05-11 06:28:55"
+            "time": "2013-05-17 06:31:50"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -338,12 +341,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "3.7.20"
+                "reference": "1f5bee4ffa4c36654ac305dece9d86343c716444"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3.7.20",
-                "reference": "3.7.20",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1f5bee4ffa4c36654ac305dece9d86343c716444",
+                "reference": "1f5bee4ffa4c36654ac305dece9d86343c716444",
                 "shasum": ""
             },
             "require": {
@@ -352,7 +355,7 @@
                 "ext-reflection": "*",
                 "ext-spl": "*",
                 "php": ">=5.3.3",
-                "phpunit/php-code-coverage": ">=1.2.1,<1.3.0",
+                "phpunit/php-code-coverage": ">=1.2.10,<1.3.0",
                 "phpunit/php-file-iterator": ">=1.3.1",
                 "phpunit/php-text-template": ">=1.1.1",
                 "phpunit/php-timer": ">=1.0.2,<1.1.0",
@@ -404,7 +407,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-05-13 06:06:41"
+            "time": "2013-05-17 03:35:58"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -498,7 +501,7 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git@git.assembla.com:rpi-console.git",
+                "url": "ssh://git@bitbucket.org/redpixelinteractive/rpi-console.git",
                 "reference": "44c7e96420016c35fd75e93cece51ce489bb6538"
             },
             "require": {
@@ -526,7 +529,7 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git@git.assembla.com:rpi-foundation.git",
+                "url": "ssh://git@bitbucket.org/redpixelinteractive/rpi-foundation.git",
                 "reference": "8f288f5062c87035cf84a7e070bce83e8725d0e8"
             },
             "require": {
@@ -574,12 +577,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "030e5f857f4089912ea3ee01d84ef41bc9a961a4"
+                "reference": "82100c7732c95452702d11433aad50988700d36c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/030e5f857f4089912ea3ee01d84ef41bc9a961a4",
-                "reference": "030e5f857f4089912ea3ee01d84ef41bc9a961a4",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/82100c7732c95452702d11433aad50988700d36c",
+                "reference": "82100c7732c95452702d11433aad50988700d36c",
                 "shasum": ""
             },
             "require": {
@@ -588,7 +591,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.3-dev"
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -612,7 +615,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2013-05-10 18:12:13"
+            "time": "2013-05-16 07:54:39"
         },
         {
             "name": "ulrichsg/getopt-php",
