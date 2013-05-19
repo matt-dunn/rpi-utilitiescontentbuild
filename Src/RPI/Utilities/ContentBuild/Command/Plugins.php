@@ -60,7 +60,11 @@ class Plugins implements \RPI\Console\ICommand
         
         foreach ($classes as $class) {
             $className = self::getClassName($class);
-            $logger->info("    $className: ".$className::getVersion());
+            $reflectionClass = new \ReflectionClass($className);
+            if (in_array("RPI\Utilities\ContentBuild\Lib\Model\IPlugin", class_implements($className))
+                && !$reflectionClass->isAbstract()) {
+                $logger->info("    $className: ".$className::getVersion());
+            }
         }
     }
     
