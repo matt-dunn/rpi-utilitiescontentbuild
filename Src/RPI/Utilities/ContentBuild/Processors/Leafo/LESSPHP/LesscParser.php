@@ -1,6 +1,6 @@
 <?php
 
-namespace RPI\Utilities\ContentBuild\Processors\LESSPHP;
+namespace RPI\Utilities\ContentBuild\Processors\Leafo\LESSPHP;
 
 class LesscParser extends \lessc_parser
 {

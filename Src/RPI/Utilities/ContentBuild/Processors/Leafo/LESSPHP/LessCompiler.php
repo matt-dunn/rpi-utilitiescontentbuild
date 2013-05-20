@@ -1,6 +1,6 @@
 <?php
 
-namespace RPI\Utilities\ContentBuild\Processors\LESSPHP;
+namespace RPI\Utilities\ContentBuild\Processors\Leafo\LESSPHP;
 
 class LessCompiler extends \lessc
 {
@@ -51,7 +51,7 @@ class LessCompiler extends \lessc
 
     protected function makeParser($name)
     {
-        $parser = new \RPI\Utilities\ContentBuild\Processors\LESSPHP\LesscParser($this, $name);
+        $parser = new \RPI\Utilities\ContentBuild\Processors\Leafo\LESSPHP\LesscParser($this, $name);
         $parser->writeComments = $this->preserveComments;
 
         return $parser;
@@ -61,7 +61,7 @@ class LessCompiler extends \lessc
     protected function injectVariables($args)
     {
         $this->pushEnv();
-        $parser = new \RPI\Utilities\ContentBuild\Processors\LESSPHP\LesscParser($this, __METHOD__);
+        $parser = new \RPI\Utilities\ContentBuild\Processors\Leafo\LESSPHP\LesscParser($this, __METHOD__);
         foreach ($args as $name => $strValue) {
             if ($name{0} != '@') {
                 $name = '@' . $name;

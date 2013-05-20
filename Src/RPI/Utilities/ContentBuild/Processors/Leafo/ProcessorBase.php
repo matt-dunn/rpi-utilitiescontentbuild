@@ -1,8 +1,8 @@
 <?php
 
-namespace RPI\Utilities\ContentBuild\Processors;
+namespace RPI\Utilities\ContentBuild\Processors\Leafo;
 
-abstract class CompilerBase implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
+abstract class ProcessorBase implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
     /**
      *
@@ -62,20 +62,20 @@ abstract class CompilerBase implements \RPI\Utilities\ContentBuild\Lib\Model\Pro
             if (isset($this->customFunctions)) {
                 foreach ($this->customFunctions as $function) {
                     if (!isset($function["@"], $function["@"]["name"])) {
-                        throw new \Exception(
+                        throw new \RPI\Utilities\ContentBuild\Processors\Leafo\Exceptions\CustomFunction(
                             "Custom function missing name attribute: ".
                             str_replace("array (", "", var_export($function, true))
                         );
                     }
                     
                     if (!isset($function["@"], $function["@"]["params"])) {
-                        throw new \Exception(
+                        throw new \RPI\Utilities\ContentBuild\Processors\Leafo\Exceptions\CustomFunction(
                             "Custom function '{$function["@"]["name"]}' missing params attribute"
                         );
                     }
                     
                     if (!isset($function["#"]) || trim($function["#"]) == "") {
-                        throw new \Exception(
+                        throw new \RPI\Utilities\ContentBuild\Processors\Leafo\Exceptions\CustomFunction(
                             "Custom function '{$function["@"]["name"]}' missing code in function body"
                         );
                     }
@@ -84,7 +84,7 @@ abstract class CompilerBase implements \RPI\Utilities\ContentBuild\Lib\Model\Pro
                         try {
                             {$function["#"]}
                         } catch (\Exception \$ex) {
-                            throw new \Exception(
+                            throw new \RPI\Utilities\ContentBuild\Processors\Leafo\Exceptions\CustomFunction(
                                 "Custom function '{$function["@"]["name"]}' caused an exception: ".\$ex->getMessage()
                             );
                         }
@@ -128,7 +128,7 @@ EOT;
                 
                 $buffer = $compiler->compile($buffer, $inputFilename);
             } catch (\Exception $ex) {
-                throw new \Exception(
+                throw new \RPI\Utilities\ContentBuild\Processors\Leafo\Exceptions\CompilerError(
                     "{$this->getFileExtension()} compile error in '".realpath($inputFilename)."'",
                     null,
                     $ex

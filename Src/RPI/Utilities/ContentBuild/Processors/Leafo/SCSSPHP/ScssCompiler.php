@@ -1,6 +1,6 @@
 <?php
 
-namespace RPI\Utilities\ContentBuild\Processors\SCSSPHP;
+namespace RPI\Utilities\ContentBuild\Processors\Leafo\SCSSPHP;
 
 class ScssCompiler extends \scssc
 {
