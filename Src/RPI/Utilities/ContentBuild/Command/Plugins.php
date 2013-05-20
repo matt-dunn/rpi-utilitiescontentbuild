@@ -37,6 +37,12 @@ class Plugins implements \RPI\Console\ICommand
         array $operands
     ) {
         if (isset($value)) {
+            $logger->setLogLevel(
+                array(
+                    \Psr\Log\LogLevel::INFO
+                )
+            );
+            
             displayHeader($logger);
 
             $logger->info("Processors:");
