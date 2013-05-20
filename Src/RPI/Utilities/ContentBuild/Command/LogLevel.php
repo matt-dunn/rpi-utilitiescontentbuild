@@ -15,7 +15,7 @@ class LogLevel implements \RPI\Console\ICommand
             "option" => array(
                 "l",
                 "loglevel",
-                Getopt::REQUIRED_ARGUMENT, "Set log level"
+                Getopt::REQUIRED_ARGUMENT, "Set log level. 0 = silent, 1 = information, 2 = verbose, 3 = debug"
             )
         );
     }
@@ -40,7 +40,6 @@ class LogLevel implements \RPI\Console\ICommand
             try {
                 $logLevels = array(
                     array(
-                        \Psr\Log\LogLevel::INFO,
                         \Psr\Log\LogLevel::ERROR
                     ),
                     array(
