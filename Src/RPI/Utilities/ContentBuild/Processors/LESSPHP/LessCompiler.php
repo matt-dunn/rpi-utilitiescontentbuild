@@ -35,13 +35,13 @@ class LessCompiler extends \lessc
         if ($this->debug && isset($block->props[0])) {
             $prop = $block->props[0];
             $filename = $prop[-2];
-            $line_number = $prop[-3];
+            $lineNumber = $prop[-3];
 
             $outDebug = $this->makeOutputBlock(null);
             $outDebug->lines [] = sprintf(
                 "@media -sass-debug-info{filename{font-family:file\:\/\/%s}line{font-family:\\00003%d}}\n",
                 preg_replace("/([\/:.])/", "\\\\$1", realpath($filename)),
-                $line_number
+                $lineNumber
             );
             $this->scope->children[] = $outDebug;
         }
