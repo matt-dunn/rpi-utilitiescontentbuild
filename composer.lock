@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "b98df270a06758694abb5f2cffff9975",
+    "hash": "456fc0ff1b5fd6cb1238a1ed9d2ca96e",
     "packages": [
 
     ],
@@ -48,6 +48,49 @@
             "description": "lessphp is a compiler for LESS written in PHP.",
             "homepage": "http://leafo.net/lessphp/",
             "time": "2013-05-07 23:46:12"
+        },
+        {
+            "name": "leafo/scssphp",
+            "version": "v0.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/leafo/scssphp.git",
+                "reference": "v0.0.5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/leafo/scssphp/zipball/v0.0.5",
+                "reference": "v0.0.5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.0"
+            },
+            "require-dev": {
+                "php": ">=5.3.0",
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "scss.inc.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT",
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Leaf Corcoran",
+                    "email": "leafot@gmail.com",
+                    "homepage": "http://leafo.net"
+                }
+            ],
+            "description": "scssphp is a compiler for SCSS written in PHP.",
+            "homepage": "http://leafo.net/scssphp/",
+            "time": "2013-03-12 04:35:11"
         },
         {
             "name": "phing/phing",
@@ -107,12 +150,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "251c20ee1a92da0d3111157de4e6ada9523ed19b"
+                "reference": "ac44d7cab145515d1496f84811e42a5c5f39ee74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/251c20ee1a92da0d3111157de4e6ada9523ed19b",
-                "reference": "251c20ee1a92da0d3111157de4e6ada9523ed19b",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/ac44d7cab145515d1496f84811e42a5c5f39ee74",
+                "reference": "ac44d7cab145515d1496f84811e42a5c5f39ee74",
                 "shasum": ""
             },
             "require": {
@@ -155,7 +198,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-05-17 06:31:50"
+            "time": "2013-05-18 03:35:59"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -341,12 +384,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "1f5bee4ffa4c36654ac305dece9d86343c716444"
+                "reference": "1c194d6359531979d68c8310afff7e3b73b99654"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1f5bee4ffa4c36654ac305dece9d86343c716444",
-                "reference": "1f5bee4ffa4c36654ac305dece9d86343c716444",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1c194d6359531979d68c8310afff7e3b73b99654",
+                "reference": "1c194d6359531979d68c8310afff7e3b73b99654",
                 "shasum": ""
             },
             "require": {
@@ -407,7 +450,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-05-17 03:35:58"
+            "time": "2013-05-19 10:05:15"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
