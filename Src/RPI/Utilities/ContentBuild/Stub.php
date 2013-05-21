@@ -1,4 +1,4 @@
-#!/usr/bin/env php -dphar.readonly=0 -ddetect_unicode=1
+#!/usr/bin/env php
 <?php
 
 Phar::mapPhar('contentbuild.phar');
