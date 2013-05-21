@@ -95,7 +95,7 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
         $this->logger = $logger;
         $this->configurationFile = $configurationFile;
 
-        $this->validateConfigurationFile($configurationFile);
+        $this->validate();
         
         $doc = new \DOMDocument();
         $doc->load($configurationFile);
@@ -180,20 +180,19 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
         }
     }
 
-    protected function validateConfigurationFile($configurationFile)
+    public function validate()
     {
         try {
             $doc = new \DOMDocument();
-            $doc->load($configurationFile);
-            if (!\RPI\Foundation\Helpers\Dom::validateSchema(
+            $doc->load($this->configurationFile);
+            return \RPI\Foundation\Helpers\Dom::validateSchema(
                 $doc,
                 dirname(__FILE__)."/Model/Schema.xsd"
-            )) {
-                exit(2);
-            }
+            );
         } catch (\Exception $ex) {
-            $this->logger->error("Invalid config file '$configurationFile'", array("exception" => $ex));
-            exit(2);
+            throw new \RPI\Foundation\Exceptions\RuntimeException(
+                "Invalid config file '{$this->configurationFile}'", null, $ex
+            );
         }
     }
     

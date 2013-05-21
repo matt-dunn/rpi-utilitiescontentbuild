@@ -34,9 +34,16 @@ class Version implements \RPI\Console\ICommand
         \Psr\Log\LoggerInterface $logger,
         \Ulrichsg\Getopt $getopt,
         $value,
-        array $operands
+        array $operands,
+        array $commandValues
     ) {
         if (isset($value)) {
+            $logger->setLogLevel(
+                array(
+                    \Psr\Log\LogLevel::INFO
+                )
+            );
+            
             $logger->info("ContentBuild v".CONTENT_BUILD_VERSION);
             return false;
         }

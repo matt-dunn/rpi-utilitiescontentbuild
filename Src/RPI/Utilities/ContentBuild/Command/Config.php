@@ -34,7 +34,8 @@ class Config implements \RPI\Console\ICommand
         \Psr\Log\LoggerInterface $logger,
         \Ulrichsg\Getopt $getopt,
         $configurationFile,
-        array $operands
+        array $operands,
+        array $commandValues
     ) {
         if (!isset($configurationFile) && isset($operands[0])) {
             $configurationFile = $operands[0];

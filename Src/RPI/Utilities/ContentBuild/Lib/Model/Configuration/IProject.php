@@ -54,4 +54,10 @@ interface IProject
      * @return \Psr\Log\LoggerInterface
      */
     public function getLogger();
+    
+    /**
+     * 
+     * @return boolean
+     */
+    public function validate();
 }

@@ -34,7 +34,8 @@ class NoDev implements \RPI\Console\ICommand
         \Psr\Log\LoggerInterface $logger,
         \Ulrichsg\Getopt $getopt,
         $value,
-        array $operands
+        array $operands,
+        array $commandValues
     ) {
         if (isset($value)) {
             if (!is_numeric($value) || ($value != 0 && $value != 1)) {

@@ -34,7 +34,8 @@ class Plugins implements \RPI\Console\ICommand
         \Psr\Log\LoggerInterface $logger,
         \Ulrichsg\Getopt $getopt,
         $value,
-        array $operands
+        array $operands,
+        array $commandValues
     ) {
         if (isset($value)) {
             $logger->setLogLevel(
