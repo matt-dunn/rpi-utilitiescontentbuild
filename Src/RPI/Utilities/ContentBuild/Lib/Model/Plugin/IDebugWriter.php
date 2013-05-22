@@ -19,5 +19,4 @@ interface IDebugWriter extends \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
         $outputFilename,
         $webroot
     );
-    
 }
