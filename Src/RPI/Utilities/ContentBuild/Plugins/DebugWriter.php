@@ -19,6 +19,8 @@ class DebugWriter implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
         array $options = null
     ) {
         $this->project = $project;
+        
+        $project->getLogger()->info("Creating '".__CLASS__."' ({$this->getVersion()})");
     }
     
     public static function getVersion()

@@ -24,7 +24,7 @@ class Build
     
     /**
      *
-     * @var \RPI\Utilities\ContentBuild\Plugins\Compressor
+     * @var \RPI\Utilities\ContentBuild\Plugins\YUICompressor
      */
     protected $compressor = null;
     
@@ -82,7 +82,7 @@ class Build
         }
         
         $this->dependencyBuilder = new \RPI\Utilities\ContentBuild\Plugins\DependencyBuilder($project, $options);
-        $this->compressor = new \RPI\Utilities\ContentBuild\Plugins\Compressor($project, $options);
+        $this->compressor = new \RPI\Utilities\ContentBuild\Plugins\YUICompressor($project, $options);
         if ($this->includeDebug) {
             $this->debugWriter = new \RPI\Utilities\ContentBuild\Plugins\DebugWriter($project, $options);
         }

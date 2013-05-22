@@ -2,7 +2,7 @@
 
 namespace RPI\Utilities\ContentBuild\Plugins;
 
-class Compressor implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
+class YUICompressor implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
 {
     const VERSION = "1.0.1";
     const VERSION_YUI = "2.4.7";
@@ -32,6 +32,8 @@ class Compressor implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
         $this->project = $project;
         $this->yuicompressorLocation =
             __DIR__."/../../../../../vendor/yui/yuicompressor/build/yuicompressor-".self::VERSION_YUI.".jar";
+        
+        $project->getLogger()->info("Creating '".__CLASS__."' ({$this->getVersion()})");
     }
     
     public function __destruct()
