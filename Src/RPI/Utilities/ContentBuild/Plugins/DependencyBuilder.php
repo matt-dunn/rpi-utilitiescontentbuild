@@ -140,19 +140,16 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
 
                 array_push($dependentFiles, $inputFilename);
 
-                $dependencyClassname =
-                    "\\RPI\\Utilities\\ContentBuild\\Lib\\Dependencies\\".ucfirst($dependenciesFileType)."\\Dependency";
-                if (!class_exists($dependencyClassname)) {
-                    throw new \Exception("Dependency type '$dependenciesFileType' not supported");
-                }
-                
-                $dependency = new $dependencyClassname($this->project->getLogger(), $dependenciesFile);
-
-                $this->project->getLogger()->debug(
-                    "Processing ".count($dependency->files)." dependencies"
+                $dependencyConfig = new \RPI\Utilities\ContentBuild\Lib\Dependency(
+                    $this->project->getLogger(),
+                    $dependenciesFile
                 );
 
-                foreach ($dependency->files as $dependency) {
+                $this->project->getLogger()->debug(
+                    "Processing ".count($dependencyConfig->dependencies->files)." dependencies"
+                );
+
+                foreach ($dependencyConfig->dependencies->files as $dependency) {
                     $filename = $this->getInputFileName(
                         $build,
                         $resolver,

@@ -21,6 +21,12 @@ class Dependency extends Object implements \RPI\Utilities\ContentBuild\Lib\Model
      */
     protected $files = array();
     
+    /**
+     *
+     * @var string
+     */
+    protected $filename = null;
+    
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
         $filename
@@ -30,11 +36,12 @@ class Dependency extends Object implements \RPI\Utilities\ContentBuild\Lib\Model
         }
         
         $this->logger = $logger;
+        $this->filename = $filename;
         
-        $this->validateConfigurationFile($filename);
+        $this->validate();
         
         $doc = new \DOMDocument();
-        $doc->load($filename);
+        $doc->load($this->filename);
         
         $dependencies = \RPI\Foundation\Helpers\Dom::deserialize(simplexml_import_dom($doc));
         
@@ -55,20 +62,21 @@ class Dependency extends Object implements \RPI\Utilities\ContentBuild\Lib\Model
         return $this->files;
     }
     
-    protected function validateConfigurationFile($filename)
+    public function validate()
     {
         try {
             $doc = new \DOMDocument();
-            $doc->load($filename);
-            if (!\RPI\Foundation\Helpers\Dom::validateSchema(
+            $doc->load($this->filename);
+            return \RPI\Foundation\Helpers\Dom::validateSchema(
                 $doc,
                 dirname(__FILE__)."/Model/Schema.xsd"
-            )) {
-                exit(2);
-            }
+            );
         } catch (\Exception $ex) {
-            $this->logger->error("Invalid dependency file '$filename'", array("exception" => $ex));
-            exit(2);
+            throw new \RPI\Foundation\Exceptions\RuntimeException(
+                "Invalid dependency file '{$this->filename}'",
+                null,
+                $ex
+            );
         }
     }
 }

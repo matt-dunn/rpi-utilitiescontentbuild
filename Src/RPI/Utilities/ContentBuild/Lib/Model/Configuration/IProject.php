@@ -5,6 +5,18 @@ namespace RPI\Utilities\ContentBuild\Lib\Model\Configuration;
 interface IProject
 {
     /**
+     * 
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param string $configurationFile
+     * @param array $options
+     */
+    public function __construct(
+        \Psr\Log\LoggerInterface $logger,
+        $configurationFile,
+        array $options = null
+    );
+    
+    /**
      * @return boolean
      */
     public function getIncludeDebug();

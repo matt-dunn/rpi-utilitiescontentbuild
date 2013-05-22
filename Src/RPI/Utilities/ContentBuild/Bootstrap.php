@@ -28,11 +28,12 @@ new \RPI\Console\Exception\Handler($logger);
 $commands = new \RPI\Console\Command(
     $logger,
     array(
-        new \RPI\Utilities\ContentBuild\Command\Version(),
         new \RPI\Utilities\ContentBuild\Command\LogLevel(),
+        new \RPI\Utilities\ContentBuild\Command\Version(),
         new \RPI\Utilities\ContentBuild\Command\Help(),
-        new \RPI\Utilities\ContentBuild\Command\Plugins(),
+        new \RPI\Utilities\ContentBuild\Command\Support(),
         new \RPI\Utilities\ContentBuild\Command\Options\NoDev(),
+        new \RPI\Utilities\ContentBuild\Command\ValidateDependency(),
         new \RPI\Utilities\ContentBuild\Command\Config(),
         new \RPI\Utilities\ContentBuild\Command\Validate()
     )
@@ -42,17 +43,23 @@ $options = $commands->parse();
 if ($options !== false && isset($options["configurationFile"])) {
     displayHeader($logger);
 
-    $project = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Project(
+    $configuration = new \RPI\Utilities\ContentBuild\Lib\Configuration(
         $logger,
         $options["configurationFile"],
         $options
     );
 
-    $processor = new \RPI\Utilities\ContentBuild\Lib\Processor($logger, $project);
+    $processor = new \RPI\Utilities\ContentBuild\Lib\Processor($logger, $configuration->project);
     
-    $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver($logger, $project);
+    $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver($logger, $configuration->project);
 
-    $build = new \RPI\Utilities\ContentBuild\Lib\Build($logger, $project, $processor, $resolver, $options);
+    $build = new \RPI\Utilities\ContentBuild\Lib\Build(
+        $logger,
+        $configuration->project,
+        $processor,
+        $resolver,
+        $options
+    );
     
     $build->run();
 }

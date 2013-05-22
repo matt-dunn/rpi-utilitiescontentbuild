@@ -15,7 +15,8 @@ class Config implements \RPI\Console\ICommand
             "option" => array(
                 "c",
                 "config",
-                Getopt::REQUIRED_ARGUMENT, "Location of the configuration file"
+                Getopt::REQUIRED_ARGUMENT, "Location of the configuration file <arg>. ".
+                "Defaults to a file called 'ui.build.xml' in the current directory or the directory supplied."
             )
         );
     }

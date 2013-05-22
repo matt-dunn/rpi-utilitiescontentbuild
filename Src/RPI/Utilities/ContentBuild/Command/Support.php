@@ -4,18 +4,18 @@ namespace RPI\Utilities\ContentBuild\Command;
 
 use Ulrichsg\Getopt;
 
-class Plugins implements \RPI\Console\ICommand
+class Support implements \RPI\Console\ICommand
 {
     protected $optionDetails = null;
     
     public function __construct()
     {
         $this->optionDetails = array(
-            "name" => "plugins",
+            "name" => "support",
             "option" => array(
-                "p",
-                "plugins",
-                Getopt::NO_ARGUMENT, "Display a list of all available plugins"
+                "s",
+                "support",
+                Getopt::NO_ARGUMENT, "Display details about ContentBuild"
             )
         );
     }
@@ -46,15 +46,32 @@ class Plugins implements \RPI\Console\ICommand
             
             displayHeader($logger);
 
-            $logger->info("Processors:");
+            $logger->info("\nProcessors:");
             $this->getDetails($logger, __DIR__."/../Processors");
             
-            $logger->info("Resolvers:");
+            $logger->info("\nResolvers:");
             $this->getDetails($logger, __DIR__."/../UriResolvers");
             
-            $logger->info("Other:");
+            $logger->info("\nPlugins:");
             $this->getDetails($logger, __DIR__."/../Plugins");
             
+            $logger->info("\nSupported file types:");
+            $logger->info(
+                "    Configuration: ".
+                implode(
+                    ", ",
+                    $this->getSupportedFileTypes(__DIR__."/../Lib/Configuration")
+                )
+            );
+            
+            $logger->info(
+                "    Dependency: ".
+                implode(
+                    ", ",
+                    $this->getSupportedFileTypes(__DIR__."/../Lib/Dependencies")
+                )
+            );
+
             return false;
         }
     }
@@ -85,5 +102,19 @@ class Plugins implements \RPI\Console\ICommand
             "",
             substr(str_replace(DIRECTORY_SEPARATOR, "\\", $fullPath), strlen($basePath))
         );
+    }
+    
+    protected function getSupportedFileTypes($basePath)
+    {
+        $configurationTypes = array_map(
+            function ($dir) {
+                return basename($dir);
+            },
+            glob(realpath($basePath)."/*", GLOB_ONLYDIR)
+        );
+
+        asort($configurationTypes);
+        
+        return $configurationTypes;
     }
 }

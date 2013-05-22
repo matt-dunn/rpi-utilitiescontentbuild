@@ -4,18 +4,18 @@ namespace RPI\Utilities\ContentBuild\Command;
 
 use Ulrichsg\Getopt;
 
-class Validate implements \RPI\Console\ICommand
+class ValidateDependency implements \RPI\Console\ICommand
 {
     protected $optionDetails = null;
     
     public function __construct()
     {
         $this->optionDetails = array(
-            "name" => "validate",
+            "name" => "validate-dep",
             "option" => array(
                 null,
-                "validate",
-                Getopt::NO_ARGUMENT, "Validate configuration file"
+                "validate-dep",
+                Getopt::REQUIRED_ARGUMENT, "Validate dependency file <arg>"
             )
         );
     }
@@ -33,31 +33,31 @@ class Validate implements \RPI\Console\ICommand
     public function exec(
         \Psr\Log\LoggerInterface $logger,
         \Ulrichsg\Getopt $getopt,
-        $value,
+        $dependencyFile,
         array $operands,
         array $commandValues
     ) {
-        if (isset($value)) {
-            if (!isset($commandValues["configurationFile"])) {
-                $logger->error("Configuration file not found");
+        if (isset($dependencyFile)) {
+            if (realpath($dependencyFile) === false) {
+                $logger->error("Dependency file '$dependencyFile' not found");
                 return false;
             }
-
-            $configuration = new \RPI\Utilities\ContentBuild\Lib\Configuration(
+            
+            $dependendency = new \RPI\Utilities\ContentBuild\Lib\Dependency(
                 $logger,
-                $commandValues["configurationFile"]
+                $dependencyFile
             );
 
-            if ($configuration->project->validate()) {
+            if ($dependendency->dependencies->validate()) {
                 $logger->setLogLevel(
                     array(
                         \Psr\Log\LogLevel::INFO
                     )
                 );
 
-                $logger->info("Congratulations, the config file '{$commandValues["configurationFile"]}' is valid");
+                $logger->info("Congratulations, the dependency file '$dependencyFile' is valid");
             } else {
-                $logger->info("Config file '{$commandValues["configurationFile"]}' is invalid");
+                $logger->info("Dependency file '$dependencyFile' is invalid");
             }
     
             return false;

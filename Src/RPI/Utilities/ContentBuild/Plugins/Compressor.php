@@ -4,7 +4,8 @@ namespace RPI\Utilities\ContentBuild\Plugins;
 
 class Compressor implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
 {
-    const VERSION = "2.4.7";
+    const VERSION = "1.0.1";
+    const VERSION_YUI = "2.4.7";
     
     /**
      *
@@ -30,7 +31,7 @@ class Compressor implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
     ) {
         $this->project = $project;
         $this->yuicompressorLocation =
-            __DIR__."/../../../../../vendor/yui/yuicompressor/build/yuicompressor-".self::VERSION.".jar";
+            __DIR__."/../../../../../vendor/yui/yuicompressor/build/yuicompressor-".self::VERSION_YUI.".jar";
     }
     
     public function __destruct()
@@ -45,7 +46,7 @@ class Compressor implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
 
     public static function getVersion()
     {
-        return "v".self::VERSION." (yuicompressor)";
+        return "v".self::VERSION." - yuicompressor ".self::VERSION_YUI;
     }
     
     public function compressFile($filename, $type, $outputFilename)

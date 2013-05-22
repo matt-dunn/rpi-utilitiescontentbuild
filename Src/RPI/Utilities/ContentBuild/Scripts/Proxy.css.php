@@ -32,14 +32,14 @@ if (isset($GLOBALS["configuration-file"])) {
 
     new \RPI\Foundation\Exception\Handler($logger);
 
-    $project = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Project(
+    $configuration = new \RPI\Utilities\ContentBuild\Lib\Configuration(
         $logger,
         $GLOBALS["configuration-file"]
     );
 
-    $processor = new \RPI\Utilities\ContentBuild\Lib\Processor($logger, $project, true);
+    $processor = new \RPI\Utilities\ContentBuild\Lib\Processor($logger, $configuration->project, true);
 
-    $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver($logger, $project);
+    $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver($logger, $configuration->project);
 
     echo $processor->process($resolver, $file, file_get_contents($file));
 } else {
