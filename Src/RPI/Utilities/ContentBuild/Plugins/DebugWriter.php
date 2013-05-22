@@ -74,7 +74,7 @@ class DebugWriter implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebug
         $this->project->getLogger()->debug(
             "Creating JavaScript debug code: ".$outputFilename
         );
-        $proxyFileScript = __DIR__."/../Scripts/Proxy.js.php";
+        $proxyFileScript = __DIR__."/DebugWriter/Proxy.js.php";
         if (!file_exists($proxyFileScript)) {
             throw new \Exception("Unable to locate proxy script file: ".$proxyFileScript);
         }
@@ -208,7 +208,7 @@ CONTENT;
     ) {
         $this->project->getLogger()->debug("Creating CSS debug code: ".$outputFilename);
 
-        $proxyFileScript = dirname(__FILE__)."/../Scripts/Proxy.css.php";
+        $proxyFileScript = dirname(__FILE__)."/DebugWriter/Proxy.css.php";
         if (!file_exists($proxyFileScript)) {
             throw new \Exception("Unable to locate proxy script file: ".$proxyFileScript);
         }
