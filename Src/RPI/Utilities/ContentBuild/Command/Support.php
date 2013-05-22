@@ -106,12 +106,17 @@ class Support implements \RPI\Console\ICommand
     
     protected function getSupportedFileTypes($basePath)
     {
-        $configurationTypes = array_map(
-            function ($dir) {
-                return basename($dir);
-            },
-            glob(realpath($basePath)."/*", GLOB_ONLYDIR)
-        );
+        $configurationTypes = array();
+        
+        $fullPath = \RPI\Foundation\Helpers\FileUtils::realPath($basePath);
+        if (is_dir($fullPath)) {
+            if ($dh = opendir($fullPath)) {
+                while (($file = readdir($dh)) !== false) {
+                    $configurationTypes[] = $file;
+                }
+                closedir($dh);
+            }
+        }
 
         asort($configurationTypes);
         
