@@ -8,7 +8,8 @@ class LESSPHP extends \RPI\Utilities\ContentBuild\Processors\Leafo\ProcessorBase
 
     public static function getVersion()
     {
-        return "v".self::VERSION." - lessphp ".\RPI\Utilities\ContentBuild\Processors\Leafo\LESSPHP\LessCompiler::$VERSION;
+        return "v".self::VERSION." - lessphp ".
+            \RPI\Utilities\ContentBuild\Processors\Leafo\LESSPHP\LessCompiler::$VERSION;
     }
 
     protected function getCompiler()

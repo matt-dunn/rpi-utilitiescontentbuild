@@ -191,7 +191,9 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
             );
         } catch (\Exception $ex) {
             throw new \RPI\Foundation\Exceptions\RuntimeException(
-                "Invalid config file '{$this->configurationFile}'", null, $ex
+                "Invalid config file '{$this->configurationFile}'",
+                null,
+                $ex
             );
         }
     }

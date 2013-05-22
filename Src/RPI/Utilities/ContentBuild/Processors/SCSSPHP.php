@@ -8,7 +8,8 @@ class SCSSPHP extends \RPI\Utilities\ContentBuild\Processors\Leafo\ProcessorBase
 
     public static function getVersion()
     {
-        return "v".self::VERSION." - scssphp ".\RPI\Utilities\ContentBuild\Processors\Leafo\SCSSPHP\ScssCompiler::$VERSION;
+        return "v".self::VERSION." - scssphp ".
+            \RPI\Utilities\ContentBuild\Processors\Leafo\SCSSPHP\ScssCompiler::$VERSION;
     }
     
     protected function getCompiler()

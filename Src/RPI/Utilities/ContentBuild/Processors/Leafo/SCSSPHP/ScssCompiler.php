@@ -29,7 +29,8 @@ class ScssCompiler extends \scssc
         $this->importCallback = $callback;
     }
     
-	protected function compileBlock($block) {
+    protected function compileBlock($block)
+    {
         if ($this->debug && isset($block->children[0])) {
             $prop = $block->children[0];
             
@@ -54,5 +55,5 @@ class ScssCompiler extends \scssc
         }
 
         return parent::compileBlock($block);
-	}
+    }
 }
