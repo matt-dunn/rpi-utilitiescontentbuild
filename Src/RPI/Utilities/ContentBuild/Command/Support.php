@@ -112,7 +112,9 @@ class Support implements \RPI\Console\ICommand
         if (is_dir($fullPath)) {
             if ($dh = opendir($fullPath)) {
                 while (($file = readdir($dh)) !== false) {
-                    $configurationTypes[] = $file;
+                    if (is_dir($fullPath.DIRECTORY_SEPARATOR.$file) && $file != "." && $file != "..") {
+                        $configurationTypes[] = $file;
+                    }
                 }
                 closedir($dh);
             }
