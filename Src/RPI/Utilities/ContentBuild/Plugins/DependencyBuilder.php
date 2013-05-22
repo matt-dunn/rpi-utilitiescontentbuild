@@ -2,7 +2,7 @@
 
 namespace RPI\Utilities\ContentBuild\Plugins;
 
-class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
+class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDependencyBuilder
 {
     const VERSION = "2.0.2";
     

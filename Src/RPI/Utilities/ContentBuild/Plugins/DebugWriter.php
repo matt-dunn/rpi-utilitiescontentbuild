@@ -2,7 +2,7 @@
 
 namespace RPI\Utilities\ContentBuild\Plugins;
 
-class DebugWriter implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
+class DebugWriter implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebugWriter
 {
     const VERSION = "2.0.1";
     
@@ -33,6 +33,8 @@ class DebugWriter implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
      * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build
      * @param array $files
      * @param string $outputFilename
+     * 
+     * @return bool
      */
     public function writeDebugFile(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
@@ -58,6 +60,8 @@ class DebugWriter implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
                 $this->writeDebugFileJs($build, $files, $debugFilename, $debugPath, $webroot);
                 break;
         }
+        
+        return true;
     }
     
     protected function writeDebugFileJs(

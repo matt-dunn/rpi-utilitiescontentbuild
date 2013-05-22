@@ -2,7 +2,7 @@
 
 namespace RPI\Utilities\ContentBuild\Plugins;
 
-class YUICompressor implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
+class YUICompressor implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor
 {
     const VERSION = "1.0.1";
     const VERSION_YUI = "2.4.7";
@@ -98,5 +98,7 @@ class YUICompressor implements \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
         } else {
             $this->project->getLogger()->debug("Nothing to compress: ".$outputFilename);
         }
+        
+        return true;
     }
 }

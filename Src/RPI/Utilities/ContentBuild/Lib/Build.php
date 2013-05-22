@@ -24,19 +24,19 @@ class Build
     
     /**
      *
-     * @var \RPI\Utilities\ContentBuild\Plugins\YUICompressor
+     * @var \RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor
      */
     protected $compressor = null;
     
     /**
      *
-     * @var \RPI\Utilities\ContentBuild\Plugins\DebugWriter
+     * @var \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebugWriter
      */
     protected $debugWriter = null;
     
     /**
      *
-     * @var \RPI\Utilities\ContentBuild\Plugins\DependencyBuilder 
+     * @var \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDependencyBuilder 
      */
     protected $dependencyBuilder = null;
     
@@ -69,7 +69,10 @@ class Build
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
-        array $options = null
+        array $options = null,
+        \RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor $compressor = null,
+        \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDependencyBuilder $dependencyBuilder = null,
+        \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebugWriter $debugWriter = null
     ) {
         $this->logger = $logger;
         $this->project = $project;
@@ -81,9 +84,21 @@ class Build
             $this->includeDebug = $options["debug-include"];
         }
         
-        $this->dependencyBuilder = new \RPI\Utilities\ContentBuild\Plugins\DependencyBuilder($project, $options);
-        $this->compressor = new \RPI\Utilities\ContentBuild\Plugins\YUICompressor($project, $options);
-        if ($this->includeDebug) {
+        if (isset($dependencyBuilder)) {
+            $this->dependencyBuilder = $dependencyBuilder;
+        } else {
+            $this->dependencyBuilder = new \RPI\Utilities\ContentBuild\Plugins\DependencyBuilder($project, $options);
+        }
+        
+        if (isset($compressor)) {
+            $this->compressor = $compressor;
+        } else {
+            $this->compressor = new \RPI\Utilities\ContentBuild\Plugins\YUICompressor($project, $options);
+        }
+        
+        if (isset($debugWriter)) {
+            $this->debugWriter = $debugWriter;
+        } elseif ($this->includeDebug) {
             $this->debugWriter = new \RPI\Utilities\ContentBuild\Plugins\DebugWriter($project, $options);
         }
         
