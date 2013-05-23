@@ -21,10 +21,16 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
     
     public static function getVersion()
     {
-        $output = \RPI\Console\Helpers\Console::run(
-            "sass",
-            "-v"
-        );
+        $output = null;
+        
+        try {
+            $output = \RPI\Console\Helpers\Console::run(
+                "sass",
+                "-v"
+            );
+        } catch (\RPI\Console\Exceptions\Console\NotInstalled $ex) {
+            $output = array("NOT INSTALLED");
+        }
         
         return "v".self::VERSION.(is_array($output) && count($output) > 0 ? " - {$output[0]}" : null);
     }

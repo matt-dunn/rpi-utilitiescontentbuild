@@ -29,10 +29,16 @@ class YuglifyCompressor implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\
     
     public static function getVersion()
     {
-        $output = \RPI\Console\Helpers\Console::run(
-            "yuglify",
-            "-v"
-        );
+        $output = null;
+        
+        try {
+            $output = \RPI\Console\Helpers\Console::run(
+                "yuglify",
+                "-v"
+            );
+        } catch (\RPI\Console\Exceptions\Console\NotInstalled $ex) {
+            $output = array("NOT INSTALLED");
+        }
         
         return "v".self::VERSION.(is_array($output) && count($output) > 0 ? " - yuglify {$output[0]}" : null);
     }
