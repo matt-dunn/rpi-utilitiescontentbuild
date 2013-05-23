@@ -12,13 +12,19 @@
                 <include name="Src/**" />
                 <include name="vendor/autoload.php" />
                 <include name="vendor/composer/**" />
-                <include name="vendor/rpi/**" />
+                
+                <include name="vendor/rpi/console/**" />
+                <include name="vendor/rpi/foundation/**" />
+                <include name="vendor/rpi/schemas/Src/RPI/Schemas/Conf/Common/**" />
+                
+                
                 <include name="vendor/leafo/lessphp/lessc.inc.php" />
                 <include name="vendor/leafo/lessphp/lessify.inc.php" />
                 <include name="vendor/leafo/scssphp/scss.inc.php" />
                 <include name="vendor/psr/log/Psr/Log/**" />
                 <include name="vendor/ulrichsg/getopt-php/src/**" />
                 <include name="vendor/yui/yuicompressor/build/yuicompressor-2.4.7.jar" />
+                
                 <exclude name="**/Test/**"/>
                 <exclude name="**/Test.php"/>
                 <exclude name="**/build.xml"/>
