@@ -87,19 +87,77 @@ class Build
         if (isset($dependencyBuilder)) {
             $this->dependencyBuilder = $dependencyBuilder;
         } else {
-            $this->dependencyBuilder = new \RPI\Utilities\ContentBuild\Plugins\DependencyBuilder($project, $options);
+            if (isset($this->project->plugins["RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDependencyBuilder"])) {
+                $this->dependencyBuilder =
+                    new $this->project->plugins[
+                        "RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDependencyBuilder"
+                    ]->type($project, $options);
+                
+                if (!$this->dependencyBuilder
+                    instanceof \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDependencyBuilder) {
+                    throw new \RPI\Foundation\Exceptions\RuntimeException(
+                        "'{$this->project->plugins[
+                            "RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDependencyBuilder"
+                        ]->type}' ".
+                        "must be of type 'RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDependencyBuilder'"
+                    );
+                }
+            } else {
+                $this->dependencyBuilder = new \RPI\Utilities\ContentBuild\Plugins\DependencyBuilder(
+                    $project,
+                    $options
+                );
+            }
         }
         
         if (isset($compressor)) {
             $this->compressor = $compressor;
         } else {
-            $this->compressor = new \RPI\Utilities\ContentBuild\Plugins\YUICompressor($project, $options);
+            if (isset($this->project->plugins["RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor"])) {
+                $this->compressor =
+                    new $this->project->plugins[
+                        "RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor"
+                    ]->type($project, $options);
+                
+                if (!$this->compressor
+                    instanceof \RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor) {
+                    throw new \RPI\Foundation\Exceptions\RuntimeException(
+                        "'{$this->project->plugins["RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor"]->type}' ".
+                        "must be of type 'RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor'"
+                    );
+                }
+            } else {
+                $this->compressor = new \RPI\Utilities\ContentBuild\Plugins\YUICompressor(
+                    $project,
+                    $options
+                );
+            }
         }
         
         if (isset($debugWriter)) {
             $this->debugWriter = $debugWriter;
         } elseif ($this->includeDebug) {
-            $this->debugWriter = new \RPI\Utilities\ContentBuild\Plugins\DebugWriter($project, $options);
+            if (isset($this->project->plugins["RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebugWriter"])) {
+                $this->debugWriter =
+                    new $this->project->plugins[
+                        "RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebugWriter"
+                    ]->type($project, $options);
+                
+                if (!$this->debugWriter
+                    instanceof \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebugWriter) {
+                    throw new \RPI\Foundation\Exceptions\RuntimeException(
+                        "'{$this->project->plugins[
+                            "RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebugWriter"
+                        ]->type}' ".
+                        "must be of type 'RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebugWriter'"
+                    );
+                }
+            } else {
+                $this->debugWriter = new \RPI\Utilities\ContentBuild\Plugins\DebugWriter(
+                    $project,
+                    $options
+                );
+            }
         }
         
         $this->webroot = realpath($this->project->basePath."/".$this->project->appRoot);
@@ -186,7 +244,7 @@ class Build
                 \RPI\Foundation\Helpers\FileUtils::makeRelativePath(
                     dirname($outputFilename),
                     realpath($this->webroot)
-                )."/".pathinfo($outputFilename, PATHINFO_FILENAME)."-min.".
+                )."/".pathinfo($outputFilename, PATHINFO_FILENAME).".min.".
                 pathinfo($outputFilename, PATHINFO_EXTENSION),
                 $outputFilename
             );
@@ -200,14 +258,14 @@ class Build
                     \RPI\Foundation\Helpers\FileUtils::makeRelativePath(
                         $build->debugPath,
                         realpath($this->webroot)
-                    )."/".pathinfo($outputFilename, PATHINFO_FILENAME)."-min.".
+                    )."/".pathinfo($outputFilename, PATHINFO_FILENAME).".min.".
                     pathinfo($outputFilename, PATHINFO_EXTENSION)
                 );
             }
 
             $parts = pathinfo($outputFilename);
             if (!isset($build->outputFilename)) {
-                $outputMiniFilename = $parts["dirname"]."/".$parts["filename"]."-min.".$parts["extension"];
+                $outputMiniFilename = $parts["dirname"]."/".$parts["filename"].".min.".$parts["extension"];
             } else {
                 $outputMiniFilename = $parts["dirname"]."/".$build->outputFilename;
             }

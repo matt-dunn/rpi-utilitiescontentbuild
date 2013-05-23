@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "456fc0ff1b5fd6cb1238a1ed9d2ca96e",
+    "hash": "456463132c4468c6bcb8c4bfa4cbc9a6",
     "packages": [
 
     ],
@@ -14,12 +14,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/leafo/lessphp.git",
-                "reference": "dbb61d4beaafb0d708b79b008d0b708abeb4eae9"
+                "reference": "ff86f2941c3f3d67d56acad2f8902ca57c73b359"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leafo/lessphp/zipball/dbb61d4beaafb0d708b79b008d0b708abeb4eae9",
-                "reference": "dbb61d4beaafb0d708b79b008d0b708abeb4eae9",
+                "url": "https://api.github.com/repos/leafo/lessphp/zipball/ff86f2941c3f3d67d56acad2f8902ca57c73b359",
+                "reference": "ff86f2941c3f3d67d56acad2f8902ca57c73b359",
                 "shasum": ""
             },
             "type": "library",
@@ -47,7 +47,7 @@
             ],
             "description": "lessphp is a compiler for LESS written in PHP.",
             "homepage": "http://leafo.net/lessphp/",
-            "time": "2013-05-07 23:46:12"
+            "time": "2013-05-22 17:52:29"
         },
         {
             "name": "leafo/scssphp",
@@ -384,12 +384,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "1c194d6359531979d68c8310afff7e3b73b99654"
+                "reference": "d79d90fa080ddff8105d66e13cb54c9ff9252da1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1c194d6359531979d68c8310afff7e3b73b99654",
-                "reference": "1c194d6359531979d68c8310afff7e3b73b99654",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/d79d90fa080ddff8105d66e13cb54c9ff9252da1",
+                "reference": "d79d90fa080ddff8105d66e13cb54c9ff9252da1",
                 "shasum": ""
             },
             "require": {
@@ -450,7 +450,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-05-19 10:05:15"
+            "time": "2013-05-22 16:50:45"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -545,7 +545,7 @@
             "source": {
                 "type": "git",
                 "url": "ssh://git@bitbucket.org/redpixelinteractive/rpi-console.git",
-                "reference": "44c7e96420016c35fd75e93cece51ce489bb6538"
+                "reference": "37b3132780372f749441aece9b9320838884fb92"
             },
             "require": {
                 "php": ">=5.3.0",
@@ -565,7 +565,7 @@
                 "proprietary"
             ],
             "description": "CSS/JS Content Builder",
-            "time": "2013-05-11 17:52:49"
+            "time": "2013-05-21 18:40:37"
         },
         {
             "name": "rpi/foundation",
@@ -612,6 +612,33 @@
             "description": "RPI Core Foundation",
             "homepage": "http://packages.red-pixel.co.uk/",
             "time": "2013-05-13 21:25:11"
+        },
+        {
+            "name": "rpi/schemas",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@bitbucket.org/redpixelinteractive/rpi-schemas.git",
+                "reference": "2656bcd62e5186be381cc9773887a1babb704047"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "RPI\\Schemas": "Src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Dunn",
+                    "email": "matt@red-pixel.co.uk"
+                }
+            ],
+            "description": "RPI Schemas",
+            "homepage": "http://packages.red-pixel.co.uk/",
+            "time": "2013-05-21 19:18:07"
         },
         {
             "name": "symfony/yaml",
@@ -719,6 +746,7 @@
     "stability-flags": {
         "ulrichsg/getopt-php": 20,
         "rpi/console": 20,
+        "rpi/schemas": 20,
         "leafo/lessphp": 20
     },
     "platform": {

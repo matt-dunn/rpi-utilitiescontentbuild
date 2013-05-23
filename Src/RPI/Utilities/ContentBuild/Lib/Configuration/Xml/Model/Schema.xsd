@@ -3,8 +3,11 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	elementFormDefault="qualified"
 	targetNamespace="http://www.rpi.co.uk/"
+    xmlns:commonType="http://www.rpi.co.uk/presentation/config/type"
 	xmlns:RPI="http://www.rpi.co.uk/">
 
+	<xs:import namespace="http://www.rpi.co.uk/presentation/config/type" schemaLocation="../../../../../../../../vendor/rpi/schemas/Src/RPI/Schemas/Conf/Common/Types.xsd"/>
+    
 	<xs:simpleType name="contentType">
 		<xs:restriction base="xs:normalizedString">
 			<xs:enumeration value="js"/>
@@ -17,6 +20,7 @@
 			<xs:sequence>
 				<xs:element minOccurs="0" maxOccurs="1" ref="RPI:processors"/>
 				<xs:element minOccurs="0" maxOccurs="1" ref="RPI:uriResolvers"/>
+				<xs:element minOccurs="0" maxOccurs="1" ref="RPI:plugins"/>
 				<xs:element minOccurs="1" maxOccurs="unbounded" ref="RPI:build"/>
 			</xs:sequence>
 			<xs:attribute name="appRoot" use="required" type="xs:normalizedString"/>
@@ -39,7 +43,7 @@
 			<xs:sequence>
 				<xs:element minOccurs="0" maxOccurs="unbounded" ref="RPI:param"/>
 			</xs:sequence>
-			<xs:attribute name="type" use="required" type="xs:normalizedString"/>
+			<xs:attribute name="type" use="required" type="commonType:namespacedObjectName"/>
         </xs:complexType>
     </xs:element>
     
@@ -56,7 +60,25 @@
 			<xs:sequence>
 				<xs:element minOccurs="0" maxOccurs="unbounded" ref="RPI:param"/>
 			</xs:sequence>
-			<xs:attribute name="type" use="required" type="xs:normalizedString"/>
+			<xs:attribute name="type" use="required" type="commonType:namespacedObjectName"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="plugins">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="0" maxOccurs="unbounded" ref="RPI:plugin"/>
+			</xs:sequence>
+        </xs:complexType>    
+    </xs:element>
+
+    <xs:element name="plugin">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="0" maxOccurs="unbounded" ref="RPI:param"/>
+			</xs:sequence>
+			<xs:attribute name="interface" use="required" type="commonType:namespacedObjectName"/>
+			<xs:attribute name="type" use="required" type="commonType:namespacedObjectName"/>
         </xs:complexType>
     </xs:element>
     

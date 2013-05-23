@@ -9,8 +9,13 @@ use \RPI\Foundation\Helpers\Object;
  * @property-read string $prefix
  * @property-read string $appRoot
  * @property-read string $basePath
+ * @property-read string $configurationFile
  * @property-read \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild[] $builds
- * @property-read string $builds
+ * @property-read \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProcessor[] $processors
+ * @property-read \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IResolver[] $resolvers
+ * @property-read \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IPlugin[] $plugins
+ * @property-read boolean $includeDebug
+ * @property-read \Psr\Log\LoggerInterface $logger
  */
 class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject
 {
@@ -61,6 +66,12 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
      * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IResolver[]
      */
     protected $resolvers = null;
+    
+    /**
+     *
+     * @var \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IPlugin[]
+     */
+    protected $plugins = null;
     
     /**
      *
@@ -146,10 +157,11 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
                         $params[] = $param;
                     }
                 }
-                $this->processors[] = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Processor(
-                    $processor["@"]["type"],
-                    $params
-                );
+                $this->processors[$processor["@"]["type"]] =
+                    new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Processor(
+                        $processor["@"]["type"],
+                        $params
+                    );
             }
         }
         
@@ -172,10 +184,39 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
                         $params[] = $param;
                     }
                 }
-                $this->resolvers[] = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Resolver(
-                    $uriResolver["@"]["type"],
-                    $params
-                );
+                $this->resolvers[$uriResolver["@"]["type"]] =
+                    new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Resolver(
+                        $uriResolver["@"]["type"],
+                        $params
+                    );
+            }
+        }
+        
+        if (isset($config["plugins"], $config["plugins"]["plugin"])) {
+            if (!is_array($config["plugins"]["plugin"])
+                || !isset($config["plugins"]["plugin"][0])) {
+                $config["plugins"]["plugin"] = array($config["plugins"]["plugin"]);
+            }
+            
+            $this->plugins = array();
+            
+            foreach ($config["plugins"]["plugin"] as $plugin) {
+                $params = null;
+                if (isset($plugin["param"])) {
+                    if (!is_array($plugin["param"]) || !isset($plugin["param"][0])) {
+                        $plugin["param"] = array($plugin["param"]);
+                    }
+                    $params = array();
+                    foreach ($plugin["param"] as $param) {
+                        $params[] = $param;
+                    }
+                }
+                $this->plugins[$plugin["@"]["interface"]] =
+                    new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Plugin(
+                        $plugin["@"]["interface"],
+                        $plugin["@"]["type"],
+                        $params
+                    );
             }
         }
     }
@@ -268,6 +309,15 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
     public function getResolvers()
     {
         return $this->resolvers;
+    }
+
+    /**
+     * 
+     * @return \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IPlugin[]
+     */
+    public function getPlugins()
+    {
+        return $this->plugins;
     }
 
     /**

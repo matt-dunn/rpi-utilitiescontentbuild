@@ -53,7 +53,7 @@ class Support implements \RPI\Console\ICommand
             $this->getDetails($logger, __DIR__."/../UriResolvers");
             
             $logger->info("\nPlugins:");
-            $this->getDetails($logger, __DIR__."/../Plugins");
+            $this->getDetails($logger, __DIR__."/../Plugins", "RPI\Utilities\ContentBuild\Lib\Model\Plugin");
             
             $logger->info("\nSupported file types:");
             $logger->info(
@@ -76,7 +76,7 @@ class Support implements \RPI\Console\ICommand
         }
     }
     
-    protected function getDetails(\Psr\Log\LoggerInterface $logger, $basePath)
+    protected function getDetails(\Psr\Log\LoggerInterface $logger, $basePath, $baseInterfaceName = null)
     {
         $classes = \RPI\Foundation\Helpers\FileUtils::find($basePath, "*.php", null, false);
         $classes = array_keys($classes);
@@ -85,9 +85,24 @@ class Support implements \RPI\Console\ICommand
         foreach ($classes as $class) {
             $className = self::getClassName($class);
             $reflectionClass = new \ReflectionClass($className);
+            $interfaceInstanceName = null;
+            
+            if (isset($baseInterfaceName)) {
+                foreach ($reflectionClass->getInterfaceNames() as $interfaceName) {
+                    if (substr($interfaceName, 0, strlen($baseInterfaceName)) == $baseInterfaceName) {
+                        $interfaceInstanceName = $interfaceName;
+                        break;
+                    }
+                }
+            }
+            
             if (in_array("RPI\Utilities\ContentBuild\Lib\Model\IPlugin", class_implements($className))
                 && !$reflectionClass->isAbstract()) {
-                $logger->info("    $className: ".$className::getVersion());
+                $logger->info(
+                    "    ".(
+                        isset($interfaceInstanceName) ? "$className ($interfaceInstanceName)" : $className
+                    ).": ".$className::getVersion()
+                );
             }
         }
     }
@@ -97,10 +112,13 @@ class Support implements \RPI\Console\ICommand
         $fullPath = \RPI\Foundation\Helpers\FileUtils::realPath($classPath);
         $basePath = \RPI\Foundation\Helpers\FileUtils::realPath(__DIR__."/../../../../");
         
-        return str_replace(
-            ".php",
-            "",
-            substr(str_replace(DIRECTORY_SEPARATOR, "\\", $fullPath), strlen($basePath))
+        return ltrim(
+            str_replace(
+                ".php",
+                "",
+                substr(str_replace(DIRECTORY_SEPARATOR, "\\", $fullPath), strlen($basePath))
+            ),
+            "\\"
         );
     }
     

@@ -2,6 +2,19 @@
 
 namespace RPI\Utilities\ContentBuild\Lib\Model\Configuration;
 
+/**
+ * @property-read string $name
+ * @property-read string $prefix
+ * @property-read string $appRoot
+ * @property-read string $basePath
+ * @property-read string $configurationFile
+ * @property-read \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild[] $builds
+ * @property-read \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProcessor[] $processors
+ * @property-read \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IResolver[] $resolvers
+ * @property-read \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IPlugin[] $plugins
+ * @property-read boolean $includeDebug
+ * @property-read \Psr\Log\LoggerInterface $logger
+ */
 interface IProject
 {
     /**
@@ -60,6 +73,12 @@ interface IProject
      * @return \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IResolver[]
      */
     public function getResolvers();
+    
+    /**
+     * 
+     * @return \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IPlugin[]
+     */
+    public function getPlugins();
     
     /**
      * 

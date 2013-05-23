@@ -28,6 +28,7 @@
         "yui/yuicompressor": "2.4.7",
         "ulrichsg/getopt-php": "dev-master",
         "rpi/console": "dev-master",
+        "rpi/schemas": "dev-master",
         "leafo/lessphp": "0.3.*@dev",
         "leafo/scssphp": "v0.0.5",
         "phing/phing": "2.*"

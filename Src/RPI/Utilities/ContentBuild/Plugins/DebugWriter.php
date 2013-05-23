@@ -51,7 +51,7 @@ class DebugWriter implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebug
         }
 
         $parts = pathinfo($outputFilename);
-        $debugFilename = $parts["dirname"]."/".$parts["filename"]."-min.".$parts["extension"];
+        $debugFilename = $parts["dirname"]."/".$parts["filename"].".min.".$parts["extension"];
         switch ($build->type) {
             case "css":
                 $this->writeDebugFileCss($build, $files, $debugFilename, $debugPath, $webroot);
