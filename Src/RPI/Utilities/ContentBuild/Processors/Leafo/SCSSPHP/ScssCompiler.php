@@ -5,6 +5,7 @@ namespace RPI\Utilities\ContentBuild\Processors\Leafo\SCSSPHP;
 class ScssCompiler extends \scssc
 {
     protected $importCallback = null;
+    protected $processImportCallback = null;
 
     protected function findImport($url)
     {
@@ -24,9 +25,40 @@ class ScssCompiler extends \scssc
         return $importPath;
     }
 
+	protected function importFile($path, $out) {
+		// see if tree is cached
+		$realPath = realpath($path);
+		if (isset($this->importCache[$realPath])) {
+			$tree = $this->importCache[$realPath];
+		} else {
+			$code = file_get_contents($path);
+            // BEGIN INSERTED CODE
+            if (isset($this->processImportCallback) && is_callable($this->processImportCallback)) {
+                $callback = $this->processImportCallback;
+                $code = $callback($code, $path);
+            }
+            // END INSERTED CODE
+			$parser = new \scss_parser($path, false);
+			$tree = $parser->parse($code);
+			$this->parsedFiles[] = $path;
+
+			$this->importCache[$realPath] = $tree;
+		}
+
+		$pi = pathinfo($path);
+		array_unshift($this->importPaths, $pi['dirname']);
+		$this->compileChildren($tree->children, $out);
+		array_shift($this->importPaths);
+	}
+    
     public function setImportCallback($callback)
     {
         $this->importCallback = $callback;
+    }
+    
+    public function setProcessImportCallback($callback)
+    {
+        $this->processImportCallback = $callback;
     }
     
     protected function compileBlock($block)

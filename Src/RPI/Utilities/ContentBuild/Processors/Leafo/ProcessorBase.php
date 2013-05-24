@@ -126,6 +126,18 @@ EOT;
                     }
                 );
                 
+                $calledClass = get_called_class();
+                $compiler->setProcessImportCallback(
+                    function ($code, $inputFilename) use ($processor, $resolver, $calledClass) {
+                        return $processor->process(
+                            $resolver,
+                            $inputFilename,
+                            $code,
+                            array($calledClass)
+                        );
+                    }
+                );
+                
                 $buffer = $compiler->compile($buffer, $inputFilename);
             } catch (\Exception $ex) {
                 throw new \RPI\Utilities\ContentBuild\Processors\Leafo\Exceptions\CompilerError(
