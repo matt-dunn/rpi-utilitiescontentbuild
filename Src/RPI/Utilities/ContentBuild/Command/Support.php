@@ -72,15 +72,20 @@ class Support implements \RPI\Console\ICommand
                 )
             );
 
+            $logger->info("");
+            
             return false;
         }
     }
     
     protected function getDetails(\Psr\Log\LoggerInterface $logger, $basePath, $baseInterfaceName = null)
     {
-        $classes = \RPI\Foundation\Helpers\FileUtils::find($basePath, "*.php", null, false);
-        $classes = array_keys($classes);
-        asort($classes);
+        $classes = array_keys(
+            \RPI\Foundation\Helpers\FileUtils::find($basePath, "*.php", null, false)
+        );
+        
+        $interfaceNames = array();
+        $plugins = array();
         
         foreach ($classes as $class) {
             $className = self::getClassName($class);
@@ -91,6 +96,9 @@ class Support implements \RPI\Console\ICommand
                 foreach ($reflectionClass->getInterfaceNames() as $interfaceName) {
                     if (substr($interfaceName, 0, strlen($baseInterfaceName)) == $baseInterfaceName) {
                         $interfaceInstanceName = $interfaceName;
+                        if (!isset($interfaceNames[$interfaceInstanceName])) {
+                            $interfaceNames[$interfaceInstanceName] = array();
+                        }
                         break;
                     }
                 }
@@ -98,11 +106,32 @@ class Support implements \RPI\Console\ICommand
             
             if (in_array("RPI\Utilities\ContentBuild\Lib\Model\IPlugin", class_implements($className))
                 && !$reflectionClass->isAbstract()) {
-                $logger->info(
-                    "    ".(
-                        isset($interfaceInstanceName) ? "$className ($interfaceInstanceName)" : $className
-                    ).": ".$className::getVersion()
-                );
+                $plugins[$className] = true;
+                if (isset($interfaceNames[$interfaceInstanceName])) {
+                    $interfaceNames[$interfaceInstanceName][] = $className;
+                }
+            }
+        }
+        
+        if (count($interfaceNames) > 0) {
+            ksort($interfaceNames);
+            foreach ($interfaceNames as $interfaceName => $plugins) {
+                $logger->info("    $interfaceName:");
+                ksort($plugins);
+                $pluginCount = count($plugins);
+                foreach ($plugins as $index => $plugin) {
+                    if ($index == $pluginCount - 1) {
+                        $indicator = "└──";
+                    } else {
+                        $indicator = "├──";
+                    }
+                    $logger->info("      $indicator $plugin: ".$plugin::getVersion());
+                }
+            }
+        } elseif (count($plugins) > 0) {
+            ksort($plugins);
+            foreach ($plugins as $plugin => $value) {
+                $logger->info("    $plugin: ".$plugin::getVersion());
             }
         }
     }
