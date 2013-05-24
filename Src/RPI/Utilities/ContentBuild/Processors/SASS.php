@@ -4,7 +4,7 @@ namespace RPI\Utilities\ContentBuild\Processors;
 
 class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
-    const VERSION = "1.0.3";
+    const VERSION = "1.0.4";
 
     /**
      *
@@ -58,13 +58,32 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
         $inputFilename,
         $buffer
     ) {
-        if (pathinfo($inputFilename, PATHINFO_EXTENSION) == "scss") {
-            $this->project->getLogger()->info("Compiling SASS '$inputFilename'");
+        $fileExtension = strtolower(pathinfo($inputFilename, PATHINFO_EXTENSION));
+        if (in_array($fileExtension, array("scss", "sass"))) {
+            $this->project->getLogger()->info("Compiling SASS ($fileExtension) '$inputFilename'");
             
-            $cachepath = dirname($this->project->configurationFile)."/.sass-cache";
-            \RPI\Console\Helpers\Console::run("sass", "--update $inputFilename --cache-location $cachepath");
+            $cachepath = sys_get_temp_dir();
             
-            $buffer = file_get_contents(str_replace(".scss", ".css", $inputFilename));
+            $args = "";
+            if ($fileExtension == "scss") {
+                $args .= " --scss";
+            }
+            
+            if ($processor->debug) {
+                $args .= " --debug-info";
+            }
+            
+            $helpInstallation = <<<EOT
+See http://sass-lang.com/download.html for instructions on how to install and setup sass
+EOT;
+        
+            $output = \RPI\Console\Helpers\Console::run(
+                "sass",
+                "$args $inputFilename --cache-location $cachepath/.sass-cache",
+                $helpInstallation
+            );
+
+            $buffer = implode(PHP_EOL, $output);
         }
         
         return $buffer;
@@ -74,5 +93,10 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
         \RPI\Utilities\ContentBuild\Lib\Processor $processor
     ) {
         
+    }
+    
+    public function canProcessBuffer()
+    {
+        return false;
     }
 }

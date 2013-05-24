@@ -43,6 +43,8 @@ interface IProcessor extends \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
      * @param string $inputFilename
      * @param string $outputFilename
      * @param string $buffer
+     * 
+     * @return string Processed buffer
      */
     public function preProcess(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
@@ -60,6 +62,8 @@ interface IProcessor extends \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
      * @param \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver
      * @param string $inputFilename
      * @param string $buffer
+     * 
+     * @return string Processed buffer
      */
     public function process(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
@@ -76,4 +80,13 @@ interface IProcessor extends \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
     public function complete(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor
     );
+    
+    /**
+     * Indicates if the processor can directly process the processesor pipe buffer
+     * Returns false if the processor has to directly process the input file
+     * rather than the buffer.
+     * 
+     * @return boolean
+     */
+    public function canProcessBuffer();
 }

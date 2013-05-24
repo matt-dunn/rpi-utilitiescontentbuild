@@ -66,6 +66,12 @@ class Processor extends Object
             $this->getProcessors();
         }
         
+        if (!$processor->canProcessBuffer() && count($this->processors) > 0) {
+            throw new \RPI\Foundation\Exceptions\RuntimeException(
+                "'".get_class($processor)."' must be configured as the first processor"
+            );
+        }
+
         $this->processors[get_class($processor)] = $processor;
         $this->logger->info(
             "Creating '".get_class($processor)."' ({$processor->getVersion()})"

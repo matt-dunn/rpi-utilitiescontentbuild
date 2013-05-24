@@ -21,4 +21,9 @@ class SCSSPHP extends \RPI\Utilities\ContentBuild\Processors\Leafo\ProcessorBase
     {
         return "scss";
     }
+    
+    public function canProcessBuffer()
+    {
+        return true;
+    }
 }

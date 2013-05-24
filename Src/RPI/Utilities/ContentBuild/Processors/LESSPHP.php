@@ -21,4 +21,9 @@ class LESSPHP extends \RPI\Utilities\ContentBuild\Processors\Leafo\ProcessorBase
     {
         return "less";
     }
+    
+    public function canProcessBuffer()
+    {
+        return true;
+    }
 }

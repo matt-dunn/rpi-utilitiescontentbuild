@@ -287,6 +287,11 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         
     }
     
+    public function canProcessBuffer()
+    {
+        return true;
+    }
+    
     public static function findLastIcon($build, array $sprites)
     {
         $sprites = array_reverse($sprites);

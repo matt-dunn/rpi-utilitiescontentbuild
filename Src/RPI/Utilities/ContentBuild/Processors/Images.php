@@ -172,6 +172,10 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         }
     }
     
+    public function canProcessBuffer()
+    {
+        return true;
+    }
     
     protected function copyCSSImageFiles(array $files)
     {

@@ -54,7 +54,7 @@ abstract class ProcessorBase implements \RPI\Utilities\ContentBuild\Lib\Model\Pr
         $buffer
     ) {
         if (pathinfo($inputFilename, PATHINFO_EXTENSION) == $this->getFileExtension()) {
-            $this->project->getLogger()->info("Compiling {$this->getFileExtension()} '$inputFilename'");
+            $this->project->getLogger()->info("Compiling ".strtoupper($this->getFileExtension())." '$inputFilename'");
             
             $compiler = $this->getCompiler();
             $compiler->debug = $processor->debug;
