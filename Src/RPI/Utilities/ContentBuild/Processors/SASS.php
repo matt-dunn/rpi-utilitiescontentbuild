@@ -12,10 +12,18 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
      */
     protected $project = null;
 
+    /**
+     *
+     * @var \RPI\Utilities\ContentBuild\Lib\Processor 
+     */
+    protected $processor = null;
+    
     public function __construct(
+        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         array $options = null
     ) {
+        $this->processor = $processor;
         $this->project = $project;
     }
     
@@ -36,13 +44,11 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
     }
     
     public function init(
-        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         $processorIndex
     ) {
     }
     
     public function preProcess(
-        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
@@ -52,7 +58,6 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
     }
     
     public function process(
-        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
@@ -69,7 +74,7 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
                 $args .= " --scss";
             }
             
-            if ($processor->debug) {
+            if ($this->processor->debug) {
                 $args .= " --debug-info";
             }
             
@@ -90,7 +95,6 @@ EOT;
     }
     
     public function complete(
-        \RPI\Utilities\ContentBuild\Lib\Processor $processor
     ) {
         
     }

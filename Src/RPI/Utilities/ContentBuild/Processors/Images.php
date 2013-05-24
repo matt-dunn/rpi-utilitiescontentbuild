@@ -14,6 +14,12 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
     
     /**
      *
+     * @var \RPI\Utilities\ContentBuild\Lib\Processor 
+     */
+    protected $processor = null;
+    
+    /**
+     *
      * @var array
      */
     protected $imageFiles = array();
@@ -25,9 +31,11 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
     protected $timestamp = null;
     
     public function __construct(
+        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         array $options = null
     ) {
+        $this->processor = $processor;
         $this->project = $project;
     }
     
@@ -37,14 +45,12 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
     }
     
     public function init(
-        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         $processorIndex
     ) {
         $this->timestamp = microtime(true) - 1;
     }
     
     public function preProcess(
-        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
@@ -118,7 +124,6 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
     }
     
     public function process(
-        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
@@ -145,7 +150,6 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
     }
     
     public function complete(
-        \RPI\Utilities\ContentBuild\Lib\Processor $processor
     ) {
         if (count($this->imageFiles) > 0) {
             $this->project->getLogger()->debug("Copying images");

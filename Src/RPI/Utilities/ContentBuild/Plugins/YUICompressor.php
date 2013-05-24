@@ -26,6 +26,7 @@ class YUICompressor implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICom
     protected $hasExtractedCompressor = false;
     
     public function __construct(
+        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         array $options = null
     ) {
@@ -72,29 +73,14 @@ class YUICompressor implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICom
         if (file_exists($filename)) {
             $this->project->getLogger()->notice("Compressing: ".$outputFilename."...");
 
-            $options = "  --verbose";
-            
-            $output = null;
-            $ret = null;
-            
-            exec(
-                "java -jar ".$this->yuicompressorLocation.$options." --type ".$type." ".
-                $filename." -o ".$outputFilename." 2>&1 1> /dev/stdout",
-                $output,
-                $ret
+            $output = \RPI\Console\Helpers\Console::run(
+                "java -jar {$this->yuicompressorLocation}",
+                "--verbose --type ".$type." ".$filename." -o ".$outputFilename
             );
+                
+            $this->project->getLogger()->debug($output);
             
             unlink($filename);
-            
-            if ($ret != 0) {
-                throw new \Exception(
-                    "ERROR COMPRESSING FILE (returned $ret): ".$filename.". In addition: ".implode("\r\n    ", $output)
-                );
-            } elseif (isset($output) && count($output) > 0) {
-                $this->project->getLogger()->debug(
-                    "YUI Compressor returned this for '$filename': ".implode("\r\n    ", $output)
-                );
-            }
         } else {
             $this->project->getLogger()->debug("Nothing to compress: ".$outputFilename);
         }

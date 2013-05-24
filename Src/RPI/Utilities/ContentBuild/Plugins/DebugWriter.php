@@ -15,6 +15,7 @@ class DebugWriter implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebug
     protected $project = null;
     
     public function __construct(
+        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         array $options = null
     ) {

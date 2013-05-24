@@ -24,11 +24,19 @@ class UriResolver extends Object
      */
     protected $logger = null;
     
+    /**
+     *
+     * @var \RPI\Utilities\ContentBuild\Lib\Processor 
+     */
+    protected $processor = null;
+    
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
+        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
     ) {
         $this->logger = $logger;
+        $this->processor = $processor;
         $this->project = $project;
     }
     
@@ -36,7 +44,7 @@ class UriResolver extends Object
      * 
      * @param \RPI\Utilities\ContentBuild\Lib\Model\UriResolver\IUriResolver $resolver
      * 
-     * @return \RPI\Utilities\ContentBuild\Lib\Processor
+     * @return \RPI\Utilities\ContentBuild\Lib\UriResolver
      */
     public function add(\RPI\Utilities\ContentBuild\Lib\Model\UriResolver\IUriResolver $resolver)
     {
@@ -66,7 +74,7 @@ class UriResolver extends Object
                     "Reading resolvers from configuration '{$this->project->configurationFile}'"
                 );
                 foreach ($this->project->resolvers as $resolver) {
-                    $params = array($this->project);
+                    $params = array($this->processor, $this->project);
                     if (isset($resolver->params)) {
                         $params = array_merge($params, $resolver->params);
                     }

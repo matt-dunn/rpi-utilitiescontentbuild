@@ -51,7 +51,7 @@ if ($options !== false && isset($options["configurationFile"])) {
 
     $processor = new \RPI\Utilities\ContentBuild\Lib\Processor($logger, $configuration->project);
     
-    $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver($logger, $configuration->project);
+    $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver($logger, $processor, $configuration->project);
 
     $build = new \RPI\Utilities\ContentBuild\Lib\Build(
         $logger,

@@ -19,6 +19,7 @@ class YuglifyCompressor implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\
     protected $hasExtractedCompressor = false;
     
     public function __construct(
+        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         array $options = null
     ) {
@@ -53,8 +54,18 @@ EOT;
             $filename,
             $helpInstallation
         );
+
+        $parts = pathinfo($filename);
+        $yuglifyOutputFilename = $parts["dirname"]."/".$parts["filename"].".min.".$parts["extension"];
+
+        if ($yuglifyOutputFilename != $outputFilename) {
+            rename($yuglifyOutputFilename, $outputFilename);
+            $this->project->getLogger()->debug(
+                "Renaming yuglify output '$yuglifyOutputFilename' to '$outputFilename'"
+            );
+        }
         
-        $this->project->getLogger()->notice($output);
+        $this->project->getLogger()->debug($output);
         
         unlink($filename);
         

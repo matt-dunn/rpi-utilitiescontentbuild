@@ -39,7 +39,7 @@ if (isset($GLOBALS["configuration-file"])) {
 
     $processor = new \RPI\Utilities\ContentBuild\Lib\Processor($logger, $configuration->project, true);
 
-    $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver($logger, $configuration->project);
+    $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver($logger, $processor, $configuration->project);
 
     if (!isset($_GET["n"]) || !isset($_GET["t"])) {
         throw new \RPI\Foundation\Exceptions\RuntimeException("Missing querystring parameters 'n' and/or 't'");

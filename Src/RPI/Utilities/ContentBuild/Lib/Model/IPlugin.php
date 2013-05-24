@@ -6,10 +6,12 @@ interface IPlugin
 {
     /**
      * 
+     * @param \RPI\Utilities\ContentBuild\Lib\Processor $processor
      * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
      * @param array $options
      */
     public function __construct(
+        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         array $options = null
     );

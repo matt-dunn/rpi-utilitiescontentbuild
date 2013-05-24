@@ -91,7 +91,7 @@ class Build
                 $this->dependencyBuilder =
                     new $this->project->plugins[
                         "RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDependencyBuilder"
-                    ]->type($project, $options);
+                    ]->type($processor, $project, $options);
                 
                 if (!$this->dependencyBuilder
                     instanceof \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDependencyBuilder) {
@@ -104,6 +104,7 @@ class Build
                 }
             } else {
                 $this->dependencyBuilder = new \RPI\Utilities\ContentBuild\Plugins\DependencyBuilder(
+                    $processor,
                     $project,
                     $options
                 );
@@ -117,7 +118,7 @@ class Build
                 $this->compressor =
                     new $this->project->plugins[
                         "RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor"
-                    ]->type($project, $options);
+                    ]->type($processor, $project, $options);
                 
                 if (!$this->compressor
                     instanceof \RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor) {
@@ -128,6 +129,7 @@ class Build
                 }
             } else {
                 $this->compressor = new \RPI\Utilities\ContentBuild\Plugins\YUICompressor(
+                    $processor,
                     $project,
                     $options
                 );
@@ -141,7 +143,7 @@ class Build
                 $this->debugWriter =
                     new $this->project->plugins[
                         "RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebugWriter"
-                    ]->type($project, $options);
+                    ]->type($processor, $project, $options);
                 
                 if (!$this->debugWriter
                     instanceof \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebugWriter) {
@@ -154,6 +156,7 @@ class Build
                 }
             } else {
                 $this->debugWriter = new \RPI\Utilities\ContentBuild\Plugins\DebugWriter(
+                    $processor,
                     $project,
                     $options
                 );
@@ -255,11 +258,8 @@ class Build
             }
 
             $parts = pathinfo($outputFilename);
-            if (!isset($build->outputFilename)) {
-                $outputMiniFilename = $parts["dirname"]."/".$parts["filename"].".min.".$parts["extension"];
-            } else {
-                $outputMiniFilename = $parts["dirname"]."/".$build->outputFilename;
-            }
+            $outputMiniFilename = $parts["dirname"]."/".$parts["filename"].".min.".$parts["extension"];
+            
             $this->compressor->compressFile($outputFilename, $build->type, $outputMiniFilename);
         } else {
             throw new \RPI\Foundation\Exceptions\RuntimeException(

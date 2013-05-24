@@ -94,7 +94,7 @@ class Processor extends Object
                     "Reading processors from configuration '{$this->project->configurationFile}'"
                 );
                 foreach ($this->project->processors as $processor) {
-                    $params = array($this->project);
+                    $params = array($this, $this->project);
                     if (isset($processor->params)) {
                         $params = array_merge($params, $processor->params);
                     }
@@ -112,7 +112,7 @@ class Processor extends Object
         $index = 0;
         foreach ($this->getProcessors() as $processor) {
             $this->logger->debug("Init '".get_class($processor)."'");
-            $processor->init($this, $index);
+            $processor->init($index);
             $index++;
         }
         
@@ -143,7 +143,6 @@ class Processor extends Object
                 $this->logger->debug("Preprocess '".get_class($processor)."'");
                 if ($build->type == "css") {
                     $buffer = $processor->preProcess(
-                        $this,
                         $resolver,
                         $build,
                         $inputFilename,
@@ -151,7 +150,6 @@ class Processor extends Object
                     );
 
                     $buffer = $processor->process(
-                        $this,
                         $resolver,
                         $build,
                         $inputFilename,
@@ -187,7 +185,6 @@ class Processor extends Object
             if (!isset($skipProcessors) || !in_array(get_class($processor), $skipProcessors)) {
                 $this->logger->debug("Process '".get_class($processor)."'");
                 $buffer = $processor->process(
-                    $this,
                     $resolver,
                     $build,
                     $inputFilename,
@@ -203,7 +200,7 @@ class Processor extends Object
     {
         foreach ($this->getProcessors() as $processor) {
             $this->logger->debug("Complete '".get_class($processor)."'");
-            $processor->complete($this);
+            $processor->complete();
         }
         
         return $this;
@@ -236,8 +233,13 @@ class Processor extends Object
         
         if (!file_exists(dirname($this->metadataFilename))) {
             $oldumask = umask(0);
-            mkdir(dirname($this->metadataFilename), 0755, true);
+            mkdir(dirname($this->metadataFilename), 0777, true);
             umask($oldumask);
+        }
+
+        if (!file_exists($this->metadataFilename)) {
+            touch($this->metadataFilename);
+            chmod($this->metadataFilename, 0777);
         }
 
         file_put_contents(

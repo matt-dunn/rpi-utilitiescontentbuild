@@ -12,14 +12,24 @@ abstract class ProcessorBase implements \RPI\Utilities\ContentBuild\Lib\Model\Pr
 
     /**
      *
+     * @var \RPI\Utilities\ContentBuild\Lib\Processor 
+     */
+    protected $processor = null;
+    
+    /**
+     *
      * @var array
      */
     protected $customFunctions = null;
     
+    protected $processed = false;
+    
     public function __construct(
+        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         array $options = null
     ) {
+        $this->processor = $processor;
         $this->project = $project;
         
         if (isset($options["custom"], $options["custom"]["function"])) {
@@ -31,33 +41,51 @@ abstract class ProcessorBase implements \RPI\Utilities\ContentBuild\Lib\Model\Pr
     }
     
     public function init(
-        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         $processorIndex
     ) {
     }
     
     public function preProcess(
-        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
         $buffer
     ) {
-        return $buffer;
+        return $this->processFile($resolver, $build, $inputFilename, $buffer, "build");
     }
     
     public function process(
-        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
         $buffer
     ) {
+        if (!$this->processed) {
+            return $this->processFile($resolver, $build, $inputFilename, $buffer, "process");
+        } else {
+            return $buffer;
+        }
+    }
+    
+    public function complete(
+    ) {
+        
+    }
+    
+    protected function processFile(
+        \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
+        $inputFilename,
+        $buffer,
+        $processMethod
+    ) {
         if (pathinfo($inputFilename, PATHINFO_EXTENSION) == $this->getFileExtension()) {
+            $this->processed = true;
+            
             $this->project->getLogger()->info("Compiling ".strtoupper($this->getFileExtension())." '$inputFilename'");
             
             $compiler = $this->getCompiler();
-            $compiler->debug = $processor->debug;
+            $compiler->debug = $this->processor->debug;
 
             if (isset($this->customFunctions)) {
                 foreach ($this->customFunctions as $function) {
@@ -127,9 +155,10 @@ EOT;
                 );
                 
                 $calledClass = get_called_class();
+                $processor = $this->processor;
                 $compiler->setProcessImportCallback(
-                    function ($code, $inputFilename) use ($processor, $resolver, $build, $calledClass) {
-                        return $processor->process(
+                    function ($code, $inputFilename) use ($processor, $resolver, $build, $calledClass, $processMethod) {
+                        return $processor->$processMethod(
                             $build,
                             $resolver,
                             $inputFilename,
@@ -151,13 +180,7 @@ EOT;
         
         return $buffer;
     }
-    
-    public function complete(
-        \RPI\Utilities\ContentBuild\Lib\Processor $processor
-    ) {
-        
-    }
-    
+
     abstract protected function getCompiler();
     
     abstract protected function getFileExtension();
