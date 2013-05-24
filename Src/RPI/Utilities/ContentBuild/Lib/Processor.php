@@ -123,8 +123,8 @@ class Processor extends Object
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         $inputFilename,
-        $outputFilename,
-        $buffer
+        $buffer,
+        array $skipProcessors = null
     ) {
         $buffer = preg_replace_callback(
             "/\/\*.*?\*\//sim",
@@ -139,18 +139,25 @@ class Processor extends Object
         );
             
         foreach ($this->getProcessors() as $processor) {
-            $this->logger->debug("Preprocess '".get_class($processor)."'");
-            if ($build->type == "css") {
-                $buffer = $processor->preProcess(
-                    $this,
-                    $resolver,
-                    $build,
-                    $inputFilename,
-                    $outputFilename,
-                    $buffer
-                );
-            
-                $buffer = $processor->process($this, $resolver, $inputFilename, $buffer);
+            if (!isset($skipProcessors) || !in_array(get_class($processor), $skipProcessors)) {
+                $this->logger->debug("Preprocess '".get_class($processor)."'");
+                if ($build->type == "css") {
+                    $buffer = $processor->preProcess(
+                        $this,
+                        $resolver,
+                        $build,
+                        $inputFilename,
+                        $buffer
+                    );
+
+                    $buffer = $processor->process(
+                        $this,
+                        $resolver,
+                        $build,
+                        $inputFilename,
+                        $buffer
+                    );
+                }
             }
         }
         
@@ -158,6 +165,7 @@ class Processor extends Object
     }
     
     public function process(
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         $inputFilename,
         $buffer,
@@ -178,7 +186,13 @@ class Processor extends Object
         foreach ($this->getProcessors() as $processor) {
             if (!isset($skipProcessors) || !in_array(get_class($processor), $skipProcessors)) {
                 $this->logger->debug("Process '".get_class($processor)."'");
-                $buffer = $processor->process($this, $resolver, $inputFilename, $buffer);
+                $buffer = $processor->process(
+                    $this,
+                    $resolver,
+                    $build,
+                    $inputFilename,
+                    $buffer
+                );
             }
         }
         

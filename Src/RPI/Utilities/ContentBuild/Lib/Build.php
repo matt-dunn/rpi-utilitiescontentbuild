@@ -174,19 +174,10 @@ class Build
         $this->processor->init();
         
         foreach ($this->project->builds as $build) {
-            $outputFilename =
-                $this->project->basePath."/".
-                $this->project->appRoot."/".$build->outputDirectory.
-                $this->project->prefix.".".
-                $this->project->name."-".
-                $build->name.".".
-                $build->type;
-            
             $this->processBuild(
                 $this->project,
                 $build,
-                $buildFiles,
-                $outputFilename
+                $buildFiles
             );
         }
         
@@ -196,9 +187,10 @@ class Build
     protected function processBuild(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
-        array $buildFiles,
-        $outputFilename
+        array $buildFiles
     ) {
+        $outputFilename = $build->outputFilename;
+        
         if (isset($buildFiles[$build->name."_".$build->type])) {
             if (is_file($outputFilename)) {
                 unlink($outputFilename);
@@ -231,7 +223,6 @@ class Build
                     $build,
                     $this->resolver,
                     $file,
-                    $outputFilename,
                     file_get_contents($file)
                 );
 

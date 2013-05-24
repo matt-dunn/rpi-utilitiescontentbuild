@@ -48,9 +48,9 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
-        $outputFilename,
         $buffer
     ) {
+        $outputFilename = $build->outputFilename;
         $files = $this->imageFiles;
         $debugPath = $build->debugPath;
         $project = $this->project;
@@ -120,6 +120,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
     public function process(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
         $buffer
     ) {

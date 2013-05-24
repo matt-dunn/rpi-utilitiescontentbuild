@@ -41,7 +41,6 @@ abstract class ProcessorBase implements \RPI\Utilities\ContentBuild\Lib\Model\Pr
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
-        $outputFilename,
         $buffer
     ) {
         return $buffer;
@@ -50,6 +49,7 @@ abstract class ProcessorBase implements \RPI\Utilities\ContentBuild\Lib\Model\Pr
     public function process(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
         $buffer
     ) {
@@ -128,8 +128,9 @@ EOT;
                 
                 $calledClass = get_called_class();
                 $compiler->setProcessImportCallback(
-                    function ($code, $inputFilename) use ($processor, $resolver, $calledClass) {
+                    function ($code, $inputFilename) use ($processor, $resolver, $build, $calledClass) {
                         return $processor->process(
+                            $build,
                             $resolver,
                             $inputFilename,
                             $code,

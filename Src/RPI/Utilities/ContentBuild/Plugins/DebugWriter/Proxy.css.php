@@ -41,7 +41,26 @@ if (isset($GLOBALS["configuration-file"])) {
 
     $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver($logger, $configuration->project);
 
-    echo $processor->process($resolver, $file, file_get_contents($file));
+    if (!isset($_GET["n"]) || !isset($_GET["t"])) {
+        throw new \RPI\Foundation\Exceptions\RuntimeException("Missing querystring parameters 'n' and/or 't'");
+    }
+    $name = $_GET["n"];
+    $type = $_GET["t"];
+    
+    $currentBuild = null;
+    
+    foreach ($configuration->project->builds as $build) {
+        if ($build->name == $name && $build->type == $type) {
+            $currentBuild = $build;
+            break;
+        }
+    }
+    
+    if (!isset($currentBuild)) {
+        throw new \RPI\Foundation\Exceptions\RuntimeException("Unable to locate build");
+    }
+    
+    echo $processor->process($currentBuild, $resolver, $file, file_get_contents($file));
 } else {
     echo file_get_contents($file);
 }

@@ -41,7 +41,6 @@ interface IProcessor extends \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
      * @param \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver
      * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build
      * @param string $inputFilename
-     * @param string $outputFilename
      * @param string $buffer
      * 
      * @return string Processed buffer
@@ -51,7 +50,6 @@ interface IProcessor extends \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
-        $outputFilename,
         $buffer
     );
     
@@ -60,6 +58,7 @@ interface IProcessor extends \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
      * 
      * @param \RPI\Utilities\ContentBuild\Lib\Processor $processor
      * @param \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver
+     * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build
      * @param string $inputFilename
      * @param string $buffer
      * 
@@ -68,6 +67,7 @@ interface IProcessor extends \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
     public function process(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
         $buffer
     );

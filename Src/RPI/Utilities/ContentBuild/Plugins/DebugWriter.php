@@ -171,28 +171,24 @@ CONTENT;
             $proxyUrl = str_replace("\\", "/", substr(realpath($proxyFile), strlen($webroot)));
             
             foreach ($files as $file) {
-                if (parse_url($file, PHP_URL_SCHEME) == "http") {
-                    fwrite($fh, "@import url(\"$proxyUrl?t=css&f=".urlencode($file)."\");\r\n");
-                } else {
-                    fwrite(
-                        $fh,
-                        "document.prepareScript(\"$proxyUrl?t=js&f=".
-                        urlencode(
-                            \RPI\Foundation\Helpers\FileUtils::makeRelativePath(
-                                dirname($file),
-                                realpath($webroot)
-                            )."/".
-                            pathinfo(
-                                $file,
-                                PATHINFO_FILENAME
-                            ).".".
-                            pathinfo(
-                                $file,
-                                PATHINFO_EXTENSION
-                            )
-                        )."\");\r\n"
-                    );
-                }
+                fwrite(
+                    $fh,
+                    "document.prepareScript(\"$proxyUrl?t=js&n={$build->name}&f=".
+                    urlencode(
+                        \RPI\Foundation\Helpers\FileUtils::makeRelativePath(
+                            dirname($file),
+                            realpath($webroot)
+                        )."/".
+                        pathinfo(
+                            $file,
+                            PATHINFO_FILENAME
+                        ).".".
+                        pathinfo(
+                            $file,
+                            PATHINFO_EXTENSION
+                        )
+                    )."\");\r\n"
+                );
             }
 
             fclose($fh);
@@ -317,11 +313,11 @@ EOT;
         $proxyUrl = str_replace("\\", "/", substr(realpath($proxyFile), strlen($webroot)));
         foreach ($files as $file) {
             if (parse_url($file, PHP_URL_SCHEME) == "http") {
-                fwrite($fh, "@import url(\"$proxyUrl?t=css&f=".urlencode($file)."\");\r\n");
+                fwrite($fh, "@import url(\"$proxyUrl?t=css&n={$build->name}&f=".urlencode($file)."\");\r\n");
             } else {
                 fwrite(
                     $fh,
-                    "@import url(\"$proxyUrl?t=css&f=".
+                    "@import url(\"$proxyUrl?t=css&n={$build->name}&f=".
                     urlencode(
                         \RPI\Foundation\Helpers\FileUtils::makeRelativePath(
                             dirname($file),

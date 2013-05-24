@@ -107,6 +107,16 @@ class Build extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Conf
             $this->media = $buildDetails["@"]["media"];
         }
         
+        if (!isset($this->outputFilename)) {
+            $this->outputFilename =
+                $project->basePath."/".
+                $project->appRoot."/".$this->outputDirectory.
+                $project->prefix.".".
+                $project->name."-".
+                $this->name.".".
+                $this->type;
+        }
+        
         if ($project->includeDebug) {
             $outputPath = $project->basePath."/".$project->appRoot."/".$this->outputDirectory;
 

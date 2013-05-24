@@ -4,6 +4,7 @@ namespace RPI\Utilities\ContentBuild\Processors\Leafo\SCSSPHP;
 
 class ScssCompiler extends \scssc
 {
+    public $debug = false;
     protected $importCallback = null;
     protected $processImportCallback = null;
 

@@ -46,7 +46,6 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
-        $outputFilename,
         $buffer
     ) {
         return $buffer;
@@ -55,6 +54,7 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
     public function process(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
         $buffer
     ) {

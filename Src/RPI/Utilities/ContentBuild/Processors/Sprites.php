@@ -73,9 +73,9 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
-        $outputFilename,
         $buffer
     ) {
+        $outputFilename = $build->outputFilename;
         $spriteOutputFilename = dirname($outputFilename)."/I/Sprites/".$build->name.".png";
         $debugSpriteOutputFilename = null;
         if (isset($build->debugPath)) {
@@ -237,6 +237,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
     public function process(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
         $buffer
     ) {
