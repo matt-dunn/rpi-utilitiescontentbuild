@@ -213,8 +213,8 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                             imagedestroy($im);
                             imagedestroy($im2);
                         } else {
-                            $project->getLogger()->error(
-                                "Unable to create image ' $spriteFilename'"
+                            throw new \RPI\Foundation\Exceptions\RuntimeException(
+                                "Unable to create sprite image ' $spriteFilename'"
                             );
                         }
 
@@ -273,7 +273,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                         return "background:url({$spriteData["spritePath"]}) no-repeat {$offsetX}px {$offsetY}px;".
                             "width:{$spriteData["width"]}px;height:{$spriteData["height"]}px;content:'';";
                     } else {
-                        $project->getLogger()->error(
+                        throw new \RPI\Foundation\Exceptions\RuntimeException(
                             "Unable to locate sprite image '{$matches[2]}' in '$inputFilename'"
                         );
                     }
