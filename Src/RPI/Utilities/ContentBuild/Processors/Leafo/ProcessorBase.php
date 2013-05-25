@@ -51,8 +51,6 @@ abstract class ProcessorBase implements \RPI\Utilities\ContentBuild\Lib\Model\Pr
         $inputFilename,
         $buffer
     ) {
-        $this->processFile($resolver, $build, $inputFilename, $buffer, "preProcess");
-        
         return true;
     }
     
@@ -61,24 +59,6 @@ abstract class ProcessorBase implements \RPI\Utilities\ContentBuild\Lib\Model\Pr
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $inputFilename,
         $buffer
-    ) {
-        if (!$this->processed) {
-            return $this->processFile($resolver, $build, $inputFilename, $buffer, "process");
-        } else {
-            return $buffer;
-        }
-    }
-    
-    public function complete()
-    {
-    }
-    
-    protected function processFile(
-        \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
-        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
-        $inputFilename,
-        $buffer,
-        $processMethod
     ) {
         if (pathinfo($inputFilename, PATHINFO_EXTENSION) == $this->getFileExtension()) {
             $this->processed = true;
@@ -158,8 +138,8 @@ EOT;
                 $calledClass = get_called_class();
                 $processor = $this->processor;
                 $compiler->setProcessImportCallback(
-                    function ($code, $inputFilename) use ($processor, $resolver, $build, $calledClass, $processMethod) {
-                        $ret = $processor->$processMethod(
+                    function ($code, $inputFilename) use ($processor, $resolver, $build, $calledClass) {
+                        $processor->preProcess(
                             $build,
                             $resolver,
                             $inputFilename,
@@ -167,11 +147,13 @@ EOT;
                             array($calledClass)
                         );
                         
-                        if (is_string($ret)) {
-                            return $ret;
-                        } else {
-                            return $code;
-                        }
+                        return $processor->process(
+                            $build,
+                            $resolver,
+                            $inputFilename,
+                            $code,
+                            array($calledClass)
+                        );
                     }
                 );
                 
@@ -186,6 +168,10 @@ EOT;
         }
         
         return $buffer;
+    }
+    
+    public function complete()
+    {
     }
 
     abstract protected function getCompiler();
