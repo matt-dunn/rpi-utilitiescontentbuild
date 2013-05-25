@@ -287,9 +287,8 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         return $buffer;
     }
     
-    public function complete(
-    ) {
-        
+    public function complete()
+    {
     }
     
     public function canProcessBuffer()

@@ -60,8 +60,7 @@ interface IProcessor extends \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
      * Complete processor
      * 
      */
-    public function complete(
-    );
+    public function complete();
     
     /**
      * Indicates if the processor can directly process the processesor pipe buffer

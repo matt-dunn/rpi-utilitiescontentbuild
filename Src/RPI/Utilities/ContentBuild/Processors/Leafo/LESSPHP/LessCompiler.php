@@ -4,6 +4,7 @@ namespace RPI\Utilities\ContentBuild\Processors\Leafo\LESSPHP;
 
 class LessCompiler extends \lessc
 {
+
     public $debug = false;
     protected $importCallback = null;
     protected $processImportCallback = null;
@@ -14,7 +15,7 @@ class LessCompiler extends \lessc
             $callback = $this->importCallback;
             $importPath = $callback($url);
         }
-        
+
         if (!isset($importPath)) {
             $importPath = parent::findImport($url);
         }
@@ -22,32 +23,39 @@ class LessCompiler extends \lessc
         if (!isset($importPath)) {
             throw new \Exception("Unable to find import '$url'");
         }
-        
+
         return $importPath;
     }
 
-	protected function tryImport($importPath, $parentBlock, $out) {
-		if ($importPath[0] == "function" && $importPath[1] == "url") {
-			$importPath = $this->flattenList($importPath[2]);
-		}
+    protected function tryImport($importPath, $parentBlock, $out)
+    {
+        if ($importPath[0] == "function" && $importPath[1] == "url") {
+            $importPath = $this->flattenList($importPath[2]);
+        }
 
-		$str = $this->coerceString($importPath);
-		if ($str === null) return false;
+        $str = $this->coerceString($importPath);
+        if ($str === null) {
+            return false;
+        }
 
-		$url = $this->compileValue($this->lib_e($str));
+        $url = $this->compileValue($this->lib_e($str));
 
-		// don't import if it ends in css
-		if (substr_compare($url, '.css', -4, 4) === 0) return false;
+        // don't import if it ends in css
+        if (substr_compare($url, '.css', -4, 4) === 0) {
+            return false;
+        }
 
-		$realPath = $this->findImport($url);
-		if ($realPath === null) return false;
+        $realPath = $this->findImport($url);
+        if ($realPath === null) {
+            return false;
+        }
 
-		if ($this->importDisabled) {
-			return array(false, "/* import disabled */");
-		}
+        if ($this->importDisabled) {
+            return array(false, "/* import disabled */");
+        }
 
-		$this->addParsedFile($realPath);
-		$parser = $this->makeParser($realPath);
+        $this->addParsedFile($realPath);
+        $parser = $this->makeParser($realPath);
         // BEGIN INSERTED CODE
         $code = file_get_contents($realPath);
         if (isset($this->processImportCallback) && is_callable($this->processImportCallback)) {
@@ -55,37 +63,38 @@ class LessCompiler extends \lessc
             $code = $callback($code, $realPath);
         }
         // END INSERTED CODE
-		$root = $parser->parse($code);
+        $root = $parser->parse($code);
 
-		// set the parents of all the block props
-		foreach ($root->props as $prop) {
-			if ($prop[0] == "block") {
-				$prop[1]->parent = $parentBlock;
-			}
-		}
+        // set the parents of all the block props
+        foreach ($root->props as $prop) {
+            if ($prop[0] == "block") {
+                $prop[1]->parent = $parentBlock;
+            }
+        }
 
-		// copy mixins into scope, set their parents
-		// bring blocks from import into current block
-		// TODO: need to mark the source parser	these came from this file
-		foreach ($root->children as $childName => $child) {
-			if (isset($parentBlock->children[$childName])) {
-				$parentBlock->children[$childName] = array_merge(
-					$parentBlock->children[$childName],
-					$child);
-			} else {
-				$parentBlock->children[$childName] = $child;
-			}
-		}
+        // copy mixins into scope, set their parents
+        // bring blocks from import into current block
+        // TODO: need to mark the source parser	these came from this file
+        foreach ($root->children as $childName => $child) {
+            if (isset($parentBlock->children[$childName])) {
+                $parentBlock->children[$childName] = array_merge(
+                    $parentBlock->children[$childName],
+                    $child
+                );
+            } else {
+                $parentBlock->children[$childName] = $child;
+            }
+        }
 
-		$pi = pathinfo($realPath);
-		$dir = $pi["dirname"];
+        $pi = pathinfo($realPath);
+        $dir = $pi["dirname"];
 
-		list($top, $bottom) = $this->sortProps($root->props, true);
-		$this->compileImportedProps($top, $parentBlock, $out, $parser, $dir);
+        list($top, $bottom) = $this->sortProps($root->props, true);
+        $this->compileImportedProps($top, $parentBlock, $out, $parser, $dir);
 
-		return array(true, $bottom, $parser, $dir);
-	}
-    
+        return array(true, $bottom, $parser, $dir);
+    }
+
     public function setImportCallback($callback)
     {
         $this->importCallback = $callback;
@@ -95,7 +104,7 @@ class LessCompiler extends \lessc
     {
         $this->processImportCallback = $callback;
     }
-    
+
     protected function compileCSSBlock($block)
     {
         if ($this->debug && isset($block->props[0])) {
@@ -106,7 +115,11 @@ class LessCompiler extends \lessc
             $outDebug = $this->makeOutputBlock(null);
             $outDebug->lines [] = sprintf(
                 "@media -sass-debug-info{filename{font-family:file\:\/\/%s}line{font-family:\\00003%d}}\n",
-                preg_replace("/([\/:.])/", "\\\\$1", realpath($filename)),
+                preg_replace(
+                    "/([\/:.])/",
+                    "\\\\$1",
+                    realpath($filename)
+                ),
                 $lineNumber
             );
             $this->scope->children[] = $outDebug;

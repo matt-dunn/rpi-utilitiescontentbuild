@@ -151,8 +151,8 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         );
     }
     
-    public function complete(
-    ) {
+    public function complete()
+    {
         if (count($this->imageFiles) > 0) {
             $this->project->getLogger()->debug("Copying images");
             $this->copyCSSImageFiles($this->imageFiles);

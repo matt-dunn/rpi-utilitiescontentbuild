@@ -94,9 +94,8 @@ EOT;
         return $buffer;
     }
     
-    public function complete(
-    ) {
-        
+    public function complete()
+    {
     }
     
     public function canProcessBuffer()

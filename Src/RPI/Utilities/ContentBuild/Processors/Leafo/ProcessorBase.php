@@ -69,9 +69,8 @@ abstract class ProcessorBase implements \RPI\Utilities\ContentBuild\Lib\Model\Pr
         }
     }
     
-    public function complete(
-    ) {
-        
+    public function complete()
+    {
     }
     
     protected function processFile(
