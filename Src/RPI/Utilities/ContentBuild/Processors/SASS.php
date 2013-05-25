@@ -54,7 +54,7 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
         $inputFilename,
         $buffer
     ) {
-        return $buffer;
+        return true;
     }
     
     public function process(

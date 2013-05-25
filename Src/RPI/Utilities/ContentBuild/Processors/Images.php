@@ -61,11 +61,11 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         $debugPath = $build->debugPath;
         $project = $this->project;
         
-        $buffer = preg_replace_callback(
-            "/(background.*?)\s*:\s*(.*?)url\s*\(\s*'*\"*(.*?)'*\"*\s*\)/sim",
+        preg_replace_callback(
+            "/(background[-\w\s\d]*):([\/\\#_-\w\d\s]*?)url\s*\(\s*'*\"*(.*?)'*\"*\s*\)/sim",
             function ($matches) use ($resolver, $project, $inputFilename, &$files, $outputFilename, $debugPath) {
                 $imageMatch = $matches[3];
-
+                
                 if (strtolower(substr($imageMatch, 0, 5)) !== "data:") {
                     $resolvedPath = $imageUrl = $resolver->realpath($project, $imageMatch);
                     if ($imageUrl === false) {
@@ -90,22 +90,24 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
                         if ($resolvedPath !== false) {
                             $imagePath = $resolver->getRelativePath($project, $imageMatch);
 
-                            $files[$imageUrl] = array(
+                            $destinationFile = dirname($outputFilename)."/".$imagePath;
+                            $files[$destinationFile] = array(
                                 "imagePath" => $imageMatch,
                                 "sourceDocument" => $inputFilename,
                                 "sourceFile" => $imageUrl,
-                                "destinationFile" => dirname($outputFilename)."/".$imagePath,
+                                "destinationFile" => $destinationFile,
                                 "destinationFileDebug" =>
                                     (isset($debugPath) ? $debugPath."/".$imagePath : null)
                             );
 
                             $imageMatch = $imagePath;
                         } else {
-                            $files[$imageUrl] = array(
+                            $destinationFile = dirname($outputFilename)."/".str_replace("../", "", $imageMatch);
+                            $files[$destinationFile] = array(
                                 "imagePath" => $imageMatch,
                                 "sourceDocument" => $inputFilename,
                                 "sourceFile" => $imageUrl,
-                                "destinationFile" => dirname($outputFilename)."/".str_replace("../", "", $imageMatch),
+                                "destinationFile" => $destinationFile,
                                 "destinationFileDebug" =>
                                     (isset($debugPath) ? $debugPath."/".str_replace("../", "", $imageMatch) : null)
                             );
@@ -120,7 +122,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
 
         $this->imageFiles = array_merge($this->imageFiles, $files);
         
-        return $buffer;
+        return true;
     }
     
     public function process(
@@ -132,7 +134,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         $project = $this->project;
         
         return preg_replace_callback(
-            "/(background.*?)\s*:\s*(.*?)url\s*\(\s*'*\"*(.*?)'*\"*\s*\)/sim",
+            "/(background[-\w\s\d]*):([\/\\#_-\w\d\s]*?)url\s*\(\s*'*\"*(.*?)'*\"*\s*\)/sim",
             function ($matches) use ($resolver, $project) {
                 $imageMatch = $matches[3];
                 

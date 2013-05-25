@@ -177,6 +177,18 @@ class Build
         $this->processor->init();
         
         foreach ($this->project->builds as $build) {
+            $files = $buildFiles[$build->name."_".$build->type];
+            foreach ($files as $file) {
+                $this->processor->preProcess(
+                    $build,
+                    $this->resolver,
+                    $file,
+                    file_get_contents($file)
+                );
+            }
+        }
+        
+        foreach ($this->project->builds as $build) {
             $this->processBuild(
                 $this->project,
                 $build,
@@ -222,7 +234,7 @@ class Build
                     umask($oldumask);
                 }
 
-                $buffer = $this->processor->build(
+                $buffer = $this->processor->process(
                     $build,
                     $this->resolver,
                     $file,

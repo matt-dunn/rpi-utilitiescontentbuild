@@ -51,7 +51,9 @@ abstract class ProcessorBase implements \RPI\Utilities\ContentBuild\Lib\Model\Pr
         $inputFilename,
         $buffer
     ) {
-        return $this->processFile($resolver, $build, $inputFilename, $buffer, "build");
+        $this->processFile($resolver, $build, $inputFilename, $buffer, "preProcess");
+        
+        return true;
     }
     
     public function process(
@@ -158,13 +160,19 @@ EOT;
                 $processor = $this->processor;
                 $compiler->setProcessImportCallback(
                     function ($code, $inputFilename) use ($processor, $resolver, $build, $calledClass, $processMethod) {
-                        return $processor->$processMethod(
+                        $ret = $processor->$processMethod(
                             $build,
                             $resolver,
                             $inputFilename,
                             $code,
                             array($calledClass)
                         );
+                        
+                        if (is_string($ret)) {
+                            return $ret;
+                        } else {
+                            return $code;
+                        }
                     }
                 );
                 

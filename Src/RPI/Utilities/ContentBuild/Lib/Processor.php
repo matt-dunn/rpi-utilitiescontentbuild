@@ -42,6 +42,12 @@ class Processor extends Object
      */
     protected $logger = null;
     
+    /**
+     * 
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
+     * @param boolean $debug
+     */
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
@@ -107,6 +113,10 @@ class Processor extends Object
         return $this->processors;
     }
     
+    /**
+     * 
+     * @return \RPI\Utilities\ContentBuild\Lib\Processor
+     */
     public function init()
     {
         $index = 0;
@@ -119,7 +129,17 @@ class Processor extends Object
         return $this;
     }
     
-    public function build(
+    /**
+     * 
+     * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build
+     * @param \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver
+     * @param string $inputFilename
+     * @param string $buffer
+     * @param array $skipProcessors
+     * 
+     * @return boolean
+     */
+    public function preProcess(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         $inputFilename,
@@ -140,16 +160,9 @@ class Processor extends Object
             
         foreach ($this->getProcessors() as $processor) {
             if (!isset($skipProcessors) || !in_array(get_class($processor), $skipProcessors)) {
-                $this->logger->debug("Preprocess '".get_class($processor)."'");
                 if ($build->type == "css") {
-                    $buffer = $processor->preProcess(
-                        $resolver,
-                        $build,
-                        $inputFilename,
-                        $buffer
-                    );
-
-                    $buffer = $processor->process(
+                    $this->logger->debug("Preprocess '$inputFilename'\n   ".get_class($processor));
+                    $processor->preProcess(
                         $resolver,
                         $build,
                         $inputFilename,
@@ -159,9 +172,19 @@ class Processor extends Object
             }
         }
         
-        return $buffer;
+        return true;
     }
     
+    /**
+     * 
+     * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build
+     * @param \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver
+     * @param string $inputFilename
+     * @param string $buffer
+     * @param array $skipProcessors
+     * 
+     * @return string
+     */
     public function process(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
@@ -183,19 +206,25 @@ class Processor extends Object
             
         foreach ($this->getProcessors() as $processor) {
             if (!isset($skipProcessors) || !in_array(get_class($processor), $skipProcessors)) {
-                $this->logger->debug("Process '".get_class($processor)."'");
-                $buffer = $processor->process(
-                    $resolver,
-                    $build,
-                    $inputFilename,
-                    $buffer
-                );
+                if ($build->type == "css") {
+                    $this->logger->debug("Process '$inputFilename'\n   ".get_class($processor));
+                    $buffer = $processor->process(
+                        $resolver,
+                        $build,
+                        $inputFilename,
+                        $buffer
+                    );
+                }
             }
         }
         
         return $buffer;
     }
     
+    /**
+     * 
+     * @return \RPI\Utilities\ContentBuild\Lib\Processor
+     */
     public function complete()
     {
         foreach ($this->getProcessors() as $processor) {
@@ -206,6 +235,12 @@ class Processor extends Object
         return $this;
     }
     
+    /**
+     * 
+     * @param string $name
+     * 
+     * @return boolean|mixed
+     */
     public function getMetadata($name)
     {
         if (!isset($this->metadata)) {
@@ -223,6 +258,13 @@ class Processor extends Object
         return false;
     }
 
+    /**
+     * 
+     * @param string $name
+     * @param mixed $value
+     * 
+     * @return \RPI\Utilities\ContentBuild\Lib\Processor
+     */
     public function setMetadata($name, $value)
     {
         if (!isset($this->metadata)) {
@@ -246,5 +288,7 @@ class Processor extends Object
             $this->metadataFilename,
             serialize($this->metadata)
         );
+        
+        return $this;
     }
 }
