@@ -64,7 +64,6 @@ class SCSSPHPTest extends \RPI\Test\Harness\Base
         parent::tearDownAfterClass();
         
         \RPI\Foundation\Helpers\FileUtils::delTree(__DIR__."/SCSSPHPTest/ROOT");
-        $this->processor->setMetadata("sprites", null);
     }
 
     public function testProcess()
