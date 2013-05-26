@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "456463132c4468c6bcb8c4bfa4cbc9a6",
+    "hash": "aeef55dfaaf278714d990ab300c5dc37",
     "packages": [
 
     ],
@@ -150,12 +150,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "ac44d7cab145515d1496f84811e42a5c5f39ee74"
+                "reference": "1.2.11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/ac44d7cab145515d1496f84811e42a5c5f39ee74",
-                "reference": "ac44d7cab145515d1496f84811e42a5c5f39ee74",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/1.2.11",
+                "reference": "1.2.11",
                 "shasum": ""
             },
             "require": {
@@ -198,7 +198,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-05-18 03:35:59"
+            "time": "2013-05-23 18:23:24"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -384,12 +384,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "d79d90fa080ddff8105d66e13cb54c9ff9252da1"
+                "reference": "3.7.21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/d79d90fa080ddff8105d66e13cb54c9ff9252da1",
-                "reference": "d79d90fa080ddff8105d66e13cb54c9ff9252da1",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3.7.21",
+                "reference": "3.7.21",
                 "shasum": ""
             },
             "require": {
@@ -398,7 +398,7 @@
                 "ext-reflection": "*",
                 "ext-spl": "*",
                 "php": ">=5.3.3",
-                "phpunit/php-code-coverage": ">=1.2.10,<1.3.0",
+                "phpunit/php-code-coverage": ">=1.2.1,<1.3.0",
                 "phpunit/php-file-iterator": ">=1.3.1",
                 "phpunit/php-text-template": ">=1.1.1",
                 "phpunit/php-timer": ">=1.0.2,<1.1.0",
@@ -450,7 +450,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-05-22 16:50:45"
+            "time": "2013-05-23 18:54:29"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -545,7 +545,7 @@
             "source": {
                 "type": "git",
                 "url": "ssh://git@bitbucket.org/redpixelinteractive/rpi-console.git",
-                "reference": "37b3132780372f749441aece9b9320838884fb92"
+                "reference": "ba7a3ee9eff17e83722687d3c1007e46979b9626"
             },
             "require": {
                 "php": ">=5.3.0",
@@ -565,7 +565,7 @@
                 "proprietary"
             ],
             "description": "CSS/JS Content Builder",
-            "time": "2013-05-21 18:40:37"
+            "time": "2013-05-23 18:33:51"
         },
         {
             "name": "rpi/foundation",
@@ -573,7 +573,7 @@
             "source": {
                 "type": "git",
                 "url": "ssh://git@bitbucket.org/redpixelinteractive/rpi-foundation.git",
-                "reference": "8f288f5062c87035cf84a7e070bce83e8725d0e8"
+                "reference": "00aa9fc0c6df9dae995c92a565864610949e0d73"
             },
             "require": {
                 "ext-apc": "*",
@@ -611,7 +611,7 @@
             ],
             "description": "RPI Core Foundation",
             "homepage": "http://packages.red-pixel.co.uk/",
-            "time": "2013-05-13 21:25:11"
+            "time": "2013-05-23 18:31:24"
         },
         {
             "name": "rpi/schemas",
@@ -619,7 +619,7 @@
             "source": {
                 "type": "git",
                 "url": "ssh://git@bitbucket.org/redpixelinteractive/rpi-schemas.git",
-                "reference": "2656bcd62e5186be381cc9773887a1babb704047"
+                "reference": "d063f92fa6c7ac85b337332373690c20a3c43a1f"
             },
             "type": "library",
             "autoload": {
@@ -638,7 +638,41 @@
             ],
             "description": "RPI Schemas",
             "homepage": "http://packages.red-pixel.co.uk/",
-            "time": "2013-05-21 19:18:07"
+            "time": "2013-05-23 19:26:12"
+        },
+        {
+            "name": "rpi/test-harness",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@bitbucket.org/redpixelinteractive/rpi-testharness.git",
+                "reference": "5b0c7c3c9d66b733a3b821754650ddd9859176c7"
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "phpunit/phpunit": "3.7.*"
+            },
+            "require-dev": {
+                "firephp/firephp-core": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "RPI\\Test\\Harness": "Src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Dunn",
+                    "email": "matt@red-pixel.co.uk"
+                }
+            ],
+            "description": "RPI Test Harness",
+            "homepage": "http://packages.red-pixel.co.uk/",
+            "time": "2013-05-21 18:57:34"
         },
         {
             "name": "symfony/yaml",
@@ -747,6 +781,7 @@
         "ulrichsg/getopt-php": 20,
         "rpi/console": 20,
         "rpi/schemas": 20,
+        "rpi/test-harness": 20,
         "leafo/lessphp": 20
     },
     "platform": {
