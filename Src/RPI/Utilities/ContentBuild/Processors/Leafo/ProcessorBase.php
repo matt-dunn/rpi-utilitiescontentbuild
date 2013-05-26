@@ -51,6 +51,7 @@ abstract class ProcessorBase implements \RPI\Utilities\ContentBuild\Lib\Model\Pr
         $inputFilename,
         $buffer
     ) {
+        $this->processFile($resolver, $build, $inputFilename, $buffer, "preProcess");
         return true;
     }
     
@@ -60,10 +61,20 @@ abstract class ProcessorBase implements \RPI\Utilities\ContentBuild\Lib\Model\Pr
         $inputFilename,
         $buffer
     ) {
+        return $this->processFile($resolver, $build, $inputFilename, $buffer, "process");
+    }
+    
+    protected function processFile(
+        \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
+        $inputFilename,
+        $buffer,
+        $processMethodName
+    ) {
         if (pathinfo($inputFilename, PATHINFO_EXTENSION) == $this->getFileExtension()) {
             $this->processed = true;
             
-            $this->project->getLogger()->info("Compiling ".strtoupper($this->getFileExtension())." '$inputFilename'");
+            $this->project->getLogger()->info(ucfirst($processMethodName)." ".strtoupper($this->getFileExtension())." '$inputFilename'");
             
             $compiler = $this->getCompiler();
             $compiler->debug = $this->processor->debug;
@@ -138,8 +149,8 @@ EOT;
                 $calledClass = get_called_class();
                 $processor = $this->processor;
                 $compiler->setProcessImportCallback(
-                    function ($code, $inputFilename) use ($processor, $resolver, $build, $calledClass) {
-                        $processor->preProcess(
+                    function ($code, $inputFilename) use ($processor, $resolver, $build, $calledClass, $processMethodName) {
+                        $ret = $processor->$processMethodName(
                             $build,
                             $resolver,
                             $inputFilename,
@@ -147,13 +158,11 @@ EOT;
                             array($calledClass)
                         );
                         
-                        return $processor->process(
-                            $build,
-                            $resolver,
-                            $inputFilename,
-                            $code,
-                            array($calledClass)
-                        );
+                        if (is_string($ret)) {
+                            return $ret;
+                        } else {
+                            return $code;
+                        }
                     }
                 );
                 
