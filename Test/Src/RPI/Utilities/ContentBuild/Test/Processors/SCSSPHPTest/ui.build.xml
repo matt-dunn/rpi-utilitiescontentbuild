@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.rpi.co.uk/ ../../../../../../vendor/rpi/utilities-contentbuild/Src/RPI/Utilities/ContentBuild/Lib/Configuration/Xml/Model/Schema.xsd"
 
-    xmlns="http://www.rpi.co.uk/" name="website" prefix="TEMPLATE" appRoot="ROOT" basePath="/../../">
+    xmlns="http://www.rpi.co.uk/" name="website" prefix="TEMPLATE" appRoot="ROOT" basePath="">
     
     <processors>
         <!--<processor type="\RPI\Utilities\ContentBuild\Processors\SASS"/>-->
@@ -39,7 +39,7 @@
     <uriResolvers>
         <uriResolver type="RPI\Utilities\ContentBuild\UriResolvers\Composer">
             <param>
-                <vendorPath>../../../../../../../../vendor</vendorPath>
+                <vendorPath>vendor</vendorPath>
             </param>
         </uriResolver>
     </uriResolvers>

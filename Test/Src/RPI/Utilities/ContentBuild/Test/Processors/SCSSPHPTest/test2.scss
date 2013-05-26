@@ -3,4 +3,18 @@ $margin: 40px;
 .border {
     padding: $margin / 2;
     margin: $margin / 2;
+    sprite:url(composer://rpi/view#Src/RPI/View/Css/I/Sprites/2.png);
 }
+
+.border2 {
+    sprite:url(composer://rpi/view#Src/RPI/View/Css/I/Sprites/1.png);
+}
+
+.border3 {
+    sprite:url(composer://rpi/view#Src/RPI/View/Css/I/Sprites/3.png);
+}
+
+.border4 {
+    sprite:url(composer://rpi/view#Src/RPI/View/Css/I/Sprites/4.png);
+}
+

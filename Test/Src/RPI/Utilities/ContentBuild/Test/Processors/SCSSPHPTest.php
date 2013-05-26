@@ -46,6 +46,9 @@ class SCSSPHPTest extends \RPI\Test\Harness\Base
             array(
             )
         );
+        
+        \RPI\Foundation\Helpers\FileUtils::delTree(__DIR__."/SCSSPHPTest/ROOT");
+        $this->processor->setMetadata("sprites", null);
     }
 
     /**
@@ -55,6 +58,14 @@ class SCSSPHPTest extends \RPI\Test\Harness\Base
     protected function tearDown()
     {
     }
+    
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+        
+        \RPI\Foundation\Helpers\FileUtils::delTree(__DIR__."/SCSSPHPTest/ROOT");
+        $this->processor->setMetadata("sprites", null);
+    }
 
     public function testProcess()
     {
@@ -63,12 +74,35 @@ class SCSSPHPTest extends \RPI\Test\Harness\Base
             $this->processor,
             $this->configuration->project
         );
+        
         $inputFilename = __DIR__."/SCSSPHPTest/test.scss";
         
         $css = <<<EOT
 .border {
   padding: 20px;
-  margin: 20px; }
+  margin: 20px;
+  background: url(I/Sprites/core.png) no-repeat 0px 0px;
+  width: 10px;
+  height: 10px;
+  content: ''; }
+
+.border2 {
+  background: url(I/Sprites/core.png) no-repeat -12px 0px;
+  width: 24px;
+  height: 24px;
+  content: ''; }
+
+.border3 {
+  background: url(I/Sprites/core.png) no-repeat -38px 0px;
+  width: 10px;
+  height: 10px;
+  content: ''; }
+
+.border4 {
+  background: url(I/Sprites/core.png) no-repeat -50px 0px;
+  width: 17px;
+  height: 17px;
+  content: ''; }
 
 .content-navigation {
   border-color: #3bbfce;
@@ -91,5 +125,9 @@ EOT;
                 )
             )
         );
+        
+        $this->assertTrue(file_exists(__DIR__."/SCSSPHPTest/ROOT/compiled/__debug/css/I/Sprites/core.png"));
+        
+        $this->assertTrue(file_exists(__DIR__."/SCSSPHPTest/ROOT/compiled/css/I/Sprites/core.png"));
     }
 }
