@@ -97,7 +97,7 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
         array $options = null
     ) {
         if (!file_exists($configurationFile)) {
-            $this->logger->error(
+            $logger->error(
                 "Unable to locate configuration file '{$configurationFile}'"
             );
             exit(2);
