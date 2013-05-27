@@ -20,12 +20,6 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
     
     /**
      *
-     * @var array
-     */
-    protected $imageFiles = array();
-    
-    /**
-     *
      * @var integer
      */
     protected $timestamp = null;
@@ -57,13 +51,13 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         $buffer
     ) {
         $outputFilename = $build->outputFilename;
-        $files = $this->imageFiles;
+        $imageFiles = array();
         $debugPath = $build->debugPath;
         $project = $this->project;
         
         preg_replace_callback(
             "/(background[-\w\s\d]*):([\/\\#_-\w\d\s]*?)url\s*\(\s*'*\"*(.*?)'*\"*\s*\)/sim",
-            function ($matches) use ($resolver, $project, $inputFilename, &$files, $outputFilename, $debugPath) {
+            function ($matches) use ($resolver, $project, $inputFilename, &$imageFiles, $outputFilename, $debugPath) {
                 $imageMatch = $matches[3];
                 
                 if (strtolower(substr($imageMatch, 0, 5)) !== "data:") {
@@ -91,7 +85,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
                             $imagePath = $resolver->getRelativePath($project, $imageMatch);
 
                             $destinationFile = dirname($outputFilename)."/".$imagePath;
-                            $files[$destinationFile] = array(
+                            $imageFiles[$destinationFile] = array(
                                 "imagePath" => $imageMatch,
                                 "sourceDocument" => $inputFilename,
                                 "sourceFile" => $imageUrl,
@@ -103,7 +97,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
                             $imageMatch = $imagePath;
                         } else {
                             $destinationFile = dirname($outputFilename)."/".str_replace("../", "", $imageMatch);
-                            $files[$destinationFile] = array(
+                            $imageFiles[$destinationFile] = array(
                                 "imagePath" => $imageMatch,
                                 "sourceDocument" => $inputFilename,
                                 "sourceFile" => $imageUrl,
@@ -120,7 +114,10 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
             $buffer
         );
 
-        $this->imageFiles = array_merge($this->imageFiles, $files);
+        if (count($imageFiles) > 0) {
+            $this->project->getLogger()->debug("Copying images");
+            $this->copyCSSImageFiles($imageFiles);
+        }
         
         return true;
     }
@@ -153,11 +150,6 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
     
     public function complete()
     {
-        if (count($this->imageFiles) > 0) {
-            $this->project->getLogger()->debug("Copying images");
-            $this->copyCSSImageFiles($this->imageFiles);
-        }
-
         $basePaths = array();
         foreach ($this->project->builds as $build) {
             if ($build->type == "css") {
