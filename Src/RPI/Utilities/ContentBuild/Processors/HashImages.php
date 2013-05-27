@@ -54,7 +54,7 @@ class HashImages implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IPro
     ) {
         $project = $this->project;
 
-        if ($this->processor->debug) {
+        if (!$this->processor->debug) {
             return preg_replace_callback(
                 "/(background[-\w\s\d]*):([\/\\#_-\w\d\s]*?)url\s*\(\s*'*\"*(.*?)'*\"*\s*\)/sim",
                 function ($matches) use ($resolver, $project, $build) {
