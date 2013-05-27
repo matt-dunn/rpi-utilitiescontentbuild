@@ -168,6 +168,8 @@ class Build
     
     public function run()
     {
+        $startTime = microtime(true);
+        
         $this->logger->info(
             "Config read from '{$this->configurationFile}'"
         );
@@ -197,6 +199,9 @@ class Build
         }
         
         $this->processor->complete();
+        
+        $this->logger->info("\nBUILD SUCCESSFUL");
+        $this->logger->info("Total time: ".round(microtime(true) - $startTime, 1)." seconds");
     }
     
     protected function processBuild(
