@@ -4,7 +4,7 @@ namespace RPI\Utilities\ContentBuild\Processors;
 
 class HashImages implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
-    const VERSION = "1.0.0";
+    const VERSION = "1.0.1";
 
     /**
      *
@@ -18,6 +18,12 @@ class HashImages implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IPro
      */
     protected $processor = null;
     
+    /**
+     *
+     * @var string
+     */
+    protected $hashAlgorithm = "md5";
+    
     public function __construct(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
@@ -25,6 +31,11 @@ class HashImages implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IPro
     ) {
         $this->processor = $processor;
         $this->project = $project;
+        
+        if (isset($options, $options["hashAlgorithm"])) {
+            $this->hashAlgorithm = $options["hashAlgorithm"];
+        }
+        
     }
     
     public static function getVersion()
@@ -53,11 +64,12 @@ class HashImages implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IPro
         $buffer
     ) {
         $project = $this->project;
+        $hashAlgorithm = $this->hashAlgorithm;
 
         if (!$this->processor->debug) {
             return preg_replace_callback(
                 "/(background[-\w\s\d]*):([\/\\#_-\w\d\s]*?)url\s*\(\s*'*\"*(.*?)'*\"*\s*\)/sim",
-                function ($matches) use ($resolver, $project, $build) {
+                function ($matches) use ($resolver, $project, $build, $hashAlgorithm) {
                     $imageMatch = $matches[3];
 
                     if (strtolower(substr($imageMatch, 0, 5)) !== "data:") {
@@ -66,11 +78,11 @@ class HashImages implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IPro
                             $parts = null;
                             parse_str($querystring, $parts);
                             if (!isset($parts["hash"])) {
-                                $fileHash = hash_file("md5", dirname($build->outputFilename)."/$imageMatch");
+                                $fileHash = hash_file($hashAlgorithm, dirname($build->outputFilename)."/$imageMatch");
                                 $imageMatch .= "&hash={$fileHash}";
                             }
                         } else {
-                            $fileHash = hash_file("md5", dirname($build->outputFilename)."/$imageMatch");
+                            $fileHash = hash_file($hashAlgorithm, dirname($build->outputFilename)."/$imageMatch");
                             $imageMatch .= "?hash={$fileHash}";
                         }
                     }
