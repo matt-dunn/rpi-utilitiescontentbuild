@@ -74,7 +74,7 @@ class HashImages implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IPro
 
                     if (strtolower(substr($imageMatch, 0, 5)) !== "data:") {
                         $querystring = parse_url($imageMatch, PHP_URL_QUERY);
-                        if(isset($querystring)) {
+                        if (isset($querystring)) {
                             $parts = null;
                             parse_str($querystring, $parts);
                             if (!isset($parts["hash"])) {

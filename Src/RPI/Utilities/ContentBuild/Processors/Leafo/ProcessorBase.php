@@ -74,7 +74,9 @@ abstract class ProcessorBase implements \RPI\Utilities\ContentBuild\Lib\Model\Pr
         if (pathinfo($inputFilename, PATHINFO_EXTENSION) == $this->getFileExtension()) {
             $this->processed = true;
             
-            $this->project->getLogger()->notice(ucfirst($processMethodName)." ".strtoupper($this->getFileExtension())." '$inputFilename'");
+            $this->project->getLogger()->notice(
+                ucfirst($processMethodName)." ".strtoupper($this->getFileExtension())." '$inputFilename'"
+            );
             
             $compiler = $this->getCompiler();
             $compiler->debug = $this->processor->debug;
@@ -149,7 +151,16 @@ EOT;
                 $calledClass = get_called_class();
                 $processor = $this->processor;
                 $compiler->setProcessImportCallback(
-                    function ($code, $inputFilename) use ($processor, $resolver, $build, $calledClass, $processMethodName) {
+                    function (
+                        $code,
+                        $inputFilename
+                    ) use (
+                        $processor,
+                        $resolver,
+                        $build,
+                        $calledClass,
+                        $processMethodName
+                        ) {
                         $ret = $processor->$processMethodName(
                             $build,
                             $resolver,
