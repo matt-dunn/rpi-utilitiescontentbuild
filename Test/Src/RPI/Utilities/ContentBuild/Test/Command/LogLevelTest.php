@@ -7,7 +7,7 @@ use Ulrichsg\Getopt;
 class LogLevelTest extends Base
 {
     /**
-     * @var \RPI\Utilities\ContentBuild\Command\Config
+     * @var \RPI\Utilities\ContentBuild\Command\LogLevel
      */
     protected $object;
     
