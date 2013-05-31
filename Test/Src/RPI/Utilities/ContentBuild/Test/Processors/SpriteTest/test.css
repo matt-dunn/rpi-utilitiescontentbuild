@@ -1,0 +1,16 @@
+.sprite1:after {
+    sprite:url(composer://rpi/view#Src/RPI/View/Css/I/Sprites/1.png);
+}
+
+.sprite2:after {
+    sprite:url(composer://rpi/view#Src/RPI/View/Css/I/Sprites/2.png);
+}
+
+.sprite3:after {
+    sprite:url(composer://rpi/view#Src/RPI/View/Css/I/Sprites/3.png);
+}
+
+.sprite4:after {
+    sprite:url(composer://rpi/view#Src/RPI/View/Css/I/Sprites/4.png);
+}
+

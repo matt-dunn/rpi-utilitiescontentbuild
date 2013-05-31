@@ -11,7 +11,7 @@
                 <!--<maxSpriteWidth>60</maxSpriteWidth>-->
             </param>
         </processor>
-        <processor type="RPI\Utilities\ContentBuild\Processors\SCSSPHP">
+        <processor type="RPI\Utilities\ContentBuild\Processors\LESSPHP">
             <param>
                 <custom>
                     <function name="double" params="$arg">
@@ -43,6 +43,6 @@
     </uriResolvers>
     
     <build buildDirectory="" outputDirectory="compiled/css/" type="css" name="core" media="all">
-        <files name="View/test.scss"/>
+        <files name="View/test.less"/>
     </build>
 </project>

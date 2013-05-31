@@ -2,10 +2,10 @@
 
 namespace RPI\Utilities\ContentBuild\Test\Processors;
 
-class SCSSPHPTest extends \RPI\Test\Harness\Base
+class SpritesTest extends \RPI\Test\Harness\Base
 {
     /**
-     * @var \RPI\Utilities\ContentBuild\Processors\SCSSPHP
+     * @var \RPI\Utilities\ContentBuild\Processors\Sprites
      */
     protected $object;
     
@@ -31,7 +31,7 @@ class SCSSPHPTest extends \RPI\Test\Harness\Base
         
         $this->configuration = new \RPI\Utilities\ContentBuild\Lib\Configuration(
             $this->logger,
-            __DIR__."/SCSSPHPTest/ui.build.xml"
+            __DIR__."/SpriteTest/ui.build.xml"
         );
 
         $this->processor = new \RPI\Utilities\ContentBuild\Lib\Processor(
@@ -40,14 +40,14 @@ class SCSSPHPTest extends \RPI\Test\Harness\Base
             false
         );
 
-        $this->object = new \RPI\Utilities\ContentBuild\Processors\SCSSPHP(
+        $this->object = new \RPI\Utilities\ContentBuild\Processors\Sprites(
             $this->processor,
             $this->configuration->project,
             array(
             )
         );
         
-        \RPI\Foundation\Helpers\FileUtils::delTree(__DIR__."/SCSSPHPTest/ROOT");
+        \RPI\Foundation\Helpers\FileUtils::delTree(__DIR__."/SpriteTest/ROOT");
         $this->processor->setMetadata("sprites", null);
     }
 
@@ -63,7 +63,7 @@ class SCSSPHPTest extends \RPI\Test\Harness\Base
     {
         parent::tearDownAfterClass();
         
-        \RPI\Foundation\Helpers\FileUtils::delTree(__DIR__."/SCSSPHPTest/ROOT");
+        \RPI\Foundation\Helpers\FileUtils::delTree(__DIR__."/SpriteTest/ROOT");
     }
 
     public function testProcess()
@@ -74,7 +74,25 @@ class SCSSPHPTest extends \RPI\Test\Harness\Base
             $this->configuration->project
         );
         
-        $inputFilename = __DIR__."/SCSSPHPTest/test.scss";
+        $inputFilename = __DIR__."/SpriteTest/test.css";
+        
+        $css = <<<EOT
+.sprite1:after {
+    background:url(I/Sprites/core.png) no-repeat 0px 0px;width:24px;height:24px;content:'';
+}
+
+.sprite2:after {
+    background:url(I/Sprites/core.png) no-repeat -26px 0px;width:10px;height:10px;content:'';
+}
+
+.sprite3:after {
+    background:url(I/Sprites/core.png) no-repeat -38px 0px;width:10px;height:10px;content:'';
+}
+
+.sprite4:after {
+    background:url(I/Sprites/core.png) no-repeat -50px 0px;width:17px;height:17px;content:'';
+}
+EOT;
         
         $this->assertTrue(
             $this->object->preProcess(
@@ -84,43 +102,6 @@ class SCSSPHPTest extends \RPI\Test\Harness\Base
                 file_get_contents($inputFilename)
             )
         );
-        
-        $css = <<<EOT
-.border {
-  padding: 20px;
-  margin: 20px;
-  background: url(I/Sprites/core.png) no-repeat 0px 0px;
-  width: 10px;
-  height: 10px;
-  content: ''; }
-
-.border2 {
-  background: url(I/Sprites/core.png) no-repeat -12px 0px;
-  width: 24px;
-  height: 24px;
-  content: ''; }
-
-.border3 {
-  background: url(I/Sprites/core.png) no-repeat -38px 0px;
-  width: 10px;
-  height: 10px;
-  content: ''; }
-
-.border4 {
-  background: url(I/Sprites/core.png) no-repeat -50px 0px;
-  width: 17px;
-  height: 17px;
-  content: ''; }
-
-.content-navigation {
-  border-color: #3bbfce;
-  color: #2ca2af; }
-
-.border {
-  padding: 13.33333px;
-  margin: 13.33333px;
-  border-color: #3bbfce; }
-EOT;
         
         $this->assertEquals(
             \RPI\Foundation\Helpers\Utils::normalizeString($css),
@@ -134,7 +115,7 @@ EOT;
             )
         );
         
-        $this->assertTrue(file_exists(__DIR__."/SCSSPHPTest/ROOT/compiled/css/I/Sprites/core.png"));
+        $this->assertTrue(file_exists(__DIR__."/SpriteTest/ROOT/compiled/css/I/Sprites/core.png"));
         
         $this->assertEquals(
             array(
@@ -145,10 +126,10 @@ EOT;
                 "bits" => 8,
                 "mime" => "image/png"
             ),
-            getimagesize(__DIR__."/SCSSPHPTest/ROOT/compiled/css/I/Sprites/core.png")
+            getimagesize(__DIR__."/SpriteTest/ROOT/compiled/css/I/Sprites/core.png")
         );
         
-        $this->assertTrue(file_exists(__DIR__."/SCSSPHPTest/ROOT/compiled/__debug/css/I/Sprites/core.png"));
+        $this->assertTrue(file_exists(__DIR__."/SpriteTest/ROOT/compiled/__debug/css/I/Sprites/core.png"));
         
         $this->assertEquals(
             array(
@@ -159,7 +140,7 @@ EOT;
                 "bits" => 8,
                 "mime" => "image/png"
             ),
-            getimagesize(__DIR__."/SCSSPHPTest/ROOT/compiled/__debug/css/I/Sprites/core.png")
+            getimagesize(__DIR__."/SpriteTest/ROOT/compiled/__debug/css/I/Sprites/core.png")
         );
     }
 }
