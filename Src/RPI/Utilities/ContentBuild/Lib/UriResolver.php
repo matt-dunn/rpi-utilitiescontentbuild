@@ -30,6 +30,12 @@ class UriResolver extends Object
      */
     protected $processor = null;
     
+    /**
+     * 
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \RPI\Utilities\ContentBuild\Lib\Processor $processor
+     * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
+     */
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
@@ -87,6 +93,15 @@ class UriResolver extends Object
         return $this->resolvers;
     }
     
+    /**
+     * 
+     * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
+     * @param string $uri
+     * 
+     * @return boolean
+     * 
+     * @throws \RPI\Foundation\Exceptions\RuntimeException
+     */
     public function realpath(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         $uri
@@ -105,7 +120,7 @@ class UriResolver extends Object
             }
             
             if (!$schemRegistered) {
-                throw new \Exception(
+                throw new \RPI\Foundation\Exceptions\RuntimeException(
                     "Unable to locate '$uri' as scheme '$scheme' cannot be resolved. ".
                     "Ensure '$scheme' is configured as a uriResolvers"
                 );
@@ -115,6 +130,15 @@ class UriResolver extends Object
         return false;
     }
     
+    /**
+     * 
+     * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
+     * @param string $uri
+     * 
+     * @return boolean
+     * 
+     * @throws \RPI\Foundation\Exceptions\RuntimeException
+     */
     public function getRelativePath(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         $uri
@@ -133,7 +157,7 @@ class UriResolver extends Object
             }
             
             if (!$schemRegistered) {
-                throw new \Exception(
+                throw new \RPI\Foundation\Exceptions\RuntimeException(
                     "Unable to locate '$uri' as scheme '$scheme' cannot be resolved. ".
                     "Ensure '$scheme' is configured as a uriResolvers"
                 );

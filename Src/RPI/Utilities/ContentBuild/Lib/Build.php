@@ -64,6 +64,17 @@ class Build
      */
     protected $webroot = null;
     
+    /**
+     * 
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
+     * @param \RPI\Utilities\ContentBuild\Lib\Processor $processor
+     * @param \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver
+     * @param array $options
+     * @param \RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor $compressor
+     * @param \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDependencyBuilder $dependencyBuilder
+     * @param \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebugWriter $debugWriter
+     */
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
@@ -87,85 +98,87 @@ class Build
         if (isset($dependencyBuilder)) {
             $this->dependencyBuilder = $dependencyBuilder;
         } else {
-            if (isset($this->project->plugins["RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDependencyBuilder"])) {
-                $this->dependencyBuilder =
-                    new $this->project->plugins[
-                        "RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDependencyBuilder"
-                    ]->type($processor, $project, $options);
-                
-                if (!$this->dependencyBuilder
-                    instanceof \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDependencyBuilder) {
-                    throw new \RPI\Foundation\Exceptions\RuntimeException(
-                        "'{$this->project->plugins[
-                            "RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDependencyBuilder"
-                        ]->type}' ".
-                        "must be of type 'RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDependencyBuilder'"
-                    );
-                }
-            } else {
-                $this->dependencyBuilder = new \RPI\Utilities\ContentBuild\Plugins\DependencyBuilder(
-                    $processor,
-                    $project,
-                    $options
-                );
-            }
+            $this->dependencyBuilder = $this->getPlugin(
+                "RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDependencyBuilder",
+                "RPI\Utilities\ContentBuild\Plugins\DependencyBuilder",
+                $project,
+                $processor,
+                $options
+            );
         }
         
         if (isset($compressor)) {
             $this->compressor = $compressor;
         } else {
-            if (isset($this->project->plugins["RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor"])) {
-                $this->compressor =
-                    new $this->project->plugins[
-                        "RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor"
-                    ]->type($processor, $project, $options);
-                
-                if (!$this->compressor
-                    instanceof \RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor) {
-                    throw new \RPI\Foundation\Exceptions\RuntimeException(
-                        "'{$this->project->plugins["RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor"]->type}' ".
-                        "must be of type 'RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor'"
-                    );
-                }
-            } else {
-                $this->compressor = new \RPI\Utilities\ContentBuild\Plugins\YUICompressor(
-                    $processor,
-                    $project,
-                    $options
-                );
-            }
+            $this->compressor = $this->getPlugin(
+                "RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor",
+                "RPI\Utilities\ContentBuild\Plugins\YUICompressor",
+                $project,
+                $processor,
+                $options
+            );
         }
         
         if (isset($debugWriter)) {
             $this->debugWriter = $debugWriter;
         } elseif ($this->includeDebug) {
-            if (isset($this->project->plugins["RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebugWriter"])) {
-                $this->debugWriter =
-                    new $this->project->plugins[
-                        "RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebugWriter"
-                    ]->type($processor, $project, $options);
-                
-                if (!$this->debugWriter
-                    instanceof \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebugWriter) {
-                    throw new \RPI\Foundation\Exceptions\RuntimeException(
-                        "'{$this->project->plugins[
-                            "RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebugWriter"
-                        ]->type}' ".
-                        "must be of type 'RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebugWriter'"
-                    );
-                }
-            } else {
-                $this->debugWriter = new \RPI\Utilities\ContentBuild\Plugins\DebugWriter(
-                    $processor,
-                    $project,
-                    $options
-                );
-            }
+            $this->debugWriter = $this->getPlugin(
+                "RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebugWriter",
+                "RPI\Utilities\ContentBuild\Plugins\DebugWriter",
+                $project,
+                $processor,
+                $options
+            );
         }
         
         $this->webroot = realpath($this->project->basePath."/".$this->project->appRoot);
     }
     
+    /**
+     * 
+     * @param string $type
+     * @param string $defaultClass
+     * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
+     * @param \RPI\Utilities\ContentBuild\Lib\Processor $processor
+     * @param array $options
+     * 
+     * @return \RPI\Utilities\ContentBuild\Lib\Model\IPlugin
+     * 
+     * @throws \RPI\Foundation\Exceptions\RuntimeException
+     */
+    protected function getPlugin(
+        $type,
+        $defaultClass,
+        \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
+        \RPI\Utilities\ContentBuild\Lib\Processor $processor,
+        array $options = null
+    ) {
+        $type = ltrim($type, "\\");
+        
+        if (isset($this->project->plugins[$type])) {
+            return new $this->project->plugins[
+                $type
+            ]->type($processor, $project, $options);
+
+            if (!$this->compressor
+                instanceof $type) {
+                throw new \RPI\Foundation\Exceptions\RuntimeException(
+                    "'{$this->project->plugins[$type]->type}' ".
+                    "must be of type '$type'"
+                );
+            }
+        } else {
+            return new $defaultClass(
+                $processor,
+                $project,
+                $options
+            );
+        }
+    }
+
+    /**
+     * @return bool
+     */
     public function run()
     {
         $startTime = microtime(true);
@@ -202,8 +215,18 @@ class Build
         
         $this->logger->info("\nBUILD SUCCESSFUL");
         $this->logger->info("Total time: ".round(microtime(true) - $startTime, 1)." seconds");
+        
+        return true;
     }
     
+    /**
+     * 
+     * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
+     * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build
+     * @param array $buildFiles
+     * 
+     * @throws \RPI\Foundation\Exceptions\RuntimeException
+     */
     protected function processBuild(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
@@ -285,6 +308,13 @@ class Build
         }
     }
     
+    /**
+     * 
+     * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build
+     * @param string $outputPath
+     * @param string $fileSource
+     * @param string $outputFilename
+     */
     protected function writeIncludeFile(
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         $outputPath,
