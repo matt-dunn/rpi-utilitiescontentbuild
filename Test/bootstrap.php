@@ -3,6 +3,9 @@
 //session_start();
 ob_start();
 
+require_once __DIR__."/../Src/RPI/Utilities/ContentBuild/Constants.php";
+require_once __DIR__."/../Src/RPI/Utilities/ContentBuild/Functions.php";
+
 if (file_exists(__DIR__."/../vendor/autoload.php")) {
     $autoload = require __DIR__."/../vendor/autoload.php";
 } else {
