@@ -82,11 +82,6 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         $buffer
     ) {
         $outputFilename = $build->outputFilename;
-        $spriteOutputFilename = dirname($outputFilename)."/I/Sprites/".$build->name.".png";
-        $debugSpriteOutputFilename = null;
-        if (isset($build->debugPath)) {
-            $debugSpriteOutputFilename = $build->debugPath."/I/Sprites/".$build->name.".png";
-        }
         
         $sprites = $this->processor->getMetaData("sprites");
         if ($sprites === false) {
@@ -98,19 +93,51 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         $project = $this->project;
         
         preg_replace_callback(
-            "/(sprite\:\s*url\s*\(\s*'*\"*(.*?)'*\"*\s*\)\s*;)/sim",
+            "/(sprite\:\s*url\s*\(\s*'*\"*(.*?)'*\"*\s*\)\s*(.*?);)/sim",
             function ($matches) use (
                 $inputFilename,
                 $outputFilename,
                 $build,
                 &$sprites,
-                $spriteOutputFilename,
-                $debugSpriteOutputFilename,
                 $maxSpriteWidth,
                 $resolver,
                 $project,
                 $spritePadding
                 ) {
+            
+                $details = $matches[3];
+                
+                $ratio = 1;
+                $filenamePostfix = "";
+                
+                if ($details !== "") {
+                    $detailsParts = explode("=", $details);
+
+                    switch (strtolower(trim($detailsParts[0]))) {
+                        case "ratio":
+                            if (!isset($detailsParts[1])) {
+                                throw new \RPI\Foundation\Exceptions\RuntimeException(
+                                    "Ratio value must be specifed. e.g. ration=<x>"
+                                );
+                            } elseif (!is_numeric($detailsParts[1])) {
+                                throw new \RPI\Foundation\Exceptions\RuntimeException(
+                                    "Ration value '{$detailsParts[1]}' must be an integer"
+                                );
+                            }
+                            $filenamePostfix = "X".$detailsParts[1];
+                            $ratio = (int)$detailsParts[1];
+                            break;
+                    }
+                }
+                
+                $buildName = $build->name.$filenamePostfix;
+                
+                $spriteOutputFilename = dirname($outputFilename)."/I/Sprites/{$buildName}.png";
+                $debugSpriteOutputFilename = null;
+                if (isset($build->debugPath)) {
+                    $debugSpriteOutputFilename = $build->debugPath."/I/Sprites/{$buildName}.png";
+                }
+                    
                 $spriteFilename = $resolver->realpath($project, $matches[2]);
                 if ($spriteFilename === false) {
                     $spriteFilename = realpath(dirname($inputFilename)."/".$matches[2]);
@@ -132,7 +159,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
 
                         if (file_exists($spriteOutputFilename)) {
                             $previousSprite =
-                                \RPI\Utilities\ContentBuild\Processors\Sprites::findLastIcon($build, $sprites);
+                                \RPI\Utilities\ContentBuild\Processors\Sprites::findLastIcon($buildName, $sprites);
                             if ($previousSprite !== false) {
                                 $offsetX = $previousSprite["offsetX"] + $previousSprite["width"] + $spritePadding;
                                 $offsetY = $previousSprite["offsetY"];
@@ -223,11 +250,12 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                             "height" => $imageDataSprite[1],
                             "offsetX" => $offsetX,
                             "offsetY" => $offsetY,
-                            "buildName" => $build->name,
+                            "buildName" => $buildName,
                             "spriteName" => $spriteOutputFilename,
                             "spriteDebugName" => $debugSpriteOutputFilename,
                             "spritePath" => substr($spriteOutputFilename, strlen(dirname($outputFilename)) + 1),
-                            "originalName" => $spriteFilename
+                            "originalName" => $spriteFilename,
+                            "ratio" => $ratio
                         );
                     }
                 }
@@ -250,7 +278,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         if (isset($sprites)) {
             $project = $this->project;
             $buffer = preg_replace_callback(
-                "/(sprite\:\s*url\s*\(\s*'*\"*(.*?)'*\"*\s*\)\s*;)/sim",
+                "/(sprite\:\s*url\s*\(\s*'*\"*(.*?)'*\"*\s*\)\s*(.*?);)/sim",
                 function ($matches) use ($inputFilename, $sprites, $project, $resolver) {
                     $spriteImage = $resolver->realpath($project, $matches[2]);
                     if ($spriteImage === false) {
@@ -267,11 +295,28 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                         if ($offsetY > 0) {
                             $offsetY = $offsetY * -1;
                         }
+                        
+                        $width = (int)$spriteData["width"];
+                        $height = (int)$spriteData["height"];
+                        
+                        $extraRules = "";
+                        
+                        $ratio = (int)$spriteData["ratio"];
+                        
+                        if ($ratio !== 1) {
+                            $offsetX = $offsetX / $ratio;
+                            $offsetY = $offsetY / $ratio;
+                            $width = $width / $ratio;
+                            $height = $height / $ratio;
+                            
+                            $spriteDetails = getimagesize($spriteData["spriteName"]);
+                            $extraRules .= "background-size:".($spriteDetails[0] / $ratio)."px ".($spriteDetails[1] / $ratio)."px";
+                        }
 
                         // This needs to be on a single line so that line number reporting
                         // does not break (e.g. when using firebug)
                         return "background:url({$spriteData["spritePath"]}) no-repeat {$offsetX}px {$offsetY}px;".
-                            "width:{$spriteData["width"]}px;height:{$spriteData["height"]}px;content:'';";
+                            "width:{$width}px;height:{$height}px;content:'';{$extraRules}";
                     } else {
                         throw new \RPI\Foundation\Exceptions\RuntimeException(
                             "Unable to locate sprite image '{$matches[2]}' in '$inputFilename'"
@@ -296,11 +341,11 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         return true;
     }
     
-    public static function findLastIcon($build, array $sprites)
+    public static function findLastIcon($buildName, array $sprites)
     {
         $sprites = array_reverse($sprites);
         foreach ($sprites as $sprite) {
-            if (isset($sprite["buildName"]) && $sprite["buildName"] == $build->name) {
+            if (isset($sprite["buildName"]) && $sprite["buildName"] == $buildName) {
                 return $sprite;
             }
         }
