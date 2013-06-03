@@ -1,0 +1,6 @@
+@media only screen and (-webkit-min-device-pixel-ratio: 2), 
+only screen and (min-device-pixel-ratio: 2) {
+    .sprite1:after {
+        sprite:url(composer://rpi/view#Src/RPI/View/Css/I/Sprites/1.png) ratio=2;
+    }
+}

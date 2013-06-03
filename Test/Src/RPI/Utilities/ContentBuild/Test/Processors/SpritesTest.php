@@ -143,4 +143,135 @@ EOT;
             getimagesize(__DIR__."/SpriteTest/ROOT/compiled/__debug/css/I/Sprites/core.png")
         );
     }
+
+    /**
+     * @expectedException RPI\Foundation\Exceptions\RuntimeException
+     */
+    public function testProcessOptionInvalid()
+    {
+        $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver(
+            $this->logger,
+            $this->processor,
+            $this->configuration->project
+        );
+        
+        $inputFilename = __DIR__."/SpriteTest/test-option-invalid.css";
+        
+        $this->assertTrue(
+            $this->object->preProcess(
+                $resolver,
+                $this->configuration->project->builds[0],
+                $inputFilename,
+                file_get_contents($inputFilename)
+            )
+        );
+        
+        $this->object->process(
+            $resolver,
+            $this->configuration->project->builds[0],
+            $inputFilename,
+            file_get_contents($inputFilename)
+        );
+    }
+
+    /**
+     * @expectedException RPI\Foundation\Exceptions\RuntimeException
+     */
+    public function testProcessOptionRatioInvalidMissing()
+    {
+        $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver(
+            $this->logger,
+            $this->processor,
+            $this->configuration->project
+        );
+        
+        $inputFilename = __DIR__."/SpriteTest/test-option-ratio-invalid-missing.css";
+        
+        $this->assertTrue(
+            $this->object->preProcess(
+                $resolver,
+                $this->configuration->project->builds[0],
+                $inputFilename,
+                file_get_contents($inputFilename)
+            )
+        );
+        
+        $this->object->process(
+            $resolver,
+            $this->configuration->project->builds[0],
+            $inputFilename,
+            file_get_contents($inputFilename)
+        );
+    }
+    
+    /**
+     * @expectedException RPI\Foundation\Exceptions\RuntimeException
+     */
+    public function testProcessOptionRatioInvalidValue()
+    {
+        $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver(
+            $this->logger,
+            $this->processor,
+            $this->configuration->project
+        );
+        
+        $inputFilename = __DIR__."/SpriteTest/test-option-ratio-invalid-value.css";
+        
+        $this->assertTrue(
+            $this->object->preProcess(
+                $resolver,
+                $this->configuration->project->builds[0],
+                $inputFilename,
+                file_get_contents($inputFilename)
+            )
+        );
+        
+        $this->object->process(
+            $resolver,
+            $this->configuration->project->builds[0],
+            $inputFilename,
+            file_get_contents($inputFilename)
+        );
+    }
+    
+    public function testProcessOptionRatio()
+    {
+        $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver(
+            $this->logger,
+            $this->processor,
+            $this->configuration->project
+        );
+        
+        $inputFilename = __DIR__."/SpriteTest/test-option-ratio.css";
+        
+        $css = <<<EOT
+@media only screen and (-webkit-min-device-pixel-ratio: 2), 
+only screen and (min-device-pixel-ratio: 2) {
+    .sprite1:after {
+        background:url(I/Sprites/coreX2.png) no-repeat 0px 0px;width:12px;height:12px;content:'';background-size:12px 12px
+    }
+}
+EOT;
+        
+        $this->assertTrue(
+            $this->object->preProcess(
+                $resolver,
+                $this->configuration->project->builds[0],
+                $inputFilename,
+                file_get_contents($inputFilename)
+            )
+        );
+        
+        $this->assertEquals(
+            \RPI\Foundation\Helpers\Utils::normalizeString($css),
+            \RPI\Foundation\Helpers\Utils::normalizeString(
+                $this->object->process(
+                    $resolver,
+                    $this->configuration->project->builds[0],
+                    $inputFilename,
+                    file_get_contents($inputFilename)
+                )
+            )
+        );
+    }
 }
