@@ -4,7 +4,7 @@ namespace RPI\Utilities\ContentBuild\Processors;
 
 class HashImages implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
-    const VERSION = "1.0.1";
+    const VERSION = "1.0.2";
 
     /**
      *
@@ -66,39 +66,37 @@ class HashImages implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IPro
         $project = $this->project;
         $hashAlgorithm = $this->hashAlgorithm;
 
-        if (!$this->processor->debug) {
-            return preg_replace_callback(
-                "/(background[-\w\s\d]*):([\/\\#_-\w\d\s]*?)url\s*\(\s*'*\"*(.*?)'*\"*\s*\)/sim",
-                function ($matches) use ($project, $build, $hashAlgorithm) {
-                    $imageMatch = $matches[3];
-                    $imageFilename = dirname($build->outputFilename)."/$imageMatch";
+        return preg_replace_callback(
+            "/(background[-\w\s\d]*):([\/\\#_-\w\d\s]*?)url\s*\(\s*'*\"*(.*?)'*\"*\s*\)/sim",
+            function ($matches) use ($project, $build, $hashAlgorithm) {
+                $imageMatch = $matches[3];
+                $imageFilename = dirname($build->outputFilename)."/$imageMatch";
 
-                    if (file_exists($imageFilename)) {
-                        if (strtolower(substr($imageMatch, 0, 5)) !== "data:") {
-                            $querystring = parse_url($imageMatch, PHP_URL_QUERY);
-                            if (isset($querystring)) {
-                                $parts = null;
-                                parse_str($querystring, $parts);
-                                if (!isset($parts["hash"])) {
-                                    $project->getLogger()->debug("Generated has for '$imageFilename'");
-                                    $fileHash = hash_file($hashAlgorithm, $imageFilename);
-                                    $imageMatch .= "&hash={$fileHash}";
-                                }
-                            } else {
+                if (file_exists($imageFilename)) {
+                    if (strtolower(substr($imageMatch, 0, 5)) !== "data:") {
+                        $querystring = parse_url($imageMatch, PHP_URL_QUERY);
+                        if (isset($querystring)) {
+                            $parts = null;
+                            parse_str($querystring, $parts);
+                            if (!isset($parts["hash"])) {
                                 $project->getLogger()->debug("Generated has for '$imageFilename'");
                                 $fileHash = hash_file($hashAlgorithm, $imageFilename);
-                                $imageMatch .= "?hash={$fileHash}";
+                                $imageMatch .= "&hash={$fileHash}";
                             }
+                        } else {
+                            $project->getLogger()->debug("Generated has for '$imageFilename'");
+                            $fileHash = hash_file($hashAlgorithm, $imageFilename);
+                            $imageMatch .= "?hash={$fileHash}";
                         }
-                    } else {
-                        $project->getLogger()->debug("Image not found '$imageFilename'");
                     }
-                    
-                    return "{$matches[1]}:{$matches[2]}url($imageMatch)";
-                },
-                $buffer
-            );
-        }
+                } else {
+                    $project->getLogger()->debug("Image not found '$imageFilename'");
+                }
+
+                return "{$matches[1]}:{$matches[2]}url($imageMatch)";
+            },
+            $buffer
+        );
         
         return $buffer;
     }
