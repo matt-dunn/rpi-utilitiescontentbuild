@@ -4,7 +4,7 @@ namespace RPI\Utilities\ContentBuild\Processors;
 
 class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
-    const VERSION = "1.0.7";
+    const VERSION = "1.0.8";
     
     /**
      *
@@ -91,8 +91,8 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         $spritePadding = self::SPRITE_PADDING;
         $maxSpriteWidth = $this->maxSpriteWidth;
         $project = $this->project;
-        
-        preg_replace_callback(
+
+        \RPI\Foundation\Helpers\Utils::pregReplaceCallbackOffset(
             "/(sprite\:\s*url\s*\(\s*'*\"*(.*?)'*\"*\s*\)\s*(.*?);)/sim",
             function ($matches) use (
                 $inputFilename,
@@ -104,8 +104,8 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                 $project,
                 $spritePadding
                 ) {
-            
-                $details = $matches[3];
+
+                $details = $matches[3][0];
                 
                 $ratio = 1;
                 $filenamePostfix = "";
@@ -117,16 +117,22 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                         case "ratio":
                             if (!isset($detailsParts[1])) {
                                 throw new \RPI\Foundation\Exceptions\RuntimeException(
-                                    "Ratio value must be specifed. e.g. ration=<x>"
+                                    "Ratio value must be specifed. e.g. ratio=<x>".
+                                    " in '$inputFilename{$matches[3]["fileDetails"]}'"
                                 );
                             } elseif (!is_numeric($detailsParts[1])) {
                                 throw new \RPI\Foundation\Exceptions\RuntimeException(
-                                    "Ration value '{$detailsParts[1]}' must be an integer"
+                                    "Ratio value '{$detailsParts[1]}' must be an integer".
+                                    " in '$inputFilename{$matches[3]["fileDetails"]}'"
                                 );
                             }
                             $filenamePostfix = "X".$detailsParts[1];
                             $ratio = (int)$detailsParts[1];
                             break;
+                        default:
+                            throw new \RPI\Foundation\Exceptions\RuntimeException(
+                                "Unknown option '{$detailsParts[0]} in '$inputFilename{$matches[3]["fileDetails"]}'"
+                            );
                     }
                 }
                 
@@ -138,13 +144,14 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                     $debugSpriteOutputFilename = $build->debugPath."/I/Sprites/{$buildName}.png";
                 }
                     
-                $spriteFilename = $resolver->realpath($project, $matches[2]);
+                $spriteFilename = $resolver->realpath($project, $matches[2][0]);
                 if ($spriteFilename === false) {
-                    $spriteFilename = realpath(dirname($inputFilename)."/".$matches[2]);
+                    $spriteFilename = realpath(dirname($inputFilename)."/".$matches[2][0]);
                 }
                 if (!file_exists($spriteFilename)) {
                     $project->getLogger()->error(
-                        "Unable to locate sprite image '{$matches[2]}' in '$inputFilename'"
+                        "Unable to locate sprite image '{$matches[2][0]}'".
+                        " in '$inputFilename{$matches[2]["fileDetails"]}'"
                     );
                 } else {
                     if (!isset($sprites[$spriteFilename])) {
@@ -277,12 +284,12 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         $sprites = $this->processor->getMetaData("sprites");
         if (isset($sprites)) {
             $project = $this->project;
-            $buffer = preg_replace_callback(
+            $buffer = \RPI\Foundation\Helpers\Utils::pregReplaceCallbackOffset(
                 "/(sprite\:\s*url\s*\(\s*'*\"*(.*?)'*\"*\s*\)\s*(.*?);)/sim",
                 function ($matches) use ($inputFilename, $sprites, $project, $resolver) {
-                    $spriteImage = $resolver->realpath($project, $matches[2]);
+                    $spriteImage = $resolver->realpath($project, $matches[2][0]);
                     if ($spriteImage === false) {
-                        $spriteImage = realpath(dirname($inputFilename)."/".$matches[2]);
+                        $spriteImage = realpath(dirname($inputFilename)."/".$matches[2][0]);
                     }
                     if (isset($sprites, $sprites[$spriteImage])) {
                         $spriteData = $sprites[$spriteImage];
@@ -310,7 +317,8 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                             $height = $height / $ratio;
                             
                             $spriteDetails = getimagesize($spriteData["spriteName"]);
-                            $extraRules .= "background-size:".($spriteDetails[0] / $ratio)."px ".($spriteDetails[1] / $ratio)."px";
+                            $extraRules .= "background-size:".
+                                ($spriteDetails[0] / $ratio)."px ".($spriteDetails[1] / $ratio)."px";
                         }
 
                         // This needs to be on a single line so that line number reporting
@@ -319,7 +327,8 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                             "width:{$width}px;height:{$height}px;content:'';{$extraRules}";
                     } else {
                         throw new \RPI\Foundation\Exceptions\RuntimeException(
-                            "Unable to locate sprite image '{$matches[2]}' in '$inputFilename'"
+                            "Unable to locate sprite image '{$matches[2][0]}'".
+                            " in '$inputFilename{$matches[2]["fileDetails"]}'"
                         );
                     }
 

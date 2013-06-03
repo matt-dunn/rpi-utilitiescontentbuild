@@ -4,7 +4,7 @@ namespace RPI\Utilities\ContentBuild\Processors;
 
 class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
-    const VERSION = "1.0.11";
+    const VERSION = "1.0.12";
 
     /**
      *
@@ -55,10 +55,10 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
         $debugPath = $build->debugPath;
         $project = $this->project;
         
-        preg_replace_callback(
+        \RPI\Foundation\Helpers\Utils::pregReplaceCallbackOffset(
             "/(background[-\w\s\d]*):([\/\\#_-\w\d\s]*?)url\s*\(\s*'*\"*(.*?)'*\"*\s*\)/sim",
             function ($matches) use ($resolver, $project, $inputFilename, &$imageFiles, $outputFilename, $debugPath) {
-                $imageMatch = $matches[3];
+                $imageMatch = $matches[3][0];
                 
                 if (strtolower(substr($imageMatch, 0, 5)) !== "data:") {
                     $resolvedPath = $imageUrl = $resolver->realpath($project, $imageMatch);
@@ -77,7 +77,8 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
 
                         if ($event->getReturnValue() !== true) {
                             throw new \Exception(
-                                "Unable to locate image '{$imageMatch}' in '$inputFilename'"
+                                "Unable to locate image '{$imageMatch}'".
+                                " in '$inputFilename{$matches[3]["fileDetails"]}'"
                             );
                         }
                     } else {
@@ -109,7 +110,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
                     }
                 }
                 
-                return "{$matches[1]}:{$matches[2]}url($imageMatch)";
+                return "{$matches[1][0]}:{$matches[2][0]}url($imageMatch)";
             },
             $buffer
         );
@@ -130,10 +131,10 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
     ) {
         $project = $this->project;
         
-        return preg_replace_callback(
+        return \RPI\Foundation\Helpers\Utils::pregReplaceCallbackOffset(
             "/(background[-\w\s\d]*):([\/\\#_-\w\d\s]*?)url\s*\(\s*'*\"*(.*?)'*\"*\s*\)/sim",
             function ($matches) use ($resolver, $project) {
-                $imageMatch = $matches[3];
+                $imageMatch = $matches[3][0];
                 
                 if (strtolower(substr($imageMatch, 0, 5)) !== "data:") {
                     $imageUrl = $resolver->realpath($project, $imageMatch);
@@ -142,7 +143,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
                     }
                 }
                 
-                return "{$matches[1]}:{$matches[2]}url($imageMatch)";
+                return "{$matches[1][0]}:{$matches[2][0]}url($imageMatch)";
             },
             $buffer
         );
