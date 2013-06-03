@@ -158,6 +158,8 @@ class Processor extends Object
             $buffer
         );
             
+        $inputFilename = realpath($inputFilename);
+        
         foreach ($this->getProcessors() as $processor) {
             if (!isset($skipProcessors) || !in_array(get_class($processor), $skipProcessors)) {
                 if ($build->type == "css") {
@@ -204,6 +206,8 @@ class Processor extends Object
             $buffer
         );
             
+        $inputFilename = realpath($inputFilename);
+        
         foreach ($this->getProcessors() as $processor) {
             if (!isset($skipProcessors) || !in_array(get_class($processor), $skipProcessors)) {
                 if ($build->type == "css") {
