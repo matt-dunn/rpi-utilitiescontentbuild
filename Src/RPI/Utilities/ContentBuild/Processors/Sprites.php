@@ -4,7 +4,7 @@ namespace RPI\Utilities\ContentBuild\Processors;
 
 class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
-    const VERSION = "1.0.8";
+    const VERSION = "1.0.9";
     
     /**
      *
@@ -149,7 +149,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                     $spriteFilename = realpath(dirname($inputFilename)."/".$matches[2][0]);
                 }
                 if (!file_exists($spriteFilename)) {
-                    $project->getLogger()->error(
+                    throw new \RPI\Foundation\Exceptions\RuntimeException(
                         "Unable to locate sprite image '{$matches[2][0]}'".
                         " in '$inputFilename{$matches[2]["fileDetails"]}'"
                     );
