@@ -4,7 +4,7 @@ namespace RPI\Utilities\ContentBuild\Processors;
 
 class HashImages implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
-    const VERSION = "1.0.2";
+    const VERSION = "1.0.3";
 
     /**
      *
@@ -66,10 +66,10 @@ class HashImages implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IPro
         $project = $this->project;
         $hashAlgorithm = $this->hashAlgorithm;
 
-        return preg_replace_callback(
+        return \RPI\Foundation\Helpers\Utils::pregReplaceCallbackOffset(
             "/(background[-\w\s\d]*):([\/\\#_-\w\d\s]*?)url\s*\(\s*'*\"*(.*?)'*\"*\s*\)/sim",
-            function ($matches) use ($project, $build, $hashAlgorithm) {
-                $imageMatch = $matches[3];
+            function ($matches) use ($project, $build, $hashAlgorithm, $inputFilename) {
+                $imageMatch = $matches[3][0];
                 $imageFilename = dirname($build->outputFilename)."/$imageMatch";
 
                 if (file_exists($imageFilename)) {
@@ -90,10 +90,13 @@ class HashImages implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IPro
                         }
                     }
                 } else {
-                    $project->getLogger()->debug("Image not found '$imageFilename'");
+                    throw new \RPI\Foundation\Exceptions\FileNotFound(
+                        "Unable to locate image '{$imageFilename}'".
+                        " in '$inputFilename{$matches[3]["fileDetails"]}'"
+                    );
                 }
 
-                return "{$matches[1]}:{$matches[2]}url($imageMatch)";
+                return "{$matches[1][0]}:{$matches[2][0]}url($imageMatch)";
             },
             $buffer
         );

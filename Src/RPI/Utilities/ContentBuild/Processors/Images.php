@@ -76,7 +76,7 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
                         \RPI\Foundation\Event\Manager::fire($event);
 
                         if ($event->getReturnValue() !== true) {
-                            throw new \Exception(
+                            throw new \RPI\Foundation\Exceptions\FileNotFound(
                                 "Unable to locate image '{$imageMatch}'".
                                 " in '$inputFilename{$matches[3]["fileDetails"]}'"
                             );

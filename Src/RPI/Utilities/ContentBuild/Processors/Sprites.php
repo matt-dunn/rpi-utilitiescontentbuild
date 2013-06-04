@@ -34,7 +34,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         if (isset($options, $options["maxSpriteWidth"])) {
             $this->maxSpriteWidth = $options["maxSpriteWidth"];
             if (!is_numeric($this->maxSpriteWidth) || $this->maxSpriteWidth < 0 || $this->maxSpriteWidth > 10000) {
-                throw new \Exception(__CLASS__.": maxSpriteWidth must be a integer between 0 and 10000");
+                throw new \RPI\Foundation\Exceptions\RuntimeException(__CLASS__.": maxSpriteWidth must be a integer between 0 and 10000");
             }
         }
         
@@ -149,7 +149,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                     $spriteFilename = realpath(dirname($inputFilename)."/".$matches[2][0]);
                 }
                 if (!file_exists($spriteFilename)) {
-                    throw new \RPI\Foundation\Exceptions\RuntimeException(
+                    throw new \RPI\Foundation\Exceptions\FileNotFound(
                         "Unable to locate sprite image '{$matches[2][0]}'".
                         " in '$inputFilename{$matches[2]["fileDetails"]}'"
                     );
@@ -326,7 +326,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                         return "background:url({$spriteData["spritePath"]}) no-repeat {$offsetX}px {$offsetY}px;".
                             "width:{$width}px;height:{$height}px;content:'';{$extraRules}";
                     } else {
-                        throw new \RPI\Foundation\Exceptions\RuntimeException(
+                        throw new \RPI\Foundation\Exceptions\FileNotFound(
                             "Unable to locate sprite image '{$matches[2][0]}'".
                             " in '$inputFilename{$matches[2]["fileDetails"]}'"
                         );
