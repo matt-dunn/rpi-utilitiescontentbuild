@@ -145,7 +145,37 @@ EOT;
     }
 
     /**
-     * @expectedException RPI\Foundation\Exceptions\RuntimeException
+     * @expectedException \RPI\Foundation\Exceptions\FileNotFound
+     */
+    public function testProcessFileNotFound()
+    {
+        $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver(
+            $this->logger,
+            $this->processor,
+            $this->configuration->project
+        );
+        
+        $inputFilename = __DIR__."/SpriteTest/test-file-not-found.css";
+        
+        $this->assertTrue(
+            $this->object->preProcess(
+                $resolver,
+                $this->configuration->project->builds[0],
+                $inputFilename,
+                file_get_contents($inputFilename)
+            )
+        );
+        
+        $this->object->process(
+            $resolver,
+            $this->configuration->project->builds[0],
+            $inputFilename,
+            file_get_contents($inputFilename)
+        );
+    }
+    
+    /**
+     * @expectedException \RPI\Foundation\Exceptions\RuntimeException
      */
     public function testProcessOptionInvalid()
     {
@@ -175,7 +205,7 @@ EOT;
     }
 
     /**
-     * @expectedException RPI\Foundation\Exceptions\RuntimeException
+     * @expectedException \RPI\Foundation\Exceptions\RuntimeException
      */
     public function testProcessOptionRatioInvalidMissing()
     {
@@ -205,7 +235,7 @@ EOT;
     }
     
     /**
-     * @expectedException RPI\Foundation\Exceptions\RuntimeException
+     * @expectedException \RPI\Foundation\Exceptions\RuntimeException
      */
     public function testProcessOptionRatioInvalidValue()
     {

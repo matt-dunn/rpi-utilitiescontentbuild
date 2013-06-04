@@ -11,27 +11,6 @@
                 <!--<maxSpriteWidth>60</maxSpriteWidth>-->
             </param>
         </processor>
-        <processor type="RPI\Utilities\ContentBuild\Processors\SCSSPHP">
-            <param>
-                <custom>
-                    <function name="double" params="$arg">
-                        list($type, $value, $unit) = $arg;
-                        return array($type, $value*2, $unit);
-                    </function>
-                    <function name="quad" params="$arg">
-                        list($type, $value, $unit) = $arg;
-                        return array($type, $value*4, $unit);
-                    </function>
-                    <function name="bitmore" params="$arg">
-                        list($type, $value, $unit) = $arg;
-                        return array($type, $value * 1.2, $unit);
-                    </function>
-                    <function name="customFunction" params="$arg">
-                        return array( 'color', 124, 56, 00);
-                    </function>
-                </custom>
-            </param>
-        </processor>
     </processors>
     
     <uriResolvers>
@@ -43,6 +22,6 @@
     </uriResolvers>
     
     <build buildDirectory="" outputDirectory="compiled/css/" type="css" name="core" media="all">
-        <files name="View/test.scss"/>
+        <files name="test.scss"/>
     </build>
 </project>
