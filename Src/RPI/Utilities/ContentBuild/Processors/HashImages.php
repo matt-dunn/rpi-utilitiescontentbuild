@@ -4,7 +4,7 @@ namespace RPI\Utilities\ContentBuild\Processors;
 
 class HashImages implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 {
-    const VERSION = "1.0.3";
+    const VERSION = "1.0.4";
 
     /**
      *
@@ -70,30 +70,36 @@ class HashImages implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IPro
             "/(background[-\w\s\d]*):([\/\\#_-\w\d\s]*?)url\s*\(\s*'*\"*(.*?)'*\"*\s*\)/sim",
             function ($matches) use ($project, $build, $hashAlgorithm, $inputFilename) {
                 $imageMatch = $matches[3][0];
-                $imageFilename = dirname($build->outputFilename)."/$imageMatch";
 
-                if (file_exists($imageFilename)) {
-                    if (strtolower(substr($imageMatch, 0, 5)) !== "data:") {
-                        $querystring = parse_url($imageMatch, PHP_URL_QUERY);
-                        if (isset($querystring)) {
-                            $parts = null;
-                            parse_str($querystring, $parts);
-                            if (!isset($parts["hash"])) {
-                                $project->getLogger()->debug("Generated has for '$imageFilename'");
-                                $fileHash = hash_file($hashAlgorithm, $imageFilename);
-                                $imageMatch .= "&hash={$fileHash}";
-                            }
-                        } else {
+                if (strtolower(substr($imageMatch, 0, 5)) !== "data:") {
+                    $querystring = parse_url($imageMatch, PHP_URL_QUERY);
+                    if (isset($querystring)) {
+                        $imageFilename = parse_url(dirname($build->outputFilename)."/$imageMatch", PHP_URL_PATH);
+                        if (!file_exists($imageFilename)) {
+                            throw new \RPI\Foundation\Exceptions\FileNotFound(
+                                "Unable to locate image '{$imageMatch}'".
+                                " in '$inputFilename{$matches[3]["fileDetails"]}'"
+                            );
+                        }
+                        $parts = null;
+                        parse_str($querystring, $parts);
+                        if (!isset($parts["hash"])) {
                             $project->getLogger()->debug("Generated has for '$imageFilename'");
                             $fileHash = hash_file($hashAlgorithm, $imageFilename);
-                            $imageMatch .= "?hash={$fileHash}";
+                            $imageMatch .= "&hash={$fileHash}";
                         }
+                    } else {
+                        $imageFilename = dirname($build->outputFilename)."/$imageMatch";
+                        if (!file_exists($imageFilename)) {
+                            throw new \RPI\Foundation\Exceptions\FileNotFound(
+                                "Unable to locate image '{$imageMatch}'".
+                                " in '$inputFilename{$matches[3]["fileDetails"]}'"
+                            );
+                        }
+                        $project->getLogger()->debug("Generated has for '$imageFilename'");
+                        $fileHash = hash_file($hashAlgorithm, $imageFilename);
+                        $imageMatch .= "?hash={$fileHash}";
                     }
-                } else {
-                    throw new \RPI\Foundation\Exceptions\FileNotFound(
-                        "Unable to locate image '{$imageFilename}'".
-                        " in '$inputFilename{$matches[3]["fileDetails"]}'"
-                    );
                 }
 
                 return "{$matches[1][0]}:{$matches[2][0]}url($imageMatch)";
