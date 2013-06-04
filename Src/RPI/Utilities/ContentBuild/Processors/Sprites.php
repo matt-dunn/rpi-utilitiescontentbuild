@@ -34,7 +34,9 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         if (isset($options, $options["maxSpriteWidth"])) {
             $this->maxSpriteWidth = $options["maxSpriteWidth"];
             if (!is_numeric($this->maxSpriteWidth) || $this->maxSpriteWidth < 0 || $this->maxSpriteWidth > 10000) {
-                throw new \RPI\Foundation\Exceptions\RuntimeException(__CLASS__.": maxSpriteWidth must be a integer between 0 and 10000");
+                throw new \RPI\Foundation\Exceptions\RuntimeException(
+                    __CLASS__.": maxSpriteWidth must be a integer between 0 and 10000"
+                );
             }
         }
         

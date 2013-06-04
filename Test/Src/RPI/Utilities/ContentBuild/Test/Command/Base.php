@@ -6,7 +6,8 @@ use Ulrichsg\Getopt;
 
 abstract class Base extends \RPI\Test\Harness\Base
 {
-    protected function execCommand($command, $commandValues = array()) {
+    protected function execCommand($command, $commandValues = array())
+    {
         $getopt = new Getopt();
         
         $optionsDetails = $this->object->getOption();

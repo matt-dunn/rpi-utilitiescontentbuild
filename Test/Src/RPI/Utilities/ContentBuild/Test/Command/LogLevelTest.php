@@ -38,7 +38,8 @@ class LogLevelTest extends Base
                 "option" => array(
                     "l",
                     "loglevel",
-                    Getopt::REQUIRED_ARGUMENT, "Set log level <arg>. 0 = silent, 1 = information, 2 = verbose, 3 = debug"
+                    Getopt::REQUIRED_ARGUMENT,
+                    "Set log level <arg>. 0 = silent, 1 = information, 2 = verbose, 3 = debug"
                 )
             ),
             $this->object->getOption()

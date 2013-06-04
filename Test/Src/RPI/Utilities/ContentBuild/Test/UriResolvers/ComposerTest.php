@@ -62,7 +62,10 @@ class ComposerTest extends \RPI\Test\Harness\Base
     {
         $this->assertEquals(
             "Src/RPI/View/Css/invalid.css",
-            $this->object->getRelativePath($this->configuration->project, "composer://rpi/view#Src/RPI/View/Css/invalid.css")
+            $this->object->getRelativePath(
+                $this->configuration->project,
+                "composer://rpi/view#Src/RPI/View/Css/invalid.css"
+            )
         );
     }
     
@@ -70,7 +73,10 @@ class ComposerTest extends \RPI\Test\Harness\Base
     {
         $this->assertEquals(
             "Src/RPI/View/Css/test.css",
-            $this->object->getRelativePath($this->configuration->project, "composer://rpi/view#Src/RPI/View/Css/test.css")
+            $this->object->getRelativePath(
+                $this->configuration->project,
+                "composer://rpi/view#Src/RPI/View/Css/test.css"
+            )
         );
     }
 }
