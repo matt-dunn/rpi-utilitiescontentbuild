@@ -56,8 +56,6 @@ class ValidateDependency implements \RPI\Console\ICommand
                 );
 
                 $logger->info("Congratulations, the dependency file '$dependencyFile' is valid");
-            } else {
-                $logger->info("Dependency file '$dependencyFile' is invalid");
             }
     
             return false;

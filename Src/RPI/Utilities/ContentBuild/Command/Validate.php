@@ -56,8 +56,6 @@ class Validate implements \RPI\Console\ICommand
                 );
 
                 $logger->info("Congratulations, the config file '{$commandValues["configurationFile"]}' is valid");
-            } else {
-                $logger->info("Config file '{$commandValues["configurationFile"]}' is invalid");
             }
     
             return false;

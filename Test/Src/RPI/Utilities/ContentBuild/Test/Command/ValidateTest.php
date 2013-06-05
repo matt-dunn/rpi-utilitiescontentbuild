@@ -7,7 +7,7 @@ use Ulrichsg\Getopt;
 class ValidateTest extends Base
 {
     /**
-     * @var \RPI\Utilities\ContentBuild\Command\Version
+     * @var \RPI\Utilities\ContentBuild\Command\Validate
      */
     protected $object;
     
