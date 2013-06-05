@@ -73,13 +73,15 @@ class VersionTest extends Base
         
         $this->assertEquals(
             array (
-                'info' =>
-                    array (
-                        'message' => 'ContentBuild v'.CONTENT_BUILD_VERSION,
-                        'context' =>
-                    array (
-                    ),
-                    'exception' => null,
+                array(
+                    'info' =>
+                        array (
+                            'message' => 'ContentBuild v'.CONTENT_BUILD_VERSION,
+                            'context' =>
+                        array (
+                        ),
+                        'exception' => null,
+                    )
                 )
             ),
             $this->loggerHandler->messages
