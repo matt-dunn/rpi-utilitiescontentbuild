@@ -109,8 +109,6 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
                         }
                     }
                 }
-                
-                return "{$matches[1][0]}:{$matches[2][0]}url($imageMatch)";
             },
             $buffer
         );
