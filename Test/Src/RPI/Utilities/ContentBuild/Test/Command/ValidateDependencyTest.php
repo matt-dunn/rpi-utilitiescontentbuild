@@ -83,7 +83,7 @@ class ValidateDependencyTest extends Base
                 "--validate-dep ".__DIR__."/ValidateDependencyTest/test.dependencies.xml"
             )
         );
-        var_dump($this->loggerHandler->messages);
+
         $this->assertTrue(
             isset($this->loggerHandler->messages[0]["info"])
         );
