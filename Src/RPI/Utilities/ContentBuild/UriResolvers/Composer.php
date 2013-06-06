@@ -31,13 +31,16 @@ class Composer implements \RPI\Utilities\ContentBuild\Lib\Model\UriResolver\IUri
             );
             
             if ($this->vendorPath === false) {
-                throw new \Exception(
-                    "Unable to locate vendor path '".$options["vendorPath"].
-                    "'. Check vendorPath parameter in your config."
+                throw new \RPI\Foundation\Exceptions\InvalidArgument(
+                    $options["vendorPath"],
+                    null,
+                    "Unable to locate vendor path - check vendorPath parameter in your config."
                 );
             }
         } else {
-            throw new \Exception("Param 'vendorPath' must be specified in the config for uriResolver '".__CLASS__."'");
+            throw new \RPI\Foundation\Exceptions\RuntimeException(
+                "Param 'vendorPath' must be specified in the config for uriResolver '".__CLASS__."'"
+            );
         }
     }
     
