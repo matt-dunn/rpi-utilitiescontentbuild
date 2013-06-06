@@ -51,11 +51,7 @@ class Config implements \RPI\Console\ICommand
         }
         
         if (!file_exists($configurationFile)) {
-            if (isset($configurationFile) && $configurationFile != "") {
-                $logger->error("Configuration file '$configurationFile' not found");
-            } else {
-                $logger->error("Configuration file not found");
-            }
+            $logger->error("Configuration file '$configurationFile' not found");
             return false;
         }
 

@@ -38,11 +38,6 @@ class NoDev implements \RPI\Console\ICommand
         array $commandValues
     ) {
         if (isset($value)) {
-            if (!is_numeric($value) || ($value != 0 && $value != 1)) {
-                $logger->error("Invalid value '$value'. Must be 0 or 1.\n");
-                return false;
-            }
-            
             return array("debug-include" => ($value != 1));
         }
     }
