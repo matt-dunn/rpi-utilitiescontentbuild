@@ -87,4 +87,11 @@ class VersionTest extends Base
             $this->loggerHandler->messages
         );
     }
+    
+    public function testExecMissingFlag()
+    {
+        $this->assertNull(
+            $this->execCommand("")
+        );
+    }
 }

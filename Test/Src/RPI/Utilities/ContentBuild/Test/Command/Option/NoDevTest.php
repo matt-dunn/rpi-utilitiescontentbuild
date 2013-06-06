@@ -74,4 +74,11 @@ class NoDevTest extends \RPI\Utilities\ContentBuild\Test\Command\Base
             $this->execCommand("--no-dev")
         );
     }
+    
+    public function testExecMissingFlag()
+    {
+        $this->assertNull(
+            $this->execCommand("")
+        );
+    }
 }

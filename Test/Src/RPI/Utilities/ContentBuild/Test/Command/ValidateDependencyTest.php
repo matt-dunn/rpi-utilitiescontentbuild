@@ -111,4 +111,11 @@ class ValidateDependencyTest extends Base
             isset($this->loggerHandler->messages[0]["error"])
         );
     }
+    
+    public function testExecMissingFlag()
+    {
+        $this->assertNull(
+            $this->execCommand("")
+        );
+    }
 }

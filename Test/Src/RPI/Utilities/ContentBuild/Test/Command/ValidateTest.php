@@ -110,4 +110,11 @@ class ValidateTest extends Base
             $this->loggerHandler->messages[0]["error"]["message"]
         );
     }
+    
+    public function testExecMissingFlag()
+    {
+        $this->assertNull(
+            $this->execCommand("")
+        );
+    }
 }

@@ -79,4 +79,11 @@ class HelpTest extends Base
             count($this->loggerHandler->messages[0]["info"]) > 1
         );
     }
+    
+    public function testExecMissingFlag()
+    {
+        $this->assertNull(
+            $this->execCommand("")
+        );
+    }
 }

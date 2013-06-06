@@ -54,6 +54,45 @@ class ConfigTest extends Base
         );
     }
     
+    public function testExecNoFlag()
+    {
+        chdir(__DIR__);
+        
+        $command = "ConfigTest";
+        
+        $this->assertEquals(
+            array(
+                "configurationFile" => realpath(__DIR__."/ConfigTest/ui.build.xml")
+            ),
+            $this->execCommand($command)
+        );
+    }
+    
+    public function testExecNoConfigFile()
+    {
+        chdir(__DIR__."/ConfigTest");
+        
+        $command = "";
+        
+        $this->assertEquals(
+            array(
+                "configurationFile" => realpath(__DIR__."/ConfigTest/ui.build.xml")
+            ),
+            $this->execCommand($command)
+        );
+    }
+    
+    public function testExecNoConfigFileMissing()
+    {
+        chdir(__DIR__);
+        
+        $command = "";
+        
+        $this->assertFalse(
+            $this->execCommand($command)
+        );
+    }
+    
     public function testExecCurrentDirectory()
     {
         chdir(__DIR__);

@@ -103,4 +103,11 @@ class LogLevelTest extends Base
             $this->execCommand("-l #")
         );
     }
+    
+    public function testExecMissingFlag()
+    {
+        $this->assertNull(
+            $this->execCommand("")
+        );
+    }
 }

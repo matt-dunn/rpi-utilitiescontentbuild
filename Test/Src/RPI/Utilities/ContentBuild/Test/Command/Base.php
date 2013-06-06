@@ -18,7 +18,10 @@ abstract class Base extends \RPI\Test\Harness\Base
         $options = $getopt->getOptions();
         $operands = $getopt->getOperands();
 
-        $value = $options[$this->object->getOptionName()];
+        $value = null;
+        if (isset($options[$this->object->getOptionName()])) {
+            $value = $options[$this->object->getOptionName()];
+        }
         
         return $this->object->exec(
             $this->logger,

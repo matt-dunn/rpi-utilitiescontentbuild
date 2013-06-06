@@ -75,4 +75,11 @@ class SupportTest extends Base
             isset($this->loggerHandler->messages[0], $this->loggerHandler->messages[0]["info"])
         );
     }
+    
+    public function testExecMissingFlag()
+    {
+        $this->assertNull(
+            $this->execCommand("")
+        );
+    }
 }
