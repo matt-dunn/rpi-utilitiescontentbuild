@@ -160,7 +160,7 @@ class ImagesTest extends \RPI\Test\Harness\Base
         $this->assertTrue(
             file_exists(__DIR__."/ImagesTest/ROOT/compiled/__debug/css/I/new.png")
         );
-     }
+    }
     
     public function testCanProcessBuffer()
     {
@@ -287,9 +287,15 @@ EOT;
             )
         );
         
-        $this->assertTrue(file_exists(__DIR__."/ImagesTest/ROOT/compiled/__debug/css/Src/RPI/View/Css/I/1.png"), "File not found");
+        $this->assertTrue(
+            file_exists(__DIR__."/ImagesTest/ROOT/compiled/__debug/css/Src/RPI/View/Css/I/1.png"),
+            "File not found"
+        );
         
-        $this->assertTrue(file_exists(__DIR__."/ImagesTest/ROOT/compiled/css/Src/RPI/View/Css/I/1.png"), "File not found");
+        $this->assertTrue(
+            file_exists(__DIR__."/ImagesTest/ROOT/compiled/css/Src/RPI/View/Css/I/1.png"),
+            "File not found"
+        );
     }
     
     /**
@@ -347,9 +353,15 @@ EOT;
             )
         );
         
-        $this->assertFalse(file_exists(__DIR__."/ImagesTest/ROOT/compiled/__debug/css/Src/RPI/View/Css/I/1.png"), "File not found");
+        $this->assertFalse(
+            file_exists(__DIR__."/ImagesTest/ROOT/compiled/__debug/css/Src/RPI/View/Css/I/1.png"),
+            "File not found"
+        );
         
-        $this->assertFalse(file_exists(__DIR__."/ImagesTest/ROOT/compiled/css/Src/RPI/View/Css/I/1.png"), "File not found");
+        $this->assertFalse(
+            file_exists(__DIR__."/ImagesTest/ROOT/compiled/css/Src/RPI/View/Css/I/1.png"),
+            "File not found"
+        );
     }
     
     /**
