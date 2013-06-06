@@ -1,0 +1,35 @@
+{
+    "name": "rpi/view",
+    "type": "library",
+    "description": "RPI Core View",
+    "keywords": [],
+    "homepage": "http://packages.red-pixel.co.uk/",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Matt Dunn",
+            "email": "matt@red-pixel.co.uk"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "http://packages.red-pixel.co.uk/"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "rpi/jquery": "dev-master",
+        "rpi/foundation": "dev-master"
+    },
+    "require-dev": {
+        "rpi/test-harness": "dev-master"
+    },
+    "suggest": {
+        "ext-gd": "May be used by other libraries to manipulate images"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": {"RPI\\View": "Src/"}
+    }
+}

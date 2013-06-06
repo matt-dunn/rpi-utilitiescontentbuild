@@ -45,6 +45,41 @@ class ComposerTest extends \RPI\Test\Harness\Base
     {
     }
     
+    public function testGetVersion()
+    {
+        $this->assertContains(
+            "v".\RPI\Utilities\ContentBuild\UriResolvers\Composer::VERSION,
+            $this->object->getVersion()
+        );
+    }
+    
+    /**
+     * @expectedException \RPI\Foundation\Exceptions\InvalidArgument
+     */
+    public function testInvalidVendorPath()
+    {
+        $object = new \RPI\Utilities\ContentBuild\UriResolvers\Composer(
+            $this->processor,
+            $this->configuration->project,
+            array(
+                "vendorPath" => "invalidvendorpath"
+            )
+        );
+    }
+    
+    /**
+     * @expectedException \RPI\Foundation\Exceptions\RuntimeException
+     */
+    public function testMissingVendorPath()
+    {
+        $object = new \RPI\Utilities\ContentBuild\UriResolvers\Composer(
+            $this->processor,
+            $this->configuration->project,
+            array(
+            )
+        );
+    }
+    
     public function testRealPathInvalid()
     {
         $this->assertFalse($this->object->realpath($this->configuration->project, "invalid"));
@@ -61,7 +96,7 @@ class ComposerTest extends \RPI\Test\Harness\Base
     public function testGetRelativePathInvalid()
     {
         $this->assertEquals(
-            "Src/RPI/View/Css/invalid.css",
+            "RPI/View/Css/invalid.css",
             $this->object->getRelativePath(
                 $this->configuration->project,
                 "composer://rpi/view#Src/RPI/View/Css/invalid.css"
@@ -72,11 +107,29 @@ class ComposerTest extends \RPI\Test\Harness\Base
     public function testGetRelativePath()
     {
         $this->assertEquals(
-            "Src/RPI/View/Css/test.css",
+            "RPI/View/Css/test.css",
             $this->object->getRelativePath(
                 $this->configuration->project,
                 "composer://rpi/view#Src/RPI/View/Css/test.css"
             )
+        );
+    }
+    
+    public function testGetRelativePathNoFragment()
+    {
+        $this->assertFalse(
+            $this->object->getRelativePath(
+                $this->configuration->project,
+                "composer://rpi/view"
+            )
+        );
+    }
+    
+    public function testGetScheme()
+    {
+        $this->assertEquals(
+            "composer",
+            $this->object->getScheme()
         );
     }
 }
