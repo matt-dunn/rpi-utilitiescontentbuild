@@ -45,7 +45,10 @@ class Help implements \RPI\Console\ICommand
             );
             
             displayHeader($logger);
+            ob_start();
             $getopt->showHelp();
+            $helpText = ob_get_clean();
+            $logger->info($helpText);
             return false;
         }
     }
