@@ -6,6 +6,12 @@
         <delete file="bin/contentbuild.phar" failonerror="false"/>
     </target>
     
+    <target name="phpunit">
+        <exec dir="." executable="php" checkReturn="true" logOutput="true">
+            <arg line="vendor/phpunit/phpunit/phpunit.php --configuration Test/phpunit.xml Test"/>
+        </exec>
+    </target>
+    
     <target name="createphar">
         <echo>
             <fileset dir="." id="sourceFiles">
