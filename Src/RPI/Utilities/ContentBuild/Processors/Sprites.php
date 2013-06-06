@@ -34,8 +34,10 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
         if (isset($options, $options["maxSpriteWidth"])) {
             $this->maxSpriteWidth = $options["maxSpriteWidth"];
             if (!is_numeric($this->maxSpriteWidth) || $this->maxSpriteWidth < 0 || $this->maxSpriteWidth > 10000) {
-                throw new \RPI\Foundation\Exceptions\RuntimeException(
-                    __CLASS__.": maxSpriteWidth must be a integer between 0 and 10000"
+                throw new \RPI\Foundation\Exceptions\InvalidArgument(
+                    $this->maxSpriteWidth,
+                    null,
+                    "maxSpriteWidth must be a integer between 0 and 10000"
                 );
             }
         }
@@ -44,16 +46,24 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
             "RPI\Utilities\ContentBuild\Events\ImageCheckAvailability",
             function (\RPI\Foundation\Event $event, $params) use ($processor) {
                 $sprites = $processor->getMetaData("sprites");
-                foreach ($sprites as $sprite) {
-                    if ($sprite["spritePath"] == $params["imageUri"]) {
-                        $event->srcEvent->setReturnValue(true);
-                        break;
+                if ($sprites !== false) {
+                    foreach ($sprites as $sprite) {
+                        if ($sprite["spritePath"] == $params["imageUri"]) {
+                            $event->srcEvent->setReturnValue(true);
+                            break;
+                        }
                     }
                 }
             }
         );
     }
     
+    public function __destruct()
+    {
+        \RPI\Foundation\Event\Manager::removeEventListener("RPI\Utilities\ContentBuild\Events\ImageCheckAvailability");
+    }
+
+
     public static function getVersion()
     {
         return "v".self::VERSION;
@@ -96,17 +106,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
 
         \RPI\Foundation\Helpers\Utils::pregReplaceCallbackOffset(
             "/(sprite\:\s*url\s*\(\s*'*\"*(.*?)'*\"*\s*\)\s*(.*?);)/sim",
-            function ($matches) use (
-                $inputFilename,
-                $outputFilename,
-                $build,
-                &$sprites,
-                $maxSpriteWidth,
-                $resolver,
-                $project,
-                $spritePadding
-                ) {
-
+            function ($matches) use ($inputFilename, $outputFilename, $build, &$sprites, $maxSpriteWidth, $resolver, $project, $spritePadding) {
                 $details = $matches[3][0];
                 
                 $ratio = 1;
@@ -169,7 +169,7 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                         if (file_exists($spriteOutputFilename)) {
                             $previousSprite =
                                 \RPI\Utilities\ContentBuild\Processors\Sprites::findLastIcon($buildName, $sprites);
-                            if ($previousSprite !== false) {
+                            if (isset($previousSprite)) {
                                 $offsetX = $previousSprite["offsetX"] + $previousSprite["width"] + $spritePadding;
                                 $offsetY = $previousSprite["offsetY"];
                             }
@@ -218,41 +218,35 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
                             imagefill($im, 0, 0, $alpha);
                         }
 
-                        if (isset($im)) {
-                            $type = explode("/", $imageDataSprite["mime"]);
-                            $type = $type[1];
-                            $imageCreateFunction = "imagecreatefrom".$type;
+                        $type = explode("/", $imageDataSprite["mime"]);
+                        $type = $type[1];
+                        $imageCreateFunction = "imagecreatefrom".$type;
 
-                            $im2 = $imageCreateFunction($spriteFilename);
-                            imagealphablending($im2, false);
-                            imagesavealpha($im2, true);
-                            imagecopy($im, $im2, $offsetX, $offsetY, 0, 0, $imageDataSprite[0], $imageDataSprite[1]);
+                        $im2 = $imageCreateFunction($spriteFilename);
+                        imagealphablending($im2, false);
+                        imagesavealpha($im2, true);
+                        imagecopy($im, $im2, $offsetX, $offsetY, 0, 0, $imageDataSprite[0], $imageDataSprite[1]);
 
-                            if (!file_exists(dirname($spriteOutputFilename))) {
+                        if (!file_exists(dirname($spriteOutputFilename))) {
+                            $oldumask = umask(0);
+                            mkdir(dirname($spriteOutputFilename), 0755, true);
+                            umask($oldumask);
+                        }
+
+                        imagepng($im, $spriteOutputFilename);
+
+                        if (isset($debugSpriteOutputFilename)) {
+                            if (!file_exists(dirname($debugSpriteOutputFilename))) {
                                 $oldumask = umask(0);
-                                mkdir(dirname($spriteOutputFilename), 0755, true);
+                                mkdir(dirname($debugSpriteOutputFilename), 0755, true);
                                 umask($oldumask);
                             }
-                
-                            imagepng($im, $spriteOutputFilename);
-                            
-                            if (isset($debugSpriteOutputFilename)) {
-                                if (!file_exists(dirname($debugSpriteOutputFilename))) {
-                                    $oldumask = umask(0);
-                                    mkdir(dirname($debugSpriteOutputFilename), 0755, true);
-                                    umask($oldumask);
-                                }
 
-                                copy($spriteOutputFilename, $debugSpriteOutputFilename);
-                            }
-
-                            imagedestroy($im);
-                            imagedestroy($im2);
-                        } else {
-                            throw new \RPI\Foundation\Exceptions\RuntimeException(
-                                "Unable to create sprite image ' $spriteFilename'"
-                            );
+                            copy($spriteOutputFilename, $debugSpriteOutputFilename);
                         }
+
+                        imagedestroy($im);
+                        imagedestroy($im2);
 
                         $sprites[$spriteFilename] = array(
                             "width" => $imageDataSprite[0],
@@ -354,13 +348,17 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
     
     public static function findLastIcon($buildName, array $sprites)
     {
+        $foundSprite = null;
+        
         $sprites = array_reverse($sprites);
+        
         foreach ($sprites as $sprite) {
             if (isset($sprite["buildName"]) && $sprite["buildName"] == $buildName) {
-                return $sprite;
+                $foundSprite = $sprite;
+                break;
             }
         }
         
-        return false;
+        return $foundSprite;
     }
 }
