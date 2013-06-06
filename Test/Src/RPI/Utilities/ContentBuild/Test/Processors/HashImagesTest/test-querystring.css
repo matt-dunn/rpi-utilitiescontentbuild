@@ -1,0 +1,7 @@
+.image1 {
+    background:url(I/1.png?hash=12345);
+}
+
+.image2 {
+    background:url(I/1.png?item1=val1&item2=val2);
+}
