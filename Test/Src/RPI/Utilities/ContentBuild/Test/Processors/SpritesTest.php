@@ -57,15 +57,65 @@ class SpritesTest extends \RPI\Test\Harness\Base
      */
     protected function tearDown()
     {
+        \RPI\Foundation\Helpers\FileUtils::delTree(__DIR__."/SpriteTest/ROOT");
+        
+        $this->object = null;
     }
     
-    public static function tearDownAfterClass()
+    public function testGetVersion()
     {
-        parent::tearDownAfterClass();
-        
-        \RPI\Foundation\Helpers\FileUtils::delTree(__DIR__."/SpriteTest/ROOT");
+        $this->assertEquals(
+            "v".\RPI\Utilities\ContentBuild\Processors\Sprites::VERSION,
+            $this->object->getVersion()
+        );
     }
-
+    
+    public function testInit()
+    {
+        $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver(
+            $this->logger,
+            $this->processor,
+            $this->configuration->project
+        );
+        
+        $inputFilename = __DIR__."/SpriteTest/test.css";
+        
+        $this->assertTrue(
+            $this->object->preProcess(
+                $resolver,
+                $this->configuration->project->builds[0],
+                $inputFilename,
+                file_get_contents($inputFilename)
+            )
+        );
+        
+        $this->assertTrue(file_exists(__DIR__."/SpriteTest/ROOT/compiled/css/I/Sprites/core.png"));
+        
+        $this->assertTrue(file_exists(__DIR__."/SpriteTest/ROOT/compiled/__debug/css/I/Sprites/core.png"));
+        
+        $this->assertNull(
+            $this->object->init(0)
+        );
+        
+        $this->assertFalse(file_exists(__DIR__."/SpriteTest/ROOT/compiled/css/I/Sprites/core.png"));
+        
+        $this->assertFalse(file_exists(__DIR__."/SpriteTest/ROOT/compiled/__debug/css/I/Sprites/core.png"));
+    }
+    
+    public function testComplete()
+    {
+        $this->assertNull(
+            $this->object->complete()
+        );
+    }
+    
+    public function testCanProcessBuffer()
+    {
+        $this->assertTrue(
+            $this->object->canProcessBuffer()
+        );
+    }
+    
     public function testProcess()
     {
         $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver(
@@ -137,6 +187,196 @@ EOT;
                 24,
                 3,
                 "width=\"69\" height=\"24\"",
+                "bits" => 8,
+                "mime" => "image/png"
+            ),
+            getimagesize(__DIR__."/SpriteTest/ROOT/compiled/__debug/css/I/Sprites/core.png")
+        );
+    }
+
+    /**
+     * @expectedException \RPI\Foundation\Exceptions\FileNotFound
+     */
+    public function testProcessSpriteNotFound()
+    {
+        $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver(
+            $this->logger,
+            $this->processor,
+            $this->configuration->project
+        );
+        
+        $inputFilename = __DIR__."/SpriteTest/test.css";
+        
+        $this->assertTrue(
+            $this->object->preProcess(
+                $resolver,
+                $this->configuration->project->builds[0],
+                $inputFilename,
+                file_get_contents($inputFilename)
+            )
+        );
+        
+        $inputFilename = __DIR__."/SpriteTest/test-file-not-found.css";
+        
+        $this->object->process(
+            $resolver,
+            $this->configuration->project->builds[0],
+            $inputFilename,
+            file_get_contents($inputFilename)
+        );
+    }
+    
+    public function testPreProcessCheckImageAvailability()
+    {
+        $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver(
+            $this->logger,
+            $this->processor,
+            $this->configuration->project
+        );
+        
+        $inputFilename = __DIR__."/SpriteTest/test.css";
+        
+        $this->assertTrue(
+            $this->object->preProcess(
+                $resolver,
+                $this->configuration->project->builds[0],
+                $inputFilename,
+                file_get_contents($inputFilename)
+            )
+        );
+        
+        $event = new \RPI\Utilities\ContentBuild\Events\ImageCheckAvailability(
+            array(
+                "imageUri" => "invalid"
+            )
+        );
+        
+        \RPI\Foundation\Event\Manager::fire($event);
+        
+        $this->assertNull(
+            $event->getReturnValue()
+        );
+        
+        $event = new \RPI\Utilities\ContentBuild\Events\ImageCheckAvailability(
+            array(
+                "imageUri" => "I/Sprites/core.png"
+            )
+        );
+        
+        \RPI\Foundation\Event\Manager::fire($event);
+
+        $this->assertTrue(
+            $event->getReturnValue()
+        );
+    }
+    
+    /**
+     * @expectedException \RPI\Foundation\Exceptions\InvalidArgument
+     */
+    public function testProcessMaxWidthInvalidSize()
+    {
+        $this->object = new \RPI\Utilities\ContentBuild\Processors\Sprites(
+            $this->processor,
+            $this->configuration->project,
+            array(
+                "maxSpriteWidth" => 30000
+            )
+        );
+    }
+        
+    /**
+     * @expectedException \RPI\Foundation\Exceptions\InvalidArgument
+     */
+    public function testProcessMaxWidthInvalidValue()
+    {
+        $this->object = new \RPI\Utilities\ContentBuild\Processors\Sprites(
+            $this->processor,
+            $this->configuration->project,
+            array(
+                "maxSpriteWidth" => "invalid"
+            )
+        );
+    }
+        
+    public function testProcessMaxWidth()
+    {
+        $this->object = new \RPI\Utilities\ContentBuild\Processors\Sprites(
+            $this->processor,
+            $this->configuration->project,
+            array(
+                "maxSpriteWidth" => 30
+            )
+        );
+        
+        $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver(
+            $this->logger,
+            $this->processor,
+            $this->configuration->project
+        );
+        
+        $inputFilename = __DIR__."/SpriteTest/test.css";
+        
+        $css = <<<EOT
+.sprite1:after {
+    background:url(I/Sprites/core.png) no-repeat 0px 0px;width:24px;height:24px;content:'';
+}
+
+.sprite2:after {
+    background:url(I/Sprites/core.png) no-repeat 0px -26px;width:10px;height:10px;content:'';
+}
+
+.sprite3:after {
+    background:url(I/Sprites/core.png) no-repeat -12px -26px;width:10px;height:10px;content:'';
+}
+
+.sprite4:after {
+    background:url(I/Sprites/core.png) no-repeat 0px -38px;width:17px;height:17px;content:'';
+}
+EOT;
+        
+        $this->assertTrue(
+            $this->object->preProcess(
+                $resolver,
+                $this->configuration->project->builds[0],
+                $inputFilename,
+                file_get_contents($inputFilename)
+            )
+        );
+        
+        $this->assertEquals(
+            \RPI\Foundation\Helpers\Utils::normalizeString($css),
+            \RPI\Foundation\Helpers\Utils::normalizeString(
+                $this->object->process(
+                    $resolver,
+                    $this->configuration->project->builds[0],
+                    $inputFilename,
+                    file_get_contents($inputFilename)
+                )
+            )
+        );
+        
+        $this->assertTrue(file_exists(__DIR__."/SpriteTest/ROOT/compiled/css/I/Sprites/core.png"));
+        
+        $this->assertEquals(
+            array(
+                30,
+                55,
+                3,
+                "width=\"30\" height=\"55\"",
+                "bits" => 8,
+                "mime" => "image/png"
+            ),
+            getimagesize(__DIR__."/SpriteTest/ROOT/compiled/css/I/Sprites/core.png")
+        );
+        
+        $this->assertTrue(file_exists(__DIR__."/SpriteTest/ROOT/compiled/__debug/css/I/Sprites/core.png"));
+        
+        $this->assertEquals(
+            array(
+                30,
+                55,
+                3,
+                "width=\"30\" height=\"55\"",
                 "bits" => 8,
                 "mime" => "image/png"
             ),

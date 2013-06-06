@@ -11,6 +11,6 @@
 }
 
 .sprite4:after {
-    sprite:url(composer://rpi/view#Src/RPI/View/Css/I/Sprites/4.png);
+    sprite:url(vendor/rpi/view/Src/RPI/View/Css/I/Sprites/4.png);
 }
 
