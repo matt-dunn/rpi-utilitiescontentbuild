@@ -187,6 +187,85 @@ EOT;
         );
     }
     
+    public function testProcessDebug()
+    {
+        $this->processor->debug = true;
+        
+        $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver(
+            $this->logger,
+            $this->processor,
+            $this->configuration->project
+        );
+        
+        $inputFilename = __DIR__."/LESSPHPTest/test.less";
+        
+        $this->assertTrue(
+            $this->object->preProcess(
+                $resolver,
+                $this->configuration->project->builds[0],
+                $inputFilename,
+                file_get_contents($inputFilename)
+            )
+        );
+        
+        $fileBasePath = preg_replace("/([\/:.])/", "\\\\$1", __DIR__);
+        
+        $css = '
+@media -sass-debug-info{filename{font-family:file\:\/\/'.$fileBasePath.'\/LESSPHPTest\/test2\.less}line{font-family:\000034}}
+.border {
+  padding: 20px;
+  margin: 20px;
+  background: url(I/Sprites/core.png) no-repeat 0px 0px;
+  width: 10px;
+  height: 10px;
+  content: \'\';
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/'.$fileBasePath.'\/LESSPHPTest\/test2\.less}line{font-family:\0000310}}
+.border2 {
+  background: url(I/Sprites/core.png) no-repeat -12px 0px;
+  width: 24px;
+  height: 24px;
+  content: \'\';
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/'.$fileBasePath.'\/LESSPHPTest\/test2\.less}line{font-family:\0000314}}
+.border3 {
+  background: url(I/Sprites/core.png) no-repeat -38px 0px;
+  width: 10px;
+  height: 10px;
+  content: \'\';
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/'.$fileBasePath.'\/LESSPHPTest\/test2\.less}line{font-family:\0000318}}
+.border4 {
+  background: url(I/Sprites/core.png) no-repeat -50px 0px;
+  width: 17px;
+  height: 17px;
+  content: \'\';
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/'.$fileBasePath.'\/LESSPHPTest\/test\.less}line{font-family:\000037}}
+.content-navigation {
+  border-color: #3bbfce;
+  color: #2ca2af;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/'.$fileBasePath.'\/LESSPHPTest\/test\.less}line{font-family:\0000312}}
+.border {
+  padding: 13.3333333333px;
+  margin: 13.3333333333px;
+  border-color: #3bbfce;
+}';
+
+        $this->assertEquals(
+            \RPI\Foundation\Helpers\Utils::normalizeString($css),
+            \RPI\Foundation\Helpers\Utils::normalizeString(
+                $this->object->process(
+                    $resolver,
+                    $this->configuration->project->builds[0],
+                    $inputFilename,
+                    file_get_contents($inputFilename)
+                )
+            )
+        );
+    }
+    
     public function testProcessImportNoExtension()
     {
         $resolver = new \RPI\Utilities\ContentBuild\Lib\UriResolver(

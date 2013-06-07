@@ -27,6 +27,9 @@ class ScssCompiler extends \scssc
         return $importPath;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     protected function importFile($path, $out)
     {
         // see if tree is cached

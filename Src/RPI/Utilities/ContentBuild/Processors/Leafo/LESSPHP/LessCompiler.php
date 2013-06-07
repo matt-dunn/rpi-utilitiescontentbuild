@@ -27,6 +27,9 @@ class LessCompiler extends \lessc
         return $importPath;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     protected function tryImport($importPath, $parentBlock, $out)
     {
         if ($importPath[0] == "function" && $importPath[1] == "url") {
@@ -136,7 +139,11 @@ class LessCompiler extends \lessc
         return $parser;
     }
 
-    // Need to override injectVariables as it does not call makeParser
+    /**
+     * Need to override injectVariables as it does not call makeParser
+     * 
+     * @codeCoverageIgnore
+     */
     protected function injectVariables($args)
     {
         $this->pushEnv();
