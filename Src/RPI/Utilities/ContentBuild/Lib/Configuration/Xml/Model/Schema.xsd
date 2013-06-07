@@ -93,7 +93,7 @@
 	<xs:element name="build">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element minOccurs="0" maxOccurs="unbounded" ref="RPI:files"/>
+				<xs:element minOccurs="1" maxOccurs="unbounded" ref="RPI:files"/>
 			</xs:sequence>
 			<xs:attribute name="buildDirectory" use="required" type="xs:normalizedString"/>
 			<xs:attribute name="name" use="required" type="xs:normalizedString"/>
