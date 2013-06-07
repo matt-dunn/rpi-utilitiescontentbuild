@@ -156,17 +156,19 @@ class Build
         $type = ltrim($type, "\\");
         
         if (isset($this->project->plugins[$type])) {
-            return new $this->project->plugins[
+            $plugin = new $this->project->plugins[
                 $type
             ]->type($processor, $project, $options);
 
-            if (!$this->compressor
+            if (!$plugin
                 instanceof $type) {
                 throw new \RPI\Foundation\Exceptions\RuntimeException(
                     "'{$this->project->plugins[$type]->type}' ".
                     "must be of type '$type'"
                 );
             }
+            
+            return $plugin;
         } else {
             return new $defaultClass(
                 $processor,
@@ -240,13 +242,6 @@ class Build
             }
             
             $files = $buildFiles[$build->name."_".$build->type];
-
-            if (count($files) == 0) {
-                $this->logger->warning(
-                    "[".$build->name."] No dependencies found -
-                        check if external dependencies have already loaded all specified resources"
-                );
-            }
 
             foreach ($files as $file) {
                 $this->logger->notice(
