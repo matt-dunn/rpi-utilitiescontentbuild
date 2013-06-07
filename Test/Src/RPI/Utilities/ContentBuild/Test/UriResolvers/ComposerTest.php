@@ -10,6 +10,18 @@ class ComposerTest extends \RPI\Test\Harness\Base
     protected $object;
     
     /**
+     *
+     * @var \RPI\Utilities\ContentBuild\Lib\Configuration 
+     */
+    protected $configuration;
+    
+    /**
+     *
+     * @var \RPI\Utilities\ContentBuild\Lib\Processor 
+     */
+    protected $processor;
+    
+    /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
