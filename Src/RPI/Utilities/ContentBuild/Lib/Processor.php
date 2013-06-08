@@ -277,12 +277,6 @@ class Processor extends Object
         
         $this->metadata[$name] = $value;
         
-        if (!file_exists(dirname($this->metadataFilename))) {
-            $oldumask = umask(0);
-            mkdir(dirname($this->metadataFilename), 0777, true);
-            umask($oldumask);
-        }
-
         if (!file_exists($this->metadataFilename)) {
             touch($this->metadataFilename);
             chmod($this->metadataFilename, 0777);
@@ -292,6 +286,19 @@ class Processor extends Object
             $this->metadataFilename,
             serialize($this->metadata)
         );
+        
+        return $this;
+    }
+    
+    /**
+     * 
+     * @return \RPI\Utilities\ContentBuild\Lib\Processor
+     */
+    public function deleteMetadata()
+    {
+        if (file_exists($this->metadataFilename)) {
+            unlink($this->metadataFilename);
+        }
         
         return $this;
     }
