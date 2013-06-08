@@ -6,7 +6,7 @@
     xmlns="http://www.rpi.co.uk/" name="website" prefix="TEMPLATE" appRoot="ROOT" basePath="">
     
     <plugins>
-        <plugin interface="RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor" type="RPI\Utilities\ContentBuild\Test\Lib\BuildTest\Plugins\Mock"/>
+        <plugin interface="RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor" type="RPI\Utilities\ContentBuild\Test\Lib\BuildTest\Plugins\DebugWriter"/>
     </plugins>
     
     <build buildDirectory="" outputDirectory="compiled/css/" type="css" name="core" media="all">

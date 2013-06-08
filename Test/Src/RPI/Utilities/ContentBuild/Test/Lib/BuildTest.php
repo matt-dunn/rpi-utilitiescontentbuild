@@ -71,6 +71,49 @@ class BuildTest extends \RPI\Test\Harness\Base
         \RPI\Foundation\Helpers\FileUtils::delTree(__DIR__."/BuildTest/ROOT");
     }
     
+    public function testConstructor()
+    {
+        $compressor = new \RPI\Utilities\ContentBuild\Test\Lib\BuildTest\Plugins\Compressor(
+            $this->processor,
+            $this->configuration->project
+        );
+        
+        $dependencyBuilder = new \RPI\Utilities\ContentBuild\Test\Lib\BuildTest\Plugins\DependencyBuilder(
+            $this->processor,
+            $this->configuration->project
+        );
+        
+        $debugWriter = new \RPI\Utilities\ContentBuild\Test\Lib\BuildTest\Plugins\DebugWriter(
+            $this->processor,
+            $this->configuration->project
+        );
+
+        $object = new \RPI\Utilities\ContentBuild\Lib\Build(
+            $this->logger,
+            $this->configuration->project,
+            $this->processor,
+            $this->resolver,
+            array(
+            ),
+            $compressor,
+            $dependencyBuilder,
+            $debugWriter
+        );
+        
+        $this->assertSame($compressor, $object->getCompressor());
+        
+        $this->assertSame($dependencyBuilder, $object->getDependencyBuilder());
+        
+        $this->assertSame($debugWriter, $object->getDebugWriter());
+    }
+    
+    public function testRunMultiple()
+    {
+        $this->testRun();
+        
+        $this->testRun();
+    }
+    
     public function testRun()
     {
         $this->assertTrue($this->object->run());
@@ -256,6 +299,63 @@ class BuildTest extends \RPI\Test\Harness\Base
             )
         );
         
+        $this->assertTrue($object->run());
+    }
+    
+    public function testRunCleanupOutputFiles()
+    {
+        $configuration = new \RPI\Utilities\ContentBuild\Lib\Configuration(
+            $this->logger,
+            __DIR__."/BuildTest/ui.build.xml"
+        );
+        
+        $object = new \RPI\Utilities\ContentBuild\Lib\Build(
+            $this->logger,
+            $configuration->project,
+            $this->processor,
+            $this->resolver
+        );
+     
+        mkdir(__DIR__."/BuildTest/ROOT/compiled/css/", 0777, true);
+        file_put_contents(__DIR__."/BuildTest/ROOT/compiled/css/TEMPLATE.website-core.css", "dummy");
+        
+        mkdir(__DIR__."/BuildTest/ROOT/compiled/js/", 0777, true);
+        file_put_contents(__DIR__."/BuildTest/ROOT/compiled/js/TEMPLATE.website-core.js", "dummy");
+        
+        $this->assertTrue(file_exists(__DIR__."/BuildTest/ROOT/compiled/css/TEMPLATE.website-core.css"));
+        
+        $this->assertTrue(file_exists(__DIR__."/BuildTest/ROOT/compiled/js/TEMPLATE.website-core.js"));
+        
+        $this->assertTrue($object->run());
+        
+        $this->assertFalse(file_exists(__DIR__."/BuildTest/ROOT/compiled/css/TEMPLATE.website-core.css"));
+        
+        $this->assertFalse(file_exists(__DIR__."/BuildTest/ROOT/compiled/js/TEMPLATE.website-core.js"));
+    }
+    
+    /**
+     * @expectedException \RPI\Foundation\Exceptions\RuntimeException
+     */
+    public function testRunInvalidDependencies()
+    {
+        $configuration = new \RPI\Utilities\ContentBuild\Lib\Configuration(
+            $this->logger,
+            __DIR__."/BuildTest/ui.build.xml"
+        );
+        
+        $object = new \RPI\Utilities\ContentBuild\Lib\Build(
+            $this->logger,
+            $configuration->project,
+            $this->processor,
+            $this->resolver,
+            null,
+            null,
+            new \RPI\Utilities\ContentBuild\Test\Lib\BuildTest\Plugins\DependencyBuilder(
+                $this->processor,
+                $this->configuration->project
+            )
+        );
+     
         $this->assertTrue($object->run());
     }
 }
