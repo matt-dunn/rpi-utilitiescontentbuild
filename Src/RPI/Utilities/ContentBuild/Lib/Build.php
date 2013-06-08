@@ -65,6 +65,12 @@ class Build
     protected $webroot = null;
     
     /**
+     *
+     * @var null|array
+     */
+    protected $processedPaths = null;
+    
+    /**
      * 
      * @param \Psr\Log\LoggerInterface $logger
      * @param \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project
@@ -131,7 +137,34 @@ class Build
             );
         }
         
-        $this->webroot = realpath($this->project->basePath."/".$this->project->appRoot);
+        $this->webroot = $this->project->basePath."/".$this->project->appRoot;
+    }
+    
+    /**
+     * 
+     * @return \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDependencyBuilder
+     */
+    public function getDependencyBuilder()
+    {
+        return $this->dependencyBuilder;
+    }
+    
+    /**
+     * 
+     * @return \RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor
+     */
+    public function getCompressor()
+    {
+        return $this->compressor;
+    }
+    
+    /**
+     * 
+     * @return \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebugWriter
+     */
+    public function getDebugWriter()
+    {
+        return $this->debugWriter;
     }
     
     /**
@@ -185,6 +218,8 @@ class Build
     {
         $startTime = microtime(true);
         
+        $this->processedPaths = array();
+        
         $this->logger->info(
             "Config read from '{$this->configurationFile}'"
         );
@@ -195,12 +230,18 @@ class Build
         
         foreach ($this->project->builds as $build) {
             $files = $buildFiles[$build->name."_".$build->type];
-            foreach ($files as $file) {
-                $this->processor->preProcess(
-                    $build,
-                    $this->resolver,
-                    $file,
-                    file_get_contents($file)
+            if (isset($files)) {
+                foreach ($files as $file) {
+                    $this->processor->preProcess(
+                        $build,
+                        $this->resolver,
+                        $file,
+                        file_get_contents($file)
+                    );
+                }
+            } else {
+                throw new \RPI\Foundation\Exceptions\RuntimeException(
+                    "No build details found for build '{$build->name}' type '{$build->type}'"
                 );
             }
         }
@@ -236,71 +277,65 @@ class Build
     ) {
         $outputFilename = $build->outputFilename;
         
-        if (isset($buildFiles[$build->name."_".$build->type])) {
-            if (is_file($outputFilename)) {
-                unlink($outputFilename);
-            }
-            
-            $files = $buildFiles[$build->name."_".$build->type];
+        if (is_file($outputFilename)) {
+            unlink($outputFilename);
+        }
 
-            foreach ($files as $file) {
-                $this->logger->notice(
-                    "Processing: [".$build->name."] ".$file." => ".$outputFilename
+        $files = $buildFiles[$build->name."_".$build->type];
+
+        foreach ($files as $file) {
+            $this->logger->notice(
+                "Processing: [".$build->name."] ".$file." => ".$outputFilename
+            );
+
+            if (!file_exists(pathinfo($outputFilename, PATHINFO_DIRNAME))) {
+                $this->logger->debug(
+                    "creating path: ".pathinfo($outputFilename, PATHINFO_DIRNAME)
                 );
-
-                if (!file_exists(pathinfo($outputFilename, PATHINFO_DIRNAME))) {
-                    $this->logger->debug(
-                        "creating path: ".pathinfo($outputFilename, PATHINFO_DIRNAME)
-                    );
-                    $oldumask = umask(0);
-                    mkdir(pathinfo($outputFilename, PATHINFO_DIRNAME), 0755, true);
-                    umask($oldumask);
-                }
-
-                $buffer = $this->processor->process(
-                    $build,
-                    $this->resolver,
-                    $file,
-                    file_get_contents($file)
-                );
-
-                file_put_contents($outputFilename, $buffer, FILE_APPEND);
+                $oldumask = umask(0);
+                mkdir(pathinfo($outputFilename, PATHINFO_DIRNAME), 0755, true);
+                umask($oldumask);
             }
+
+            $buffer = $this->processor->process(
+                $build,
+                $this->resolver,
+                $file,
+                file_get_contents($file)
+            );
+
+            file_put_contents($outputFilename, $buffer, FILE_APPEND);
+        }
+
+        $this->writeIncludeFile(
+            $build,
+            dirname($outputFilename),
+            \RPI\Foundation\Helpers\FileUtils::makeRelativePath(
+                dirname($outputFilename),
+                realpath($this->webroot)
+            )."/".pathinfo($outputFilename, PATHINFO_FILENAME).".min.".
+            pathinfo($outputFilename, PATHINFO_EXTENSION),
+            $outputFilename
+        );
+
+        if ($this->includeDebug) {
+            $this->debugWriter->writeDebugFile($build, $files, $outputFilename, $this->webroot);
 
             $this->writeIncludeFile(
                 $build,
-                dirname($outputFilename),
+                $build->debugPath,
                 \RPI\Foundation\Helpers\FileUtils::makeRelativePath(
-                    dirname($outputFilename),
+                    $build->debugPath,
                     realpath($this->webroot)
                 )."/".pathinfo($outputFilename, PATHINFO_FILENAME).".min.".
-                pathinfo($outputFilename, PATHINFO_EXTENSION),
-                $outputFilename
-            );
-
-            if ($this->includeDebug) {
-                $this->debugWriter->writeDebugFile($build, $files, $outputFilename, $this->webroot);
-
-                $this->writeIncludeFile(
-                    $build,
-                    $build->debugPath,
-                    \RPI\Foundation\Helpers\FileUtils::makeRelativePath(
-                        $build->debugPath,
-                        realpath($this->webroot)
-                    )."/".pathinfo($outputFilename, PATHINFO_FILENAME).".min.".
-                    pathinfo($outputFilename, PATHINFO_EXTENSION)
-                );
-            }
-
-            $parts = pathinfo($outputFilename);
-            $outputMiniFilename = $parts["dirname"]."/".$parts["filename"].".min.".$parts["extension"];
-            
-            $this->compressor->compressFile($outputFilename, $build->type, $outputMiniFilename);
-        } else {
-            throw new \RPI\Foundation\Exceptions\RuntimeException(
-                "No build details found for build '{$build->name}' type '{$build->type}'"
+                pathinfo($outputFilename, PATHINFO_EXTENSION)
             );
         }
+
+        $parts = pathinfo($outputFilename);
+        $outputMiniFilename = $parts["dirname"]."/".$parts["filename"].".min.".$parts["extension"];
+
+        $this->compressor->compressFile($outputFilename, $build->type, $outputMiniFilename);
     }
     
     /**
@@ -316,8 +351,6 @@ class Build
         $fileSource,
         $outputFilename = null
     ) {
-        static $processedPaths = array();
-
         $target = $build->target;
         if (!isset($target)) {
             $target = "head-all";
@@ -329,7 +362,7 @@ class Build
             "Generating include file '$outputTargetFilename'"
         );
             
-        if (!isset($processedPaths[$outputTargetFilename]) && file_exists($outputTargetFilename)) {
+        if (!isset($this->processedPaths[$outputTargetFilename]) && file_exists($outputTargetFilename)) {
             unlink($outputTargetFilename);
         }
  
@@ -355,7 +388,7 @@ EOT;
         
         if (isset($html)) {
             file_put_contents($outputTargetFilename, $html, FILE_APPEND);
-            $processedPaths[$outputTargetFilename] = true;
+            $this->processedPaths[$outputTargetFilename] = true;
         }
     }
 }
