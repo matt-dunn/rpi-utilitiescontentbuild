@@ -50,13 +50,19 @@ class Dependency extends Object
             $configType = ucfirst(pathinfo($this->filename, PATHINFO_EXTENSION));
             
             if ($configType === "") {
-                throw new \RPI\Foundation\Exceptions\RuntimeException("Invalid config file");
+                throw new \RPI\Foundation\Exceptions\InvalidArgument(
+                    $this->filename,
+                    null,
+                    "Invalid dependency file"
+                );
             }
             
             $dependenciesClass = __NAMESPACE__."\Dependencies\\".$configType."\Dependency";
             
             if (!class_exists($dependenciesClass)) {
-                throw new \RPI\Foundation\Exceptions\RuntimeException(
+                throw new \RPI\Foundation\Exceptions\InvalidArgument(
+                    $configType,
+                    null,
                     "Dependency files of type '$configType' are not supported"
                 );
             }

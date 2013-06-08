@@ -59,13 +59,19 @@ class Configuration extends Object
             $configType = ucfirst(pathinfo($this->configurationFile, PATHINFO_EXTENSION));
             
             if ($configType === "") {
-                throw new \RPI\Foundation\Exceptions\RuntimeException("Invalid config file");
+                throw new \RPI\Foundation\Exceptions\InvalidArgument(
+                    $this->configurationFile,
+                    null,
+                    "Invalid config file"
+                );
             }
             
             $projectClass = __NAMESPACE__."\Configuration\\".$configType."\Project";
             
             if (!class_exists($projectClass)) {
-                throw new \RPI\Foundation\Exceptions\RuntimeException(
+                throw new \RPI\Foundation\Exceptions\InvalidArgument(
+                    $configType,
+                    null,
                     "Configuration files of type '$configType' are not supported"
                 );
             }
