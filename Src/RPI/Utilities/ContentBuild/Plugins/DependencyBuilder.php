@@ -21,10 +21,6 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\
         
         $project->getLogger()->info("Creating '".__CLASS__."' ({$this->getVersion()})");
     }
-    
-    public function __destruct()
-    {
-    }
 
     public static function getVersion()
     {
@@ -75,7 +71,7 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\
         }
         
         if (!\RPI\Foundation\Helpers\FileUtils::exists($realpath)) {
-            throw new \Exception("Unable to locate input file '$file'");
+            throw new \RPI\Foundation\Exceptions\RuntimeException("Unable to locate input file '$file'");
         }
         
         return $realpath;
@@ -107,9 +103,6 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\
         $dependentFiles,
         array $buildFiles = array()
     ) {
-        if (!\RPI\Foundation\Helpers\FileUtils::exists($inputFilename)) {
-            throw new \Exception("Unable to locate input file '$inputFilename'");
-        }
         $this->project->getLogger()->notice(
             "Building dependencies: [".$build->name."] ".$inputFilename
         );
@@ -135,7 +128,7 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\
                     $dependenciesFile = dirname(
                         end($dependentFiles)
                     )."/".pathinfo(end($dependentFiles), PATHINFO_FILENAME).".dependencies.".$dependenciesFileType;
-                    throw new \Exception(
+                    throw new \RPI\Foundation\Exceptions\RuntimeException(
                         "Circular reference detected in [".$build->name."] - Problem file: ".
                         $inputFilename." in ".$dependenciesFile
                     );
@@ -159,35 +152,30 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\
                         $dependency["name"],
                         dirname($inputFilename)
                     );
-                    if (file_exists($filename)) {
-                        $this->project->getLogger()->debug(
-                            "Found dependency '".$filename."' - ".$inputFilename
-                        );
-                        
-                        $buildTypeDependency = null;
-                        if (isset($dependency["type"])) {
-                            $buildTypeDependency = $build->name."_".$dependency["type"];
-                        } else {
-                            $buildTypeDependency = $build->name."_".pathinfo($filename, PATHINFO_EXTENSION);
-                        }
-                        
-                        $buildFiles = array_merge(
-                            $buildFiles,
-                            $this->addUniqueFileToList(
-                                $build,
-                                $filename,
-                                $buildTypeDependency,
-                                array_merge(
-                                    $buildFiles,
-                                    $this->buildFileList($build, $resolver, $filename, $dependentFiles, $buildFiles)
-                                )
-                            )
-                        );
+
+                    $this->project->getLogger()->debug(
+                        "Found dependency '".$filename."' - ".$inputFilename
+                    );
+
+                    $buildTypeDependency = null;
+                    if (isset($dependency["type"])) {
+                        $buildTypeDependency = $build->name."_".$dependency["type"];
                     } else {
-                        throw new \Exception(
-                            "Cannot find file '$filename' in '$dependenciesFile'"
-                        );
+                        $buildTypeDependency = $build->name."_".pathinfo($filename, PATHINFO_EXTENSION);
                     }
+
+                    $buildFiles = array_merge(
+                        $buildFiles,
+                        $this->addUniqueFileToList(
+                            $build,
+                            $filename,
+                            $buildTypeDependency,
+                            array_merge(
+                                $buildFiles,
+                                $this->buildFileList($build, $resolver, $filename, $dependentFiles, $buildFiles)
+                            )
+                        )
+                    );
                 }
             }
         }
@@ -205,7 +193,7 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\
                         return $buildFiles;
                     }
                 } else {
-                    $this->project->getLogger()->warning(
+                    throw new \RPI\Foundation\Exceptions\RuntimeException(
                         "[".$build->name."] Unable to locate external dependency '".$names[$i]."' for ".$filename
                     );
                 }
