@@ -32,7 +32,7 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
         $output = null;
         
         try {
-            $output = \RPI\Console\Helpers\Console::run(
+            $output = static::runCommand(
                 "sass",
                 "-v"
             );
@@ -82,7 +82,7 @@ class SASS implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcessor
 See http://sass-lang.com/download.html for instructions on how to install and setup sass
 EOT;
         
-            $output = \RPI\Console\Helpers\Console::run(
+            $output = static::runCommand(
                 "sass",
                 "$args $inputFilename --cache-location $cachepath/.sass-cache",
                 $helpInstallation
@@ -101,5 +101,13 @@ EOT;
     public function canProcessBuffer()
     {
         return false;
+    }
+    
+    /**
+     * @codeCoverageIgnore
+     */
+    protected static function runCommand($command, $arguments, $helpInstallation = null)
+    {
+        return \RPI\Console\Helpers\Console::run($command, $arguments, $helpInstallation);
     }
 }
