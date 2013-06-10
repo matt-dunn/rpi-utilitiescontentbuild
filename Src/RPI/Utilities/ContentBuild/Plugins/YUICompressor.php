@@ -23,6 +23,12 @@ class YUICompressor implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICom
      *
      * @var boolean
      */
+    protected $pharRunning = false;
+    
+    /**
+     *
+     * @var boolean
+     */
     protected $hasExtractedCompressor = false;
     
     public function __construct(
@@ -31,8 +37,25 @@ class YUICompressor implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICom
         array $options = null
     ) {
         $this->project = $project;
-        $this->yuicompressorLocation =
-            __DIR__."/../../../../../vendor/yui/yuicompressor/build/yuicompressor-".self::VERSION_YUI.".jar";
+        
+        if (isset($options["yuicompressorLocation"])) {
+            $this->yuicompressorLocation = $options["yuicompressorLocation"];
+        } else {
+            $this->yuicompressorLocation =
+                __DIR__."/../../../../../vendor/yui/yuicompressor/build/yuicompressor-".self::VERSION_YUI.".jar";
+        }
+        
+        if (!file_exists($this->yuicompressorLocation)) {
+            throw new \RPI\Foundation\Exceptions\RuntimeException(
+                "Unable to find yuicompressor ({$this->yuicompressorLocation})"
+            );
+        }
+        
+        if (isset($options["pharRunning"])) {
+            $this->pharRunning = $options["pharRunning"];
+        } else {
+            $this->pharRunning = (\Phar::running() !== "");
+        }
         
         $project->getLogger()->info("Creating '".__CLASS__."' ({$this->getVersion()})");
     }
@@ -54,11 +77,7 @@ class YUICompressor implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICom
     
     public function compressFile($filename, $type, $outputFilename)
     {
-        if (!file_exists($this->yuicompressorLocation)) {
-            throw new \Exception("Unable to find yuicompressor (".$this->yuicompressorLocation.")");
-        }
-        
-        if (\Phar::running() !== "" && !$this->hasExtractedCompressor) {
+        if ($this->pharRunning && !$this->hasExtractedCompressor) {
             $this->project->getLogger()->notice("Extracting yuicompressor");
             $tempYuiCompressorLocation = sys_get_temp_dir()."/".basename($this->yuicompressorLocation);
             copy($this->yuicompressorLocation, $tempYuiCompressorLocation);
@@ -82,9 +101,14 @@ class YUICompressor implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICom
             
             unlink($filename);
         } else {
-            $this->project->getLogger()->debug("Nothing to compress: ".$outputFilename);
+            throw new \RPI\Foundation\Exceptions\RuntimeException("Nothing to compress: ".$outputFilename);
         }
         
         return true;
+    }
+    
+    public function getYUICompressorLocation()
+    {
+        return $this->yuicompressorLocation;
     }
 }
