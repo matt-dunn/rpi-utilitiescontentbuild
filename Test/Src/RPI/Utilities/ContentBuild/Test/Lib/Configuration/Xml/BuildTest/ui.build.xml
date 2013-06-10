@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.rpi.co.uk/ ../../../../../../../../../../Src/RPI/Utilities/ContentBuild/Lib/Configuration/Xml/Model/Schema.xsd"
+
+    xmlns="http://www.rpi.co.uk/" name="website" prefix="TEMPLATE" appRoot="ROOT" basePath="">
+    
+    <build buildDirectory="css_build_dir" outputDirectory="compiled/css/" type="css" name="core" media="all" outputFilename="test.css">
+        <files name="test.css"/>
+        <files name="test2.css"/>
+    </build>
+    
+    <build buildDirectory="js_build_dir" outputDirectory="compiled/js/" type="js" name="core" media="all" externalDependenciesNames="core" target="footer">
+        <files name="test.js"/>
+    </build>
+</project>
