@@ -33,7 +33,7 @@ class YuglifyCompressor implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\
         $output = null;
         
         try {
-            $output = \RPI\Console\Helpers\Console::run(
+            $output = static::runCommand(
                 "yuglify",
                 "-v"
             );
@@ -49,7 +49,7 @@ class YuglifyCompressor implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\
         $helpInstallation = <<<EOT
 See https://github.com/yui/yuglify for instructions on how to install and setup yuglify
 EOT;
-        $output = \RPI\Console\Helpers\Console::run(
+        $output = static::runCommand(
             "yuglify",
             $filename,
             $helpInstallation
@@ -70,5 +70,13 @@ EOT;
         unlink($filename);
         
         return true;
+    }
+    
+    /**
+     * @codeCoverageIgnore
+     */
+    protected static function runCommand($command, $arguments, $helpInstallation = null)
+    {
+        return \RPI\Console\Helpers\Console::run($command, $arguments, $helpInstallation);
     }
 }
