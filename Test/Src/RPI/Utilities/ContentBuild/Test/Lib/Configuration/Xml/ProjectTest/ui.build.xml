@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.rpi.co.uk/ ../../../../../../../../../../Src/RPI/Utilities/ContentBuild/Lib/Configuration/Xml/Model/Schema.xsd"
+
+    xmlns="http://www.rpi.co.uk/" name="website" prefix="TEMPLATE" appRoot="ROOT" basePath="">
+    
+    <processors>
+        <processor type="RPI\Utilities\ContentBuild\Processors\HashImages">
+            <param>
+                <hashAlgorithm>md5</hashAlgorithm>
+            </param>
+        </processor>
+    </processors>
+    
+    <uriResolvers>
+        <uriResolver type="RPI\Utilities\ContentBuild\UriResolvers\Composer">
+            <param>
+                <vendorPath>../../../../../../../../../../vendor</vendorPath>
+            </param>
+        </uriResolver>
+    </uriResolvers>
+    
+    <plugins>
+        <plugin interface="RPI\Utilities\ContentBuild\Lib\Model\Plugin\ICompressor" type="RPI\Utilities\ContentBuild\Plugins\YuglifyCompressor">
+            <param>
+                <testParam>value for test param</testParam>
+            </param>
+        </plugin>
+    </plugins>
+    
+    <build buildDirectory="" outputDirectory="compiled/css/" type="css" name="core" media="all" outputFilename="test.css">
+        <files name="test.css"/>
+    </build>
+    
+    <build buildDirectory="" outputDirectory="compiled/js/" type="js" name="core" media="all" externalDependenciesNames="core" target="footer">
+        <files name="test.js"/>
+    </build>
+</project>

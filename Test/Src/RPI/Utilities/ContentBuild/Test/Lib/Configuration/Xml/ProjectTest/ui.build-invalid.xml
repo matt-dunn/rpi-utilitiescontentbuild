@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.rpi.co.uk/ ../../../../../../../../../../Src/RPI/Utilities/ContentBuild/Lib/Configuration/Xml/Model/Schema.xsd"
+
+    xmlns="http://www.rpi.co.uk/" name="website" prefix="TEMPLATE" appRoot="ROOT" basePath="">
+</project>
