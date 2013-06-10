@@ -5,6 +5,7 @@ namespace RPI\Utilities\ContentBuild\Lib\Configuration\Xml;
 use \RPI\Foundation\Helpers\Object;
 
 /**
+ * @property-read array $options
  * @property-read string $name
  * @property-read string $prefix
  * @property-read string $appRoot
@@ -86,6 +87,12 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
     protected $logger = null;
 
     /**
+     *
+     * @var array
+     */
+    protected $options = null;
+    
+    /**
      * 
      * @param \Psr\Log\LoggerInterface $logger
      * @param string $configurationFile
@@ -97,10 +104,9 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
         array $options = null
     ) {
         if (!file_exists($configurationFile)) {
-            $logger->error(
+            throw new \RPI\Foundation\Exceptions\RuntimeException(
                 "Unable to locate configuration file '{$configurationFile}'"
             );
-            exit(2);
         }
         
         $this->logger = $logger;
@@ -112,9 +118,11 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
         $doc->load($configurationFile);
         
         $config = \RPI\Foundation\Helpers\Dom::deserialize(simplexml_import_dom($doc));
+        
+        $this->options = $options;
 
-        if (isset($options["debug-include"])) {
-            $this->includeDebug = $options["debug-include"];
+        if (isset($this->options["debug-include"])) {
+            $this->includeDebug = $this->options["debug-include"];
         }
         if (isset($config["@"]["name"])) {
             $this->name = $config["@"]["name"];
@@ -129,10 +137,6 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
             $this->basePath = realpath(dirname($this->configurationFile).$config["@"]["basePath"]);
         } else {
             $this->basePath = realpath(dirname($this->configurationFile)."/../../");
-        }
-        
-        if (!is_array($config["build"]) || !isset($config["build"][0])) {
-            $config["build"] = array($config["build"]);
         }
         
         foreach ($config["build"] as $build) {
@@ -336,5 +340,14 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
     public function getLogger()
     {
         return $this->logger;
+    }
+    
+    /**
+     * 
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 }

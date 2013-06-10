@@ -87,6 +87,11 @@ interface IProject
     public function getLogger();
     
     /**
+     * @return array
+     */
+    public function getOptions();
+    
+    /**
      * 
      * @return boolean
      */
