@@ -14,6 +14,10 @@ class DebugWriter implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebug
      */
     protected $project = null;
     
+    /**
+     *
+     * @var boolean
+     */
     protected $pharRunning = false;
     
     public function __construct(
@@ -23,13 +27,13 @@ class DebugWriter implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebug
     ) {
         $this->project = $project;
         
-        $project->getLogger()->info("Creating '".__CLASS__."' ({$this->getVersion()})");
-        
         if (isset($options["pharRunning"])) {
             $this->pharRunning = $options["pharRunning"];
         } else {
             $this->pharRunning = (\Phar::running() !== "");
         }
+        
+        $project->getLogger()->info("Creating '".__CLASS__."' ({$this->getVersion()})");
     }
     
     public static function getVersion()
