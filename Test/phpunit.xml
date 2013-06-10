@@ -44,6 +44,9 @@
         <whitelist>
             <directory suffix=".php">../Src/</directory>
             <exclude>
+                <file>../Src/RPI/Utilities/ContentBuild/Bootstrap.php</file>
+                <file>../Src/RPI/Utilities/ContentBuild/Constants.php</file>
+                <file>../Src/RPI/Utilities/ContentBuild/Stub.php</file>
                 <directory suffix=".php">../Src/RPI/Utilities/ContentBuild/Plugins/DebugWriter/</directory>
             </exclude>
         </whitelist>
