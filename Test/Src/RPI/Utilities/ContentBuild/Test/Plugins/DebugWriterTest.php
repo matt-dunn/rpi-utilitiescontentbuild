@@ -149,11 +149,12 @@ EOT;
         
         $this->assertTrue(file_exists(__DIR__."/DebugWriterTest/ROOT/compiled/__debug/css/proxy.php"));
         
-        $vendorBasePath = realpath(__DIR__."/../../../../../../../vendor");
         $configFilename = __DIR__."/DebugWriterTest/ui.build-css.xml";
 
+        $pharname = pathinfo($_SERVER["PHP_SELF"], PATHINFO_FILENAME).".phar";
+        $pharPath = realpath($_SERVER["PHP_SELF"]);
         $content = <<<EOT
-Phar::loadPhar("/usr/local/bin/phpunit", "phpunit.phar");
+Phar::loadPhar("$pharPath", "$pharname");
 \$GLOBALS["autoloader"] = "phar://phpunit.phar/vendor/autoload.php";
 \$GLOBALS["configuration-file"] = "$configFilename";
 EOT;
