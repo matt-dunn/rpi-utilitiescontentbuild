@@ -32,7 +32,9 @@ class Dependency extends Object implements \RPI\Utilities\ContentBuild\Lib\Model
         $filename
     ) {
         if (!file_exists($filename)) {
-            throw new \Exception("Unable to locate dependencies file '$filename'");
+            throw new \RPI\Foundation\Exceptions\RuntimeException(
+                "Unable to locate dependencies file '$filename'"
+            );
         }
         
         $this->logger = $logger;
