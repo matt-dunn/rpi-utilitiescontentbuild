@@ -139,6 +139,10 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
             $this->basePath = realpath(dirname($this->configurationFile)."/../../");
         }
         
+        if (!is_array($config["build"]) || !isset($config["build"][0])) {
+            $config["build"] = array($config["build"]);
+        }
+        
         foreach ($config["build"] as $build) {
             $this->builds[] = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Build($this, $build);
         }
