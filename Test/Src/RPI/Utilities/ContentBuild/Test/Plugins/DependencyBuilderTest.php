@@ -2,7 +2,7 @@
 
 namespace RPI\Utilities\ContentBuild\Test\Plugins;
 
-class HashImagesTest extends \RPI\Test\Harness\Base
+class DependencyBuilderTest extends \RPI\Test\Harness\Base
 {
     /**
      * @var \RPI\Utilities\ContentBuild\Plugins\DependencyBuilder
