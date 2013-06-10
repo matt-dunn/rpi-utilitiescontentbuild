@@ -106,6 +106,8 @@ class UriResolver extends Object
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         $uri
     ) {
+        $resolverRealPath = false;
+        
         $scheme = parse_url($uri, PHP_URL_SCHEME);
         if ($scheme != "") {
             $schemRegistered = false;
@@ -114,7 +116,8 @@ class UriResolver extends Object
                     $schemRegistered = true;
                     $realpath = $resolver->realpath($project, $uri);
                     if ($realpath !== false) {
-                        return $realpath;
+                        $resolverRealPath = $realpath;
+                        break;
                     }
                 }
             }
@@ -127,7 +130,7 @@ class UriResolver extends Object
             }
         }
         
-        return false;
+        return $resolverRealPath;
     }
     
     /**
@@ -143,6 +146,8 @@ class UriResolver extends Object
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
         $uri
     ) {
+        $resolverRelativePath = false;
+        
         $scheme = parse_url($uri, PHP_URL_SCHEME);
         if ($scheme != "") {
             $schemRegistered = false;
@@ -151,7 +156,8 @@ class UriResolver extends Object
                     $schemRegistered = true;
                     $relativePath = $resolver->getRelativePath($project, $uri);
                     if ($relativePath !== false) {
-                        return $relativePath;
+                        $resolverRelativePath = $relativePath;
+                        break;
                     }
                 }
             }
@@ -164,6 +170,6 @@ class UriResolver extends Object
             }
         }
         
-        return false;
+        return $resolverRelativePath;
     }
 }
