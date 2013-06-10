@@ -43,6 +43,9 @@
     <filter>
         <whitelist>
             <directory suffix=".php">../Src/</directory>
+            <exclude>
+                <directory suffix=".php">../Src/RPI/Utilities/ContentBuild/Plugins/DebugWriter/</directory>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>
