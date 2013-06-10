@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+	<dependency name="test.css"/>
+	<dependency name="test.sass" type="css"/>
+	<dependency name="test.less" type="css"/>
+</dependencies>
