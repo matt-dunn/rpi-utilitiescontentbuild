@@ -14,6 +14,8 @@ class DebugWriter implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebug
      */
     protected $project = null;
     
+    protected $pharRunning = false;
+    
     public function __construct(
         \RPI\Utilities\ContentBuild\Lib\Processor $processor,
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IProject $project,
@@ -22,6 +24,12 @@ class DebugWriter implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebug
         $this->project = $project;
         
         $project->getLogger()->info("Creating '".__CLASS__."' ({$this->getVersion()})");
+        
+        if (isset($options["pharRunning"])) {
+            $this->pharRunning = $options["pharRunning"];
+        } else {
+            $this->pharRunning = (\Phar::running() !== "");
+        }
     }
     
     public static function getVersion()
@@ -76,9 +84,6 @@ class DebugWriter implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\IDebug
             "Creating JavaScript debug code: ".$outputFilename
         );
         $proxyFileScript = __DIR__."/DebugWriter/Proxy.js.php";
-        if (!file_exists($proxyFileScript)) {
-            throw new \Exception("Unable to locate proxy script file: ".$proxyFileScript);
-        }
         $proxyFile = $outputPath."/proxy.php";
         file_put_contents($proxyFile, file_get_contents($proxyFileScript));
 
@@ -206,13 +211,10 @@ CONTENT;
         $this->project->getLogger()->debug("Creating CSS debug code: ".$outputFilename);
 
         $proxyFileScript = dirname(__FILE__)."/DebugWriter/Proxy.css.php";
-        if (!file_exists($proxyFileScript)) {
-            throw new \Exception("Unable to locate proxy script file: ".$proxyFileScript);
-        }
 
         $bootstrap = "<?php\n// Version: ".CONTENT_BUILD_VERSION."\n\n";
         $proxyFile = $outputPath."/proxy.php";
-        if (\Phar::running() !== "") {
+        if ($this->pharRunning) {
             $pharname = pathinfo($_SERVER["PHP_SELF"], PATHINFO_FILENAME).".phar";
             $pharPath = realpath($_SERVER["PHP_SELF"]);
             $bootstrap .= <<<EOT
