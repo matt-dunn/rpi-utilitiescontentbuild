@@ -56,7 +56,6 @@ class YUICompressorTest extends \RPI\Test\Harness\Base
      */
     protected function tearDown()
     {
-//        \RPI\Foundation\Helpers\FileUtils::delTree(__DIR__."/YUICompressorTest/ROOT");
     }
     
     public function testGetVersion()
