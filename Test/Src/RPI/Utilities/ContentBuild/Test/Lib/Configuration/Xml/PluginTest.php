@@ -63,5 +63,5 @@ class PluginTest extends \RPI\Test\Harness\Base
             ),
             $object->params
         );
-   }
+    }
 }

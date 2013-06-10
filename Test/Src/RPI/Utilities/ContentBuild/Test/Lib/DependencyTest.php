@@ -28,7 +28,10 @@ class DependencyTest extends \RPI\Test\Harness\Base
             __DIR__."/DependencyTest/main.dependency.xml"
         );
         
-        $this->assertInstanceOf("RPI\Utilities\ContentBuild\Lib\Dependencies\Xml\Dependency", $object->getDependencies());
+        $this->assertInstanceOf(
+            "RPI\Utilities\ContentBuild\Lib\Dependencies\Xml\Dependency",
+            $object->getDependencies()
+        );
     }
     
     /**

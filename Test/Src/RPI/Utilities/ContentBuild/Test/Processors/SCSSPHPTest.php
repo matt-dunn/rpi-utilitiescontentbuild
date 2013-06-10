@@ -210,7 +210,8 @@ EOT;
         $fileBasePath = preg_replace("/([\/:.])/", "\\\\$1", __DIR__);
         
         $css = '
-@media -sass-debug-info{filename{font-family:file\:\/\/'.$fileBasePath.'\/SCSSPHPTest\/test2\.scss}line{font-family:\000033}}
+@media -sass-debug-info{filename{font-family:file\:\/\/'.
+        $fileBasePath.'\/SCSSPHPTest\/test2\.scss}line{font-family:\000033}}
 .border {
   padding: 20px;
   margin: 20px;
@@ -218,29 +219,34 @@ EOT;
   width: 10px;
   height: 10px;
   content: \'\'; }
-@media -sass-debug-info{filename{font-family:file\:\/\/'.$fileBasePath.'\/SCSSPHPTest\/test2\.scss}line{font-family:\000039}}
+@media -sass-debug-info{filename{font-family:file\:\/\/'.
+        $fileBasePath.'\/SCSSPHPTest\/test2\.scss}line{font-family:\000039}}
 .border2 {
   background: url(I/Sprites/core.png) no-repeat -12px 0px;
   width: 24px;
   height: 24px;
   content: \'\'; }
-@media -sass-debug-info{filename{font-family:file\:\/\/'.$fileBasePath.'\/SCSSPHPTest\/test2\.scss}line{font-family:\0000313}}
+@media -sass-debug-info{filename{font-family:file\:\/\/'.
+        $fileBasePath.'\/SCSSPHPTest\/test2\.scss}line{font-family:\0000313}}
 .border3 {
   background: url(I/Sprites/core.png) no-repeat -38px 0px;
   width: 10px;
   height: 10px;
   content: \'\'; }
-@media -sass-debug-info{filename{font-family:file\:\/\/'.$fileBasePath.'\/SCSSPHPTest\/test2\.scss}line{font-family:\0000317}}
+@media -sass-debug-info{filename{font-family:file\:\/\/'.
+        $fileBasePath.'\/SCSSPHPTest\/test2\.scss}line{font-family:\0000317}}
 .border4 {
   background: url(I/Sprites/core.png) no-repeat -50px 0px;
   width: 17px;
   height: 17px;
   content: \'\'; }
-@media -sass-debug-info{filename{font-family:file\:\/\/'.$fileBasePath.'\/SCSSPHPTest\/test\.scss}line{font-family:\000036}}
+@media -sass-debug-info{filename{font-family:file\:\/\/'.
+        $fileBasePath.'\/SCSSPHPTest\/test\.scss}line{font-family:\000036}}
 .content-navigation {
   border-color: #3bbfce;
   color: #2ca2af; }
-@media -sass-debug-info{filename{font-family:file\:\/\/'.$fileBasePath.'\/SCSSPHPTest\/test\.scss}line{font-family:\0000311}}
+@media -sass-debug-info{filename{font-family:file\:\/\/'.
+        $fileBasePath.'\/SCSSPHPTest\/test\.scss}line{font-family:\0000311}}
 .border {
   padding: 13.33333px;
   margin: 13.33333px;

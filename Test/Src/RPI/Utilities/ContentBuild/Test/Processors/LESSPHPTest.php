@@ -211,7 +211,8 @@ EOT;
         $fileBasePath = preg_replace("/([\/:.])/", "\\\\$1", __DIR__);
         
         $css = '
-@media -sass-debug-info{filename{font-family:file\:\/\/'.$fileBasePath.'\/LESSPHPTest\/test2\.less}line{font-family:\000034}}
+@media -sass-debug-info{filename{font-family:file\:\/\/'.
+        $fileBasePath.'\/LESSPHPTest\/test2\.less}line{font-family:\000034}}
 .border {
   padding: 20px;
   margin: 20px;
@@ -220,33 +221,38 @@ EOT;
   height: 10px;
   content: \'\';
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/'.$fileBasePath.'\/LESSPHPTest\/test2\.less}line{font-family:\0000310}}
+@media -sass-debug-info{filename{font-family:file\:\/\/'.
+        $fileBasePath.'\/LESSPHPTest\/test2\.less}line{font-family:\0000310}}
 .border2 {
   background: url(I/Sprites/core.png) no-repeat -12px 0px;
   width: 24px;
   height: 24px;
   content: \'\';
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/'.$fileBasePath.'\/LESSPHPTest\/test2\.less}line{font-family:\0000314}}
+@media -sass-debug-info{filename{font-family:file\:\/\/'.
+        $fileBasePath.'\/LESSPHPTest\/test2\.less}line{font-family:\0000314}}
 .border3 {
   background: url(I/Sprites/core.png) no-repeat -38px 0px;
   width: 10px;
   height: 10px;
   content: \'\';
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/'.$fileBasePath.'\/LESSPHPTest\/test2\.less}line{font-family:\0000318}}
+@media -sass-debug-info{filename{font-family:file\:\/\/'.
+        $fileBasePath.'\/LESSPHPTest\/test2\.less}line{font-family:\0000318}}
 .border4 {
   background: url(I/Sprites/core.png) no-repeat -50px 0px;
   width: 17px;
   height: 17px;
   content: \'\';
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/'.$fileBasePath.'\/LESSPHPTest\/test\.less}line{font-family:\000037}}
+@media -sass-debug-info{filename{font-family:file\:\/\/'.
+        $fileBasePath.'\/LESSPHPTest\/test\.less}line{font-family:\000037}}
 .content-navigation {
   border-color: #3bbfce;
   color: #2ca2af;
 }
-@media -sass-debug-info{filename{font-family:file\:\/\/'.$fileBasePath.'\/LESSPHPTest\/test\.less}line{font-family:\0000312}}
+@media -sass-debug-info{filename{font-family:file\:\/\/'.
+        $fileBasePath.'\/LESSPHPTest\/test\.less}line{font-family:\0000312}}
 .border {
   padding: 13.3333333333px;
   margin: 13.3333333333px;

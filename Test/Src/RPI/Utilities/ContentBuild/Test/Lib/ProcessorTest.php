@@ -183,7 +183,9 @@ class ProcessorTest extends \RPI\Test\Harness\Base
         $processors = $object->getProcessors();
         
         $this->assertTrue(
-            $processors["RPI\Utilities\ContentBuild\Test\Lib\ProcessorTest\Processors\MockCannotProcessBuffer"]->hasComplete
+            $processors[
+            "RPI\Utilities\ContentBuild\Test\Lib\ProcessorTest\Processors\MockCannotProcessBuffer"
+            ]->hasComplete
         );
         
         $this->assertTrue(
@@ -233,7 +235,9 @@ class ProcessorTest extends \RPI\Test\Harness\Base
         $processors = $object->getProcessors();
         
         $this->assertTrue(
-            $processors["RPI\Utilities\ContentBuild\Test\Lib\ProcessorTest\Processors\MockCannotProcessBuffer"]->hasPreProcess
+            $processors[
+            "RPI\Utilities\ContentBuild\Test\Lib\ProcessorTest\Processors\MockCannotProcessBuffer"
+            ]->hasPreProcess
         );
         
         $this->assertTrue(
@@ -303,7 +307,9 @@ EOT;
         $processors = $object->getProcessors();
         
         $this->assertTrue(
-            $processors["RPI\Utilities\ContentBuild\Test\Lib\ProcessorTest\Processors\MockCannotProcessBuffer"]->hasProcess
+            $processors[
+            "RPI\Utilities\ContentBuild\Test\Lib\ProcessorTest\Processors\MockCannotProcessBuffer"
+            ]->hasProcess
         );
         
         $this->assertTrue(

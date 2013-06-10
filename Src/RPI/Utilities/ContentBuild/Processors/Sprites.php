@@ -106,6 +106,8 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
 
         \RPI\Foundation\Helpers\Utils::pregReplaceCallbackOffset(
             "/(sprite\:\s*url\s*\(\s*'*\"*(.*?)'*\"*\s*\)\s*(.*?);)/sim",
+            // The next line needs to break phpcs as it must go on a single line because of a bug with
+            // code coverage reporting incorrectly if spread over multiple lines
             function ($matches) use ($inputFilename, $outputFilename, $build, &$sprites, $maxSpriteWidth, $resolver, $project, $spritePadding) {
                 $details = $matches[3][0];
                 

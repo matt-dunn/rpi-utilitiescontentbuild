@@ -204,11 +204,11 @@ class DependencyBuilderTest extends \RPI\Test\Harness\Base
 
         $this->assertEquals(
             array(
-                'core_css' => 
+                'core_css' =>
                     array (
                         __DIR__.'/DependencyBuilderTest/test.css',
                     ),
-                'main_css' => 
+                'main_css' =>
                     array (
                         __DIR__.'/DependencyBuilderTest/css/test-dep.css',
                     )
@@ -232,11 +232,11 @@ class DependencyBuilderTest extends \RPI\Test\Harness\Base
 
         $this->assertEquals(
             array(
-                'core_css' => 
+                'core_css' =>
                     array (
                         __DIR__.'/DependencyBuilderTest/test.css',
                     ),
-                'main_css' => 
+                'main_css' =>
                     array (
                         __DIR__.'/DependencyBuilderTest/css/test-dep.css',
                     )
