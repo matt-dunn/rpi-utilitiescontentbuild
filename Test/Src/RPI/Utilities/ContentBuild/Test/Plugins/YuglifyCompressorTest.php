@@ -2,10 +2,10 @@
 
 namespace RPI\Utilities\ContentBuild\Test\Plugins;
 
-class YUICompressorTest extends \RPI\Test\Harness\Base
+class YuglifyCompressorTest extends \RPI\Test\Harness\Base
 {
     /**
-     * @var \RPI\Utilities\ContentBuild\Plugins\YUICompressor
+     * @var \RPI\Utilities\ContentBuild\Test\Plugins\YuglifyCompressorTest\Mock
      */
     protected $object;
     
@@ -43,7 +43,7 @@ class YUICompressorTest extends \RPI\Test\Harness\Base
             false
         );
 
-        $this->object = new \RPI\Utilities\ContentBuild\Plugins\YUICompressor(
+        $this->object = new \RPI\Utilities\ContentBuild\Test\Plugins\YuglifyCompressorTest\Mock(
             $this->processor,
             $this->configuration->project,
             $options
@@ -56,32 +56,26 @@ class YUICompressorTest extends \RPI\Test\Harness\Base
      */
     protected function tearDown()
     {
-//        \RPI\Foundation\Helpers\FileUtils::delTree(__DIR__."/YUICompressorTest/ROOT");
     }
     
     public function testGetVersion()
     {
         $this->assertContains(
-            "v".\RPI\Utilities\ContentBuild\Plugins\YUICompressor::VERSION,
-            \RPI\Utilities\ContentBuild\Plugins\YUICompressor::getVersion()
-        );
-        
-        $this->assertContains(
-            "yuicompressor ".\RPI\Utilities\ContentBuild\Plugins\YUICompressor::VERSION_YUI,
-            \RPI\Utilities\ContentBuild\Plugins\YUICompressor::getVersion()
+            "v".\RPI\Utilities\ContentBuild\Test\Plugins\YuglifyCompressorTest\Mock::VERSION,
+            \RPI\Utilities\ContentBuild\Test\Plugins\YuglifyCompressorTest\Mock::getVersion()
         );
     }
     
     public function testCompressFileCss($deleteOutputFile = true)
     {
-        $this->setUpObjects(__DIR__."/YUICompressorTest/ui.build.xml");
+        $this->setUpObjects(__DIR__."/YuglifyCompressorTest/ui.build.xml");
         
-        $filename = __DIR__."/YUICompressorTest/test-compress.css";
+        $filename = __DIR__."/YuglifyCompressorTest/test-compress.css";
         
-        copy(__DIR__."/YUICompressorTest/test.css", $filename);
+        copy(__DIR__."/YuglifyCompressorTest/test.css", $filename);
         
         $type = "css";
-        $outputFilename = __DIR__."/YUICompressorTest/test.min.css";
+        $outputFilename = __DIR__."/YuglifyCompressorTest/test.min.css";
         
         $this->assertTrue(file_exists($filename));
         
@@ -94,7 +88,9 @@ class YUICompressorTest extends \RPI\Test\Harness\Base
         $this->assertTrue(file_exists($outputFilename));
         
         $content = <<<EOT
-.image1{background:url(I/1.png)}
+.image1 {
+    background:url(I/1.png);
+}
 EOT;
         $this->assertContains(
             \RPI\Foundation\Helpers\Utils::normalizeString($content, true),
@@ -111,16 +107,33 @@ EOT;
         return $outputFilename;
     }
     
-    public function testCompressFileJs($deleteOutputFile = true)
+    public function testGetVersionYuglifyNotInstalled()
     {
-        $this->setUpObjects(__DIR__."/YUICompressorTest/ui.build.xml");
+        $this->setUpObjects(__DIR__."/YuglifyCompressorTest/ui.build.xml");
         
-        $filename = __DIR__."/YUICompressorTest/test-compress.js";
+        \RPI\Utilities\ContentBuild\Test\Plugins\YuglifyCompressorTest\Mock::$yuglifyCommand = "yuglify-notinstalled";
         
-        copy(__DIR__."/YUICompressorTest/test.js", $filename);
+        $this->assertEquals(
+            "v".\RPI\Utilities\ContentBuild\Test\Plugins\YuglifyCompressorTest\Mock::VERSION." - yuglify NOT INSTALLED",
+            $this->object->getVersion()
+        );
+    }
+    
+    /**
+     * @expectedException \RPI\Console\Exceptions\Console\NotInstalled
+     */
+    public function testCompressYuglifyNotInstalled()
+    {
+        $this->setUpObjects(__DIR__."/YuglifyCompressorTest/ui.build.xml");
+        
+        \RPI\Utilities\ContentBuild\Test\Plugins\YuglifyCompressorTest\Mock::$yuglifyCommand = "yuglify-notinstalled";
+        
+        $filename = __DIR__."/YuglifyCompressorTest/test-compress.css";
+        
+        copy(__DIR__."/YuglifyCompressorTest/test.css", $filename);
         
         $type = "css";
-        $outputFilename = __DIR__."/YUICompressorTest/test.min.js";
+        $outputFilename = __DIR__."/YuglifyCompressorTest/test.min.css";
         
         $this->assertTrue(file_exists($filename));
         
@@ -133,7 +146,9 @@ EOT;
         $this->assertTrue(file_exists($outputFilename));
         
         $content = <<<EOT
-function test(){alert("Test JS")}
+.image1 {
+    background:url(I/1.png);
+}
 EOT;
         $this->assertContains(
             \RPI\Foundation\Helpers\Utils::normalizeString($content, true),
@@ -146,71 +161,5 @@ EOT;
         if ($deleteOutputFile) {
             unlink($outputFilename);
         }
-        
-        return $outputFilename;
-    }
-    
-    public function testCompressFileOutputFileExists()
-    {
-        $outputFilename = $this->testCompressFileCss(false);
-        
-        $this->assertTrue(file_exists($outputFilename));
-        
-        $this->testCompressFileCss();
-    }
-    
-    /**
-     * @expectedException \RPI\Foundation\Exceptions\RuntimeException
-     */
-    public function testCompressFileInvalidFile()
-    {
-        $this->setUpObjects(__DIR__."/YUICompressorTest/ui.build.xml");
-        
-        $this->object->compressFile(__DIR__."/missing.css", "css", __DIR__."/missing.min.css");
-    }
-    
-    /**
-     * @expectedException \RPI\Foundation\Exceptions\RuntimeException
-     */
-    public function testCompressFileInvalidCompressorLocation()
-    {
-        $this->setUpObjects(
-            __DIR__."/YUICompressorTest/ui.build.xml",
-            array(
-                "yuicompressorLocation" => __DIR__."/missing.jar"
-            )
-        );
-    }
-    
-    public function testCompressFilePhar()
-    {
-        $this->setUpObjects(
-            __DIR__."/YUICompressorTest/ui.build.xml",
-            array(
-                "pharRunning" => true
-            )
-        );
-        
-        $filename = __DIR__."/YUICompressorTest/test-compress.js";
-        
-        copy(__DIR__."/YUICompressorTest/test.js", $filename);
-        
-        $type = "css";
-        $outputFilename = __DIR__."/YUICompressorTest/test.min.js";
-        
-        $this->assertTrue(file_exists($filename));
-        
-        $this->assertTrue(
-            $this->object->compressFile($filename, $type, $outputFilename)
-        );
-        
-        $yuiCompressorFilename = $this->object->getYUICompressorLocation();
-        $this->assertTrue(file_exists($yuiCompressorFilename));
-        
-        unlink($outputFilename);
-        
-        $this->object = null;
-        
-        $this->assertFalse(file_exists($yuiCompressorFilename));
     }
 }

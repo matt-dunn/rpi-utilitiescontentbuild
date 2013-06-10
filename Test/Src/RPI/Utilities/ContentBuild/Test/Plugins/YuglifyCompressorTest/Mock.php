@@ -1,19 +1,22 @@
 <?php
 
-namespace RPI\Utilities\ContentBuild\Test\Processors\SASSTest;
+namespace RPI\Utilities\ContentBuild\Test\Plugins\YuglifyCompressorTest;
 
-class Mock extends \RPI\Utilities\ContentBuild\Processors\SASS
+class Mock extends \RPI\Utilities\ContentBuild\Plugins\YuglifyCompressor
 {
-    public static $sassCommand = "sass";
+    public static $yuglifyCommand = "yuglify";
     
     protected static function runCommand($command, $arguments, $helpInstallation = null)
     {
-        if ($command == self::$sassCommand) {
+        if ($command == self::$yuglifyCommand) {
             if ($arguments == "-v") {
                 return array(
-                    "SASS MOCK"
+                    "YUGLIFY MOCK"
                 );
             } else {
+                $parts = pathinfo($arguments);
+                copy($arguments, $parts["dirname"]."/".$parts["filename"].".min.".$parts["extension"]);
+                
                 return array(
                     "PROCESSED: $arguments"
                 );
