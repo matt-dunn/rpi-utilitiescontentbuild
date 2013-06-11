@@ -146,17 +146,7 @@ class Processor extends Object
         $buffer,
         array $skipProcessors = null
     ) {
-        $buffer = preg_replace_callback(
-            "/\/\*.*?\*\//sim",
-            function ($matches) {
-                if (substr($matches[0], 0, 3) == "/*!") {
-                    return $matches[0];
-                } else {
-                    return str_repeat("\n", substr_count($matches[0], "\n"));
-                }
-            },
-            $buffer
-        );
+        $buffer = $this->removeComments($buffer);
             
         $inputFilename = realpath($inputFilename);
         
@@ -194,17 +184,7 @@ class Processor extends Object
         $buffer,
         array $skipProcessors = null
     ) {
-        $buffer = preg_replace_callback(
-            "/\/\*.*?\*\//sim",
-            function ($matches) {
-                if (substr($matches[0], 0, 3) == "/*!") {
-                    return $matches[0];
-                } else {
-                    return str_repeat("\n", substr_count($matches[0], "\n"));
-                }
-            },
-            $buffer
-        );
+        $buffer = $this->removeComments($buffer);
             
         $inputFilename = realpath($inputFilename);
         
@@ -301,5 +281,27 @@ class Processor extends Object
         }
         
         return $this;
+    }
+    
+    /**
+     * Remove block comments from buffer. Comments which open with ! are kept.
+     * 
+     * @param string $buffer
+     * 
+     * @return string
+     */
+    protected function removeComments($buffer)
+    {
+        return preg_replace_callback(
+            "/\/\*.*?\*\//sim",
+            function ($matches) {
+                if (substr($matches[0], 0, 3) == "/*!") {
+                    return $matches[0];
+                } else {
+                    return str_repeat("\n", substr_count($matches[0], "\n"));
+                }
+            },
+            $buffer
+        );
     }
 }
