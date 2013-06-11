@@ -183,6 +183,84 @@ class ProjectTest extends \RPI\Test\Harness\Base
         );
     }
     
+    public function testConstructSingleBuild()
+    {
+        $object = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Project(
+            $this->logger,
+            __DIR__."/ProjectTest/ui.build-single-build.xml",
+            array(
+                "debug-include" => true
+            )
+        );
+        
+        $this->assertEquals("website", $object->getName());
+        $this->assertEquals("website", $object->name);
+        
+        $this->assertEquals("TEMPLATE", $object->getPrefix());
+        $this->assertEquals("TEMPLATE", $object->prefix);
+        
+        $this->assertEquals(1, count($object->getBuilds()));
+        $this->assertEquals(1, count($object->builds));
+        $this->assertEquals(
+            array(
+                '' . "\0" . '*' . "\0" . 'buildDirectory' => '',
+                '' . "\0" . '*' . "\0" . 'files' =>
+                array(
+                    0 => 'test.css',
+                ),
+                '' . "\0" . '*' . "\0" . 'name' => 'core',
+                '' . "\0" . '*' . "\0" . 'outputDirectory' => 'compiled/css/',
+                '' . "\0" . '*' . "\0" . 'outputFilename' => 'test.css',
+                '' . "\0" . '*' . "\0" . 'externalDependenciesNames' => null,
+                '' . "\0" . '*' . "\0" . 'type' => 'css',
+                '' . "\0" . '*' . "\0" . 'target' => null,
+                '' . "\0" . '*' . "\0" . 'media' => 'all',
+                '' . "\0" . '*' . "\0" . 'debugPath' =>
+                    '/Users/matt/Development/php/RPI/sites-template/vendor/rpi/utilities-contentbuild/'.
+                    'Test/Src/RPI/Utilities/ContentBuild/Test/Lib/Configuration/Xml/ProjectTest/ROOT/'.
+                    'compiled/__debug/css',
+            ),
+            (array)$object->builds[0]
+        );
+        
+        $this->assertEquals("ROOT", $object->getAppRoot());
+        $this->assertEquals("ROOT", $object->appRoot);
+        
+        $this->assertEquals(__DIR__."/ProjectTest", $object->getBasePath());
+        $this->assertEquals(__DIR__."/ProjectTest", $object->basePath);
+        
+        $this->assertEquals(__DIR__."/ProjectTest/ui.build-single-build.xml", $object->getConfigurationFile());
+        $this->assertEquals(__DIR__."/ProjectTest/ui.build-single-build.xml", $object->configurationFile);
+        
+        $this->assertNull($object->getProcessors());
+        $this->assertNull($object->processors);
+        
+        $this->assertNull($object->getResolvers());
+        $this->assertNull($object->resolvers);
+        
+        $this->assertNull($object->getPlugins());
+        $this->assertNull($object->plugins);
+        
+        $this->assertTrue($object->getIncludeDebug());
+        $this->assertTrue($object->includeDebug);
+        
+        $this->assertSame($this->logger, $object->getLogger());
+        $this->assertSame($this->logger, $object->logger);
+        
+        $this->assertEquals(
+            array(
+                "debug-include" => true
+            ),
+            $object->getOptions()
+        );
+        $this->assertEquals(
+            array(
+                "debug-include" => true
+            ),
+            $object->options
+        );
+    }
+    
     public function testConstructNoBasePath()
     {
         $object = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Project(

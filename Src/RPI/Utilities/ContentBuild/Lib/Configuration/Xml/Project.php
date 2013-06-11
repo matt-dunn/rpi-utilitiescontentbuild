@@ -147,68 +147,40 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
             $this->builds[] = new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Build($this, $build);
         }
         
-        if (isset($config["processors"], $config["processors"]["processor"])) {
-            if (!is_array($config["processors"]["processor"]) || !isset($config["processors"]["processor"][0])) {
-                $config["processors"]["processor"] = array($config["processors"]["processor"]);
-            }
-            
-            $this->processors = array();
-            
-            foreach ($config["processors"]["processor"] as $processor) {
-                $params = null;
-                if (isset($processor["param"])) {
-                    if (!is_array($processor["param"]) || !isset($processor["param"][0])) {
-                        $processor["param"] = array($processor["param"]);
-                    }
-                    $params = array();
-                    foreach ($processor["param"] as $param) {
-                        $params[] = $param;
-                    }
-                }
-                $this->processors[$processor["@"]["type"]] =
-                    new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Processor(
-                        $processor["@"]["type"],
-                        $params
-                    );
-            }
-        }
+        $this->processors = $this->getPluginCollection(
+            $config,
+            "processors",
+            "processor",
+            "\RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Processor"
+        );
         
-        if (isset($config["uriResolvers"], $config["uriResolvers"]["uriResolver"])) {
-            if (!is_array($config["uriResolvers"]["uriResolver"])
-                || !isset($config["uriResolvers"]["uriResolver"][0])) {
-                $config["uriResolvers"]["uriResolver"] = array($config["uriResolvers"]["uriResolver"]);
-            }
-            
-            $this->resolvers = array();
-            
-            foreach ($config["uriResolvers"]["uriResolver"] as $uriResolver) {
-                $params = null;
-                if (isset($uriResolver["param"])) {
-                    if (!is_array($uriResolver["param"]) || !isset($uriResolver["param"][0])) {
-                        $uriResolver["param"] = array($uriResolver["param"]);
-                    }
-                    $params = array();
-                    foreach ($uriResolver["param"] as $param) {
-                        $params[] = $param;
-                    }
-                }
-                $this->resolvers[$uriResolver["@"]["type"]] =
-                    new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Resolver(
-                        $uriResolver["@"]["type"],
-                        $params
-                    );
-            }
-        }
+        $this->resolvers = $this->getPluginCollection(
+            $config,
+            "uriResolvers",
+            "uriResolver",
+            "\RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Processor"
+        );
         
-        if (isset($config["plugins"], $config["plugins"]["plugin"])) {
-            if (!is_array($config["plugins"]["plugin"])
-                || !isset($config["plugins"]["plugin"][0])) {
-                $config["plugins"]["plugin"] = array($config["plugins"]["plugin"]);
+        $this->plugins = $this->getPluginCollection(
+            $config,
+            "plugins",
+            "plugin",
+            "\RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Plugin"
+        );
+    }
+    
+    protected function getPluginCollection(array $config, $collectionName, $itemName, $itemType)
+    {
+        $plugins = null;
+        
+        if (isset($config[$collectionName], $config[$collectionName][$itemName])) {
+            if (!is_array($config[$collectionName][$itemName]) || !isset($config[$collectionName][$itemName][0])) {
+                $config[$collectionName][$itemName] = array($config[$collectionName][$itemName]);
             }
             
-            $this->plugins = array();
+            $plugins = array();
             
-            foreach ($config["plugins"]["plugin"] as $plugin) {
+            foreach ($config[$collectionName][$itemName] as $plugin) {
                 $params = null;
                 if (isset($plugin["param"])) {
                     if (!is_array($plugin["param"]) || !isset($plugin["param"][0])) {
@@ -219,14 +191,24 @@ class Project extends Object implements \RPI\Utilities\ContentBuild\Lib\Model\Co
                         $params[] = $param;
                     }
                 }
-                $this->plugins[$plugin["@"]["interface"]] =
-                    new \RPI\Utilities\ContentBuild\Lib\Configuration\Xml\Plugin(
-                        $plugin["@"]["interface"],
-                        $plugin["@"]["type"],
-                        $params
-                    );
+                if (isset($plugin["@"]["interface"])) {
+                    $plugins[$plugin["@"]["interface"]] =
+                        new $itemType(
+                            $plugin["@"]["interface"],
+                            $plugin["@"]["type"],
+                            $params
+                        );
+                } else {
+                    $plugins[$plugin["@"]["type"]] =
+                        new $itemType(
+                            $plugin["@"]["type"],
+                            $params
+                        );
+                }
             }
         }
+        
+        return $plugins;
     }
 
     public function validate()
