@@ -12,6 +12,10 @@
     
     <target name="prebuildTasks">
         <phingcall target="composer"/>
+        <phingcall target="checkCodeTasks"/>
+    </target>
+    
+    <target name="checkCodeTasks">
         <phingcall target="pdepend"/>
         <!--<phingcall target="phpmd"/>-->
         <!--<phingcall target="phpcpd"/>-->
