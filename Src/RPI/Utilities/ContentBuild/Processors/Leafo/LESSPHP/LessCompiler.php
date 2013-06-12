@@ -8,7 +8,8 @@ class LessCompiler extends \lessc
     protected $importCallback = null;
     protected $processImportCallback = null;
 
-	public function __construct($fname = null) {
+    public function __construct($fname = null)
+    {
         $this->numberPrecision = 5;
         
         parent::__construct($fname);
