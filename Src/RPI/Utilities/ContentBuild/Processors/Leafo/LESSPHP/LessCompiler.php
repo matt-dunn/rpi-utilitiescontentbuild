@@ -4,11 +4,16 @@ namespace RPI\Utilities\ContentBuild\Processors\Leafo\LESSPHP;
 
 class LessCompiler extends \lessc
 {
-
     public $debug = false;
     protected $importCallback = null;
     protected $processImportCallback = null;
 
+	public function __construct($fname = null) {
+        $this->numberPrecision = 5;
+        
+        parent::__construct($fname);
+    }
+    
     protected function findImport($url)
     {
         if (isset($this->importCallback) && is_callable($this->importCallback)) {

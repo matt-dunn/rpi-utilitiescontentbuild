@@ -140,8 +140,8 @@ class LESSPHPTest extends \RPI\Test\Harness\Base
   color: #2ca2af;
 }
 .border {
-  padding: 13.3333333333px;
-  margin: 13.3333333333px;
+  padding: 13.33333px;
+  margin: 13.33333px;
   border-color: #3bbfce;
 }
 EOT;
@@ -254,8 +254,8 @@ EOT;
 @media -sass-debug-info{filename{font-family:file\:\/\/'.
         $fileBasePath.'\/LESSPHPTest\/test\.less}line{font-family:\0000312}}
 .border {
-  padding: 13.3333333333px;
-  margin: 13.3333333333px;
+  padding: 13.33333px;
+  margin: 13.33333px;
   border-color: #3bbfce;
 }';
 
@@ -323,8 +323,8 @@ EOT;
   color: #2ca2af;
 }
 .border {
-  padding: 13.3333333333px;
-  margin: 13.3333333333px;
+  padding: 13.33333px;
+  margin: 13.33333px;
   border-color: #3bbfce;
 }
 .test-import-noextension {
