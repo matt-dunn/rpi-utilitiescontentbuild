@@ -76,9 +76,7 @@ class ProjectTest extends \RPI\Test\Harness\Base
                 '' . "\0" . '*' . "\0" . 'target' => null,
                 '' . "\0" . '*' . "\0" . 'media' => 'all',
                 '' . "\0" . '*' . "\0" . 'debugPath' =>
-                    '/Users/matt/Development/php/RPI/sites-template/vendor/rpi/utilities-contentbuild/'.
-                    'Test/Src/RPI/Utilities/ContentBuild/Test/Lib/Configuration/Xml/ProjectTest/ROOT/'.
-                    'compiled/__debug/css',
+                    __DIR__.'/ProjectTest/ROOT/compiled/__debug/css',
             ),
             (array)$object->builds[0]
         );
@@ -98,9 +96,7 @@ class ProjectTest extends \RPI\Test\Harness\Base
                 '' . "\0" . '*' . "\0" . 'target' => "footer",
                 '' . "\0" . '*' . "\0" . 'media' => 'all',
                 '' . "\0" . '*' . "\0" . 'debugPath' =>
-                    '/Users/matt/Development/php/RPI/sites-template/vendor/rpi/utilities-contentbuild/'.
-                    'Test/Src/RPI/Utilities/ContentBuild/Test/Lib/Configuration/Xml/ProjectTest/ROOT/'.
-                    'compiled/__debug/js',
+                    __DIR__.'/ProjectTest/ROOT/compiled/__debug/js',
             ),
             (array)$object->builds[1]
         );
@@ -216,9 +212,7 @@ class ProjectTest extends \RPI\Test\Harness\Base
                 '' . "\0" . '*' . "\0" . 'target' => null,
                 '' . "\0" . '*' . "\0" . 'media' => 'all',
                 '' . "\0" . '*' . "\0" . 'debugPath' =>
-                    '/Users/matt/Development/php/RPI/sites-template/vendor/rpi/utilities-contentbuild/'.
-                    'Test/Src/RPI/Utilities/ContentBuild/Test/Lib/Configuration/Xml/ProjectTest/ROOT/'.
-                    'compiled/__debug/css',
+                    __DIR__.'/ProjectTest/ROOT/compiled/__debug/css',
             ),
             (array)$object->builds[0]
         );
