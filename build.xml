@@ -39,7 +39,7 @@
     </target>
     
     <target name="pdepend">
-        <exec executable="pdepend" checkReturn="true" logOutput="true">
+        <exec executable="vendor/bin/pdepend" checkReturn="true" logOutput="true">
             <arg value="--jdepend-xml=build/logs/jdepend.xml" />
             <arg value="--jdepend-chart=build/pdepend/dependencies.svg" />
             <arg value="--overview-pyramid=build/pdepend/overview-pyramid.svg" />
@@ -48,7 +48,7 @@
     </target>
 
     <target name="phpmd">
-        <exec executable="phpmd" checkReturn="true" logOutput="true">
+        <exec executable="vendor/bin/phpmd" checkReturn="true" logOutput="true">
             <arg path="${source}" />
             <arg value="xml" />
             <arg value="${project.basedir}/build/phpmd.xml" />
@@ -58,7 +58,7 @@
     </target>
 
     <target name="phpcpd">
-        <exec executable="phpcpd" checkReturn="true" logOutput="true">
+        <exec executable="vendor/bin/phpcpd" checkReturn="true" logOutput="true">
             <arg value="--log-pmd" />
             <arg value="${project.basedir}/build/logs/pmd-cpd.xml" />
             <arg path="${source}" />
@@ -66,7 +66,7 @@
     </target>
 
     <target name="phploc">
-        <exec executable="phploc" checkReturn="true" logOutput="true">
+        <exec executable="vendor/bin/phploc" checkReturn="true" logOutput="true">
             <arg value="--log-csv" />
             <arg value="${project.basedir}/build/logs/phploc.csv" />
             <arg path="${source}" />
@@ -74,7 +74,7 @@
     </target>
 
     <target name="phpcs">
-        <exec executable="phpcs" checkReturn="true" logOutput="true">
+        <exec executable="vendor/bin/phpcs" checkReturn="true" logOutput="true">
             <arg value="-v" />
             <arg value="--report=checkstyle" />
             <arg value="--report-file=build/logs/checkstyle.xml" />
@@ -83,14 +83,14 @@
             <arg value="--severity=5" />
             <arg value="--error-severity=1" />
             <arg value="--warning-severity=8" />
-            <arg value="--ignore=*/.cache/*,*/__*,*/composer/*"/>
+            <arg value="--ignore=*/.cache/*,*/__*,*/composer/*,Stub.php"/>
             <arg path="${source}"/>
             <arg path="${project.basedir}/Test" />
         </exec>
     </target>
     
     <target name="phpcb">
-        <exec executable="phpcb" checkReturn="true" logOutput="true">
+        <exec executable="vendor/bin/phpcb" checkReturn="true" logOutput="true">
             <arg value="--log" />
             <arg path="build/logs" />
             <arg value="--source" />

@@ -31,7 +31,10 @@
         "rpi/test-harness": "dev-master",
         "leafo/lessphp": "0.3.*@dev",
         "leafo/scssphp": "v0.0.5",
-        "phing/phing": "2.*"
+        "phing/phing": "2.*",
+        "squizlabs/php_codesniffer": "dev-master",
+        "phploc/phploc": "dev-master",
+        "pdepend/pdepend": "dev-master"
     },
     "autoload": {
         "psr-0": {
