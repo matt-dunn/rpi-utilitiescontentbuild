@@ -1,9 +1,31 @@
 <?xml version="1.0"?>
 <!-- phing build file -->
 <project name="buildphar" basedir="." default="main">
+    <property name="source" value="${project.basedir}/Src/" override="true" />
+    
     <target name="clean">
         <delete file="bin/contentbuild" failonerror="false"/>
         <delete file="bin/contentbuild.phar" failonerror="false"/>
+        <delete dir="${project.basedir}/build" failonerror="false"/>
+        <mkdir dir="${project.basedir}/build/logs"/>
+    </target>
+    
+    <target name="prebuildTasks">
+        <phingcall target="composer"/>
+        <phingcall target="pdepend"/>
+        <!--<phingcall target="phpmd"/>-->
+        <!--<phingcall target="phpcpd"/>-->
+        <phingcall target="phpcs"/>
+        <phingcall target="phploc"/>
+        <phingcall target="phpunit"/>
+        <!--<phingcall target="phpdoc"/>-->
+        <!--<phingcall target="phpcb"/>-->
+    </target>
+
+    <target name="composer">
+        <exec dir="." executable="composer" checkReturn="true" logOutput="true">
+            <arg line="update"/>
+        </exec>
     </target>
     
     <target name="phpunit">
@@ -12,9 +34,71 @@
         </exec>
     </target>
     
+    <target name="pdepend">
+        <exec executable="pdepend" checkReturn="true" logOutput="true">
+            <arg value="--jdepend-xml=build/logs/jdepend.xml" />
+            <arg value="--jdepend-chart=build/pdepend/dependencies.svg" />
+            <arg value="--overview-pyramid=build/pdepend/overview-pyramid.svg" />
+            <arg path="${source}" />
+        </exec>
+    </target>
+
+    <target name="phpmd">
+        <exec executable="phpmd" checkReturn="true" logOutput="true">
+            <arg path="${source}" />
+            <arg value="xml" />
+            <arg value="${project.basedir}/build/phpmd.xml" />
+            <arg value="--reportfile" />
+            <arg value="${project.basedir}/build/logs/pmd.xml" />
+        </exec>
+    </target>
+
+    <target name="phpcpd">
+        <exec executable="phpcpd" checkReturn="true" logOutput="true">
+            <arg value="--log-pmd" />
+            <arg value="${project.basedir}/build/logs/pmd-cpd.xml" />
+            <arg path="${source}" />
+        </exec>
+    </target>
+
+    <target name="phploc">
+        <exec executable="phploc" checkReturn="true" logOutput="true">
+            <arg value="--log-csv" />
+            <arg value="${project.basedir}/build/logs/phploc.csv" />
+            <arg path="${source}" />
+        </exec>
+    </target>
+
+    <target name="phpcs">
+        <exec executable="phpcs" checkReturn="true" logOutput="true">
+            <arg value="-v" />
+            <arg value="--report=checkstyle" />
+            <arg value="--report-file=build/logs/checkstyle.xml" />
+            <arg value="--standard=PSR2" />
+            <arg value="--extensions=php,inc" />
+            <arg value="--severity=5" />
+            <arg value="--error-severity=1" />
+            <arg value="--warning-severity=8" />
+            <arg value="--ignore=*/.cache/*,*/__*,*/composer/*"/>
+            <arg path="${source}"/>
+            <arg path="${project.basedir}/Test" />
+        </exec>
+    </target>
+    
+    <target name="phpcb">
+        <exec executable="phpcb" checkReturn="true" logOutput="true">
+            <arg value="--log" />
+            <arg path="build/logs" />
+            <arg value="--source" />
+            <arg path="${source}" />
+            <arg value="--output" />
+            <arg path="${project.basedir}/build/code-browser" />
+        </exec>
+    </target>
+    
     <target name="createphar">
         <echo file="build/pharBuildFiles">
-            <fileset dir="." id="sourceFiles">
+            <fileset dir="${project.basedir}" id="sourceFiles">
                 <include name="Src/**" />
                 <include name="vendor/autoload.php" />
                 <include name="vendor/composer/**" />
@@ -65,7 +149,5 @@
         <copy file="bin/contentbuild" tofile="/usr/local/bin/contentbuild" overwrite="true" />
     </target>
     
-    <target name="main"
-        depends="phpunit,clean,createphar,install"
-    />
+    <target name="main"  depends="clean,prebuildTasks,createphar,install"/>
 </project>

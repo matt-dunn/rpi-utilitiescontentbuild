@@ -150,12 +150,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "1.2.11"
+                "reference": "8d0a47217af4a0ed74ac0e155ec2007205d1408f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/1.2.11",
-                "reference": "1.2.11",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/8d0a47217af4a0ed74ac0e155ec2007205d1408f",
+                "reference": "8d0a47217af4a0ed74ac0e155ec2007205d1408f",
                 "shasum": ""
             },
             "require": {
@@ -198,7 +198,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-05-23 18:23:24"
+            "time": "2013-06-12 07:14:37"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -384,12 +384,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "3.7.21"
+                "reference": "268d9f12f6b7e982ad7bb40ea492085a3d1414d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3.7.21",
-                "reference": "3.7.21",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/268d9f12f6b7e982ad7bb40ea492085a3d1414d6",
+                "reference": "268d9f12f6b7e982ad7bb40ea492085a3d1414d6",
                 "shasum": ""
             },
             "require": {
@@ -450,7 +450,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-05-23 18:54:29"
+            "time": "2013-06-01 10:06:56"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -573,7 +573,7 @@
             "source": {
                 "type": "git",
                 "url": "ssh://git@bitbucket.org/redpixelinteractive/rpi-foundation.git",
-                "reference": "00aa9fc0c6df9dae995c92a565864610949e0d73"
+                "reference": "0ec6b21dda1b41fa97d556d8f962b94fa07fffd4"
             },
             "require": {
                 "ext-apc": "*",
@@ -611,7 +611,7 @@
             ],
             "description": "RPI Core Foundation",
             "homepage": "http://packages.red-pixel.co.uk/",
-            "time": "2013-05-23 18:31:24"
+            "time": "2013-06-12 15:38:30"
         },
         {
             "name": "rpi/schemas",
@@ -646,7 +646,7 @@
             "source": {
                 "type": "git",
                 "url": "ssh://git@bitbucket.org/redpixelinteractive/rpi-testharness.git",
-                "reference": "5b0c7c3c9d66b733a3b821754650ddd9859176c7"
+                "reference": "78c27fe6a2168f4bf80a04c16a1c6938d7667d73"
             },
             "require": {
                 "php": ">=5.3.3",
@@ -672,7 +672,7 @@
             ],
             "description": "RPI Test Harness",
             "homepage": "http://packages.red-pixel.co.uk/",
-            "time": "2013-05-21 18:57:34"
+            "time": "2013-06-04 16:02:18"
         },
         {
             "name": "symfony/yaml",
@@ -727,12 +727,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ulrichsg/getopt-php.git",
-                "reference": "1.0.1"
+                "reference": "6b8f2f011edcce97a7ca8e9ca080a5828f5ebb0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ulrichsg/getopt-php/zipball/1.0.1",
-                "reference": "1.0.1",
+                "url": "https://api.github.com/repos/ulrichsg/getopt-php/zipball/6b8f2f011edcce97a7ca8e9ca080a5828f5ebb0e",
+                "reference": "6b8f2f011edcce97a7ca8e9ca080a5828f5ebb0e",
                 "shasum": ""
             },
             "require": {
@@ -759,7 +759,7 @@
             ],
             "description": "Command line arguments parser for PHP 5.3",
             "homepage": "http://github.com/ulrichsg/getopt-php",
-            "time": "2013-02-13 12:14:54"
+            "time": "2013-06-08 10:37:06"
         },
         {
             "name": "yui/yuicompressor",
