@@ -4,4 +4,5 @@
 Phar::mapPhar('contentbuild.phar');
 require 'phar://contentbuild.phar/Src/RPI/Utilities/ContentBuild/Bootstrap.php';
 
-__halt_compiler();
+/* @codingStandardsIgnoreStart */
+__HALT_COMPILER();
