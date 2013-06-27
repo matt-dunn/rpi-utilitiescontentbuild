@@ -514,6 +514,7 @@ EOT;
         
         $inputFilename = __DIR__."/SpriteTest/test-option-ratio.css";
         
+        /* @codingStandardsIgnoreStart */
         $css = <<<EOT
 @media only screen and (-webkit-min-device-pixel-ratio: 2), 
 only screen and (min-device-pixel-ratio: 2) {
@@ -522,6 +523,7 @@ only screen and (min-device-pixel-ratio: 2) {
     }
 }
 EOT;
+        /* @codingStandardsIgnoreEnd */
         
         $this->assertTrue(
             $this->object->preProcess(

@@ -108,7 +108,9 @@ class Sprites implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProces
             "/(sprite\:\s*url\s*\(\s*'*\"*(.*?)'*\"*\s*\)\s*(.*?);)/sim",
             // The next line needs to break phpcs as it must go on a single line because of a bug with
             // code coverage reporting incorrectly if spread over multiple lines
+            /* @codingStandardsIgnoreStart */
             function ($matches) use ($inputFilename, $outputFilename, $build, &$sprites, $maxSpriteWidth, $resolver, $project, $spritePadding) {
+                /* @codingStandardsIgnoreEnd */
                 $details = $matches[3][0];
                 
                 $ratio = 1;

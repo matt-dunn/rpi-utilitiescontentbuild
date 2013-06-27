@@ -80,10 +80,7 @@
             <arg value="--report-file=build/logs/checkstyle.xml" />
             <arg value="--standard=PSR2" />
             <arg value="--extensions=php,inc" />
-            <arg value="--severity=5" />
-            <arg value="--error-severity=1" />
-            <arg value="--warning-severity=8" />
-            <arg value="--ignore=*/.cache/*,*/__*,*/composer/*,Stub.php"/>
+            <arg value="--ignore=*/.cache/*,*/__*,*/composer/*"/>
             <arg path="${source}"/>
             <arg path="${project.basedir}/Test" />
         </exec>
