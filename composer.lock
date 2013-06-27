@@ -175,12 +175,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phploc.git",
-                "reference": "3596d22a3e955758dee3f8be0e21f68bd4fb3e5f"
+                "reference": "dc7a6729cac148123b5c44f6e747441196a6b752"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phploc/zipball/3596d22a3e955758dee3f8be0e21f68bd4fb3e5f",
-                "reference": "3596d22a3e955758dee3f8be0e21f68bd4fb3e5f",
+                "url": "https://api.github.com/repos/sebastianbergmann/phploc/zipball/dc7a6729cac148123b5c44f6e747441196a6b752",
+                "reference": "dc7a6729cac148123b5c44f6e747441196a6b752",
                 "shasum": ""
             },
             "require": {
@@ -212,7 +212,7 @@
             ],
             "description": "A tool for quickly measuring the size of a PHP project.",
             "homepage": "https://github.com/sebastianbergmann/phploc",
-            "time": "2013-06-07 08:26:33"
+            "time": "2013-06-22 11:19:07"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -220,12 +220,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "8d0a47217af4a0ed74ac0e155ec2007205d1408f"
+                "reference": "56ad5a88f7503b9ecee4e1799cd7c48e31ada517"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/8d0a47217af4a0ed74ac0e155ec2007205d1408f",
-                "reference": "8d0a47217af4a0ed74ac0e155ec2007205d1408f",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/56ad5a88f7503b9ecee4e1799cd7c48e31ada517",
+                "reference": "56ad5a88f7503b9ecee4e1799cd7c48e31ada517",
                 "shasum": ""
             },
             "require": {
@@ -235,13 +235,18 @@
                 "phpunit/php-token-stream": ">=1.1.3@stable"
             },
             "require-dev": {
-                "phpunit/phpunit": "3.7.*"
+                "phpunit/phpunit": "3.7.*@dev"
             },
             "suggest": {
                 "ext-dom": "*",
                 "ext-xdebug": ">=2.0.5"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2.x-dev"
+                }
+            },
             "autoload": {
                 "classmap": [
                     "PHP/"
@@ -268,7 +273,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-06-12 07:14:37"
+            "time": "2013-06-27 08:20:15"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -454,12 +459,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "268d9f12f6b7e982ad7bb40ea492085a3d1414d6"
+                "reference": "1eb9164784848777ad3cb65859f33271b97b1d34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/268d9f12f6b7e982ad7bb40ea492085a3d1414d6",
-                "reference": "268d9f12f6b7e982ad7bb40ea492085a3d1414d6",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1eb9164784848777ad3cb65859f33271b97b1d34",
+                "reference": "1eb9164784848777ad3cb65859f33271b97b1d34",
                 "shasum": ""
             },
             "require": {
@@ -468,11 +473,11 @@
                 "ext-reflection": "*",
                 "ext-spl": "*",
                 "php": ">=5.3.3",
-                "phpunit/php-code-coverage": ">=1.2.1,<1.3.0",
+                "phpunit/php-code-coverage": ">=1.2.1,<1.3",
                 "phpunit/php-file-iterator": ">=1.3.1",
                 "phpunit/php-text-template": ">=1.1.1",
-                "phpunit/php-timer": ">=1.0.2,<1.1.0",
-                "phpunit/phpunit-mock-objects": ">=1.2.0,<1.3.0",
+                "phpunit/php-timer": ">=1.0.2,<1.1",
+                "phpunit/phpunit-mock-objects": ">=1.2,<1.3",
                 "symfony/yaml": ">=2.0,<3.0"
             },
             "require-dev": {
@@ -520,7 +525,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-06-01 10:06:56"
+            "time": "2013-06-27 09:55:21"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -528,22 +533,31 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "8e9d897b39ca6310ccc2d81b8f29cabd5ce12786"
+                "reference": "977c5327c5f9e2a0f08728a59389ee604e5b2f47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/8e9d897b39ca6310ccc2d81b8f29cabd5ce12786",
-                "reference": "8e9d897b39ca6310ccc2d81b8f29cabd5ce12786",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/977c5327c5f9e2a0f08728a59389ee604e5b2f47",
+                "reference": "977c5327c5f9e2a0f08728a59389ee604e5b2f47",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3",
                 "phpunit/php-text-template": ">=1.1.1@stable"
             },
+            "require-dev": {
+                "pear-pear/pear": "1.9.4",
+                "phpunit/phpunit": "3.7.*@dev"
+            },
             "suggest": {
                 "ext-soap": "*"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2.x-dev"
+                }
+            },
             "autoload": {
                 "classmap": [
                     "PHPUnit/"
@@ -569,7 +583,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2013-05-07 12:11:45"
+            "time": "2013-06-23 05:41:31"
         },
         {
             "name": "psr/log",
@@ -870,12 +884,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "dc9ebaa80bb67d73d3e3367eda2ded7ec0626d4c"
+                "reference": "651a7576ced2438d940b7bcb24f7db4de940fc6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/dc9ebaa80bb67d73d3e3367eda2ded7ec0626d4c",
-                "reference": "dc9ebaa80bb67d73d3e3367eda2ded7ec0626d4c",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/651a7576ced2438d940b7bcb24f7db4de940fc6f",
+                "reference": "651a7576ced2438d940b7bcb24f7db4de940fc6f",
                 "shasum": ""
             },
             "require": {
@@ -933,7 +947,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2013-06-12 04:52:19"
+            "time": "2013-06-27 06:40:10"
         },
         {
             "name": "symfony/finder",
@@ -942,12 +956,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Finder.git",
-                "reference": "b709a80b766b47761ae1d1e27a6fa6b4e62dcf08"
+                "reference": "d8da924d4f7d9f325ebd72feefee40c17a3e9104"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Finder/zipball/b709a80b766b47761ae1d1e27a6fa6b4e62dcf08",
-                "reference": "b709a80b766b47761ae1d1e27a6fa6b4e62dcf08",
+                "url": "https://api.github.com/repos/symfony/Finder/zipball/d8da924d4f7d9f325ebd72feefee40c17a3e9104",
+                "reference": "d8da924d4f7d9f325ebd72feefee40c17a3e9104",
                 "shasum": ""
             },
             "require": {
@@ -980,7 +994,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "http://symfony.com",
-            "time": "2013-06-02 12:05:59"
+            "time": "2013-06-23 08:16:33"
         },
         {
             "name": "symfony/yaml",
@@ -1075,12 +1089,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ulrichsg/getopt-php.git",
-                "reference": "6b8f2f011edcce97a7ca8e9ca080a5828f5ebb0e"
+                "reference": "1.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ulrichsg/getopt-php/zipball/6b8f2f011edcce97a7ca8e9ca080a5828f5ebb0e",
-                "reference": "6b8f2f011edcce97a7ca8e9ca080a5828f5ebb0e",
+                "url": "https://api.github.com/repos/ulrichsg/getopt-php/zipball/1.1.0",
+                "reference": "1.1.0",
                 "shasum": ""
             },
             "require": {
@@ -1107,7 +1121,7 @@
             ],
             "description": "Command line arguments parser for PHP 5.3",
             "homepage": "http://github.com/ulrichsg/getopt-php",
-            "time": "2013-06-08 10:37:06"
+            "time": "2013-06-19 14:21:35"
         },
         {
             "name": "yui/yuicompressor",

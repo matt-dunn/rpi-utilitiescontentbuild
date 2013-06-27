@@ -47,15 +47,17 @@ class Dependency extends Object implements \RPI\Utilities\ContentBuild\Lib\Model
         
         $dependencies = \RPI\Foundation\Helpers\Dom::deserialize(simplexml_import_dom($doc));
         
-        if (!isset($dependencies["dependency"][0])) {
-            $dependencies["dependency"] = array($dependencies["dependency"]);
-        }
-        
-        foreach ($dependencies["dependency"] as $dependency) {
-            $this->files[] = array(
-                "name" => $dependency["@"]["name"],
-                "type" => (isset($dependency["@"]["type"]) ? $dependency["@"]["type"] : null)
-            );
+        if (isset($dependencies["dependency"])) {
+            if (!isset($dependencies["dependency"][0])) {
+                $dependencies["dependency"] = array($dependencies["dependency"]);
+            }
+
+            foreach ($dependencies["dependency"] as $dependency) {
+                $this->files[] = array(
+                    "name" => $dependency["@"]["name"],
+                    "type" => (isset($dependency["@"]["type"]) ? $dependency["@"]["type"] : null)
+                );
+            }
         }
     }
     
