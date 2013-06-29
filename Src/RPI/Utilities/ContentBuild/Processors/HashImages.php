@@ -74,7 +74,11 @@ class HashImages implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IPro
                 if (strtolower(substr($imageMatch, 0, 5)) !== "data:") {
                     $querystring = parse_url($imageMatch, PHP_URL_QUERY);
                     if (isset($querystring)) {
-                        $imageFilename = parse_url(dirname($build->outputFilename)."/$imageMatch", PHP_URL_PATH);
+                        if (substr($imageMatch, 0, 1) == "/") {
+                            $imageFilename = $project->basePath."/".$project->appRoot.$imageMatch;
+                        } else {
+                            $imageFilename = parse_url(dirname($build->outputFilename)."/$imageMatch", PHP_URL_PATH);
+                        }
                         if (!file_exists($imageFilename)) {
                             throw new \RPI\Foundation\Exceptions\FileNotFound(
                                 "Unable to locate image '{$imageMatch}'".
@@ -89,7 +93,11 @@ class HashImages implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IPro
                             $imageMatch .= "&hash={$fileHash}";
                         }
                     } else {
-                        $imageFilename = dirname($build->outputFilename)."/$imageMatch";
+                        if (substr($imageMatch, 0, 1) == "/") {
+                            $imageFilename = $project->basePath."/".$project->appRoot.$imageMatch;
+                        } else {
+                            $imageFilename = dirname($build->outputFilename)."/$imageMatch";
+                        }
                         if (!file_exists($imageFilename)) {
                             throw new \RPI\Foundation\Exceptions\FileNotFound(
                                 "Unable to locate image '{$imageMatch}'".

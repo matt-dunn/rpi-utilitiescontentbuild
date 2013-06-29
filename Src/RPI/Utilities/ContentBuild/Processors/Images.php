@@ -63,7 +63,11 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
                 if (strtolower(substr($imageMatch, 0, 5)) !== "data:") {
                     $resolvedPath = $imageUrl = $resolver->realpath($project, $imageMatch);
                     if ($imageUrl === false) {
-                        $imageUrl = realpath(dirname($inputFilename)."/".$imageMatch);
+                        if (substr($imageMatch, 0, 1) == "/") {
+                            $imageUrl = $imageMatch;
+                        } else {
+                            $imageUrl = realpath(dirname($inputFilename)."/".$imageMatch);
+                        }
                     }
 
                     if ($imageUrl === false) {
@@ -187,17 +191,19 @@ class Images implements \RPI\Utilities\ContentBuild\Lib\Model\Processor\IProcess
     
     protected function copyCSSImageFile($sourceImageFile, $destImageFile)
     {
-        if (!file_exists(dirname($destImageFile))) {
-            $this->project->getLogger()->debug("Creating image path: ".$destImageFile);
-            $oldumask = umask(0);
-            mkdir(dirname($destImageFile), 0755, true);
-            umask($oldumask);
-        }
+        if (file_exists($sourceImageFile)) {
+            if (!file_exists(dirname($destImageFile))) {
+                $this->project->getLogger()->debug("Creating image path: ".$destImageFile);
+                $oldumask = umask(0);
+                mkdir(dirname($destImageFile), 0755, true);
+                umask($oldumask);
+            }
 
-        $this->project->getLogger()->notice(
-            "Copying '$sourceImageFile' to '$destImageFile'"
-        );
-        copy($sourceImageFile, $destImageFile);
+            $this->project->getLogger()->notice(
+                "Copying '$sourceImageFile' to '$destImageFile'"
+            );
+            copy($sourceImageFile, $destImageFile);
+        }
     }
     
     protected function cleanupImages($basePath, $timestamp)
