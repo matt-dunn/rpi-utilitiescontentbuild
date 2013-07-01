@@ -109,7 +109,7 @@ class UriResolver extends Object
         $resolverRealPath = false;
         
         $scheme = parse_url($uri, PHP_URL_SCHEME);
-        if ($scheme != "") {
+        if ($scheme != "" && $scheme != "http") {
             $schemRegistered = false;
             foreach ($this->getResolvers() as $resolver) {
                 if ($resolver->getScheme() == $scheme) {
@@ -149,7 +149,7 @@ class UriResolver extends Object
         $resolverRelativePath = false;
         
         $scheme = parse_url($uri, PHP_URL_SCHEME);
-        if ($scheme != "") {
+        if ($scheme != "" && $scheme != "http") {
             $schemRegistered = false;
             foreach ($this->getResolvers() as $resolver) {
                 if ($resolver->getScheme() == $scheme) {
