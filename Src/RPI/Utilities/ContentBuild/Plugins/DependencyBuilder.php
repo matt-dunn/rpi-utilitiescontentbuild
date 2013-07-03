@@ -41,7 +41,7 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\
                         $this->buildFileList(
                             $build,
                             $resolver,
-                            $this->getInputFileName($build, $resolver, $file),
+                            $this->getInputFileName($build, $resolver, $file, $file),
                             $dependentFiles,
                             $buildFiles
                         )
@@ -57,6 +57,7 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\
         \RPI\Utilities\ContentBuild\Lib\Model\Configuration\IBuild $build,
         \RPI\Utilities\ContentBuild\Lib\UriResolver $resolver,
         $file,
+        $inputFilename,
         $basePath = null
     ) {
         $realpath = $resolver->realpath($this->project, $file);
@@ -71,7 +72,7 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\
         }
         
         if (!\RPI\Foundation\Helpers\FileUtils::exists($realpath)) {
-            throw new \RPI\Foundation\Exceptions\RuntimeException("Unable to locate input file '$file'");
+            throw new \RPI\Foundation\Exceptions\RuntimeException("Unable to locate input file '$file' for '$inputFilename'");
         }
         
         return $realpath;
@@ -91,8 +92,16 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\
         $dependenciesFile = reset($files);
         if ($dependenciesFile !== false) {
             $type = pathinfo($dependenciesFile, PATHINFO_EXTENSION);
+            $fileType = pathinfo(basename($dependenciesFile, ".".$type), PATHINFO_EXTENSION);
+            if (array_search($fileType, array("css", "js"))) {
+                if ($fileType == pathinfo($inputFilename, PATHINFO_EXTENSION)) {
+                    $type = $fileType.".".$type;
+                } else {
+                    $type = null;
+                }
+            }
         }
-        
+
         return $type;
     }
     
@@ -150,6 +159,7 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\
                         $build,
                         $resolver,
                         $dependency["name"],
+                        $inputFilename,
                         dirname($inputFilename)
                     );
 
