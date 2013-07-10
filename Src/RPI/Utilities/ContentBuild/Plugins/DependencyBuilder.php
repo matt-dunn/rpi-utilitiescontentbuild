@@ -72,7 +72,9 @@ class DependencyBuilder implements \RPI\Utilities\ContentBuild\Lib\Model\Plugin\
         }
         
         if (!\RPI\Foundation\Helpers\FileUtils::exists($realpath)) {
-            throw new \RPI\Foundation\Exceptions\RuntimeException("Unable to locate input file '$file' for '$inputFilename'");
+            throw new \RPI\Foundation\Exceptions\RuntimeException(
+                "Unable to locate input file '$file' for '$inputFilename'"
+            );
         }
         
         return $realpath;
