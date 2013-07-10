@@ -29,6 +29,7 @@
     <target name="composer">
         <exec dir="." executable="composer" checkReturn="true" logOutput="true">
             <arg line="update"/>
+            <arg line="-n"/>
         </exec>
     </target>
     
