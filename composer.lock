@@ -14,12 +14,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/leafo/lessphp.git",
-                "reference": "ff86f2941c3f3d67d56acad2f8902ca57c73b359"
+                "reference": "366fb52798d4f120503af0703da11cba4ad06f8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leafo/lessphp/zipball/ff86f2941c3f3d67d56acad2f8902ca57c73b359",
-                "reference": "ff86f2941c3f3d67d56acad2f8902ca57c73b359",
+                "url": "https://api.github.com/repos/leafo/lessphp/zipball/366fb52798d4f120503af0703da11cba4ad06f8d",
+                "reference": "366fb52798d4f120503af0703da11cba4ad06f8d",
                 "shasum": ""
             },
             "type": "library",
@@ -47,7 +47,7 @@
             ],
             "description": "lessphp is a compiler for LESS written in PHP.",
             "homepage": "http://leafo.net/lessphp/",
-            "time": "2013-05-22 17:52:29"
+            "time": "2013-07-09 16:25:09"
         },
         {
             "name": "leafo/scssphp",
@@ -175,12 +175,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phploc.git",
-                "reference": "dc7a6729cac148123b5c44f6e747441196a6b752"
+                "reference": "ccf4221911a336869b84ecc6b8e16d072fae9ec3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phploc/zipball/dc7a6729cac148123b5c44f6e747441196a6b752",
-                "reference": "dc7a6729cac148123b5c44f6e747441196a6b752",
+                "url": "https://api.github.com/repos/sebastianbergmann/phploc/zipball/ccf4221911a336869b84ecc6b8e16d072fae9ec3",
+                "reference": "ccf4221911a336869b84ecc6b8e16d072fae9ec3",
                 "shasum": ""
             },
             "require": {
@@ -212,7 +212,7 @@
             ],
             "description": "A tool for quickly measuring the size of a PHP project.",
             "homepage": "https://github.com/sebastianbergmann/phploc",
-            "time": "2013-06-22 11:19:07"
+            "time": "2013-07-03 06:35:21"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -220,12 +220,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "56ad5a88f7503b9ecee4e1799cd7c48e31ada517"
+                "reference": "1.2.12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/56ad5a88f7503b9ecee4e1799cd7c48e31ada517",
-                "reference": "56ad5a88f7503b9ecee4e1799cd7c48e31ada517",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/1.2.12",
+                "reference": "1.2.12",
                 "shasum": ""
             },
             "require": {
@@ -273,7 +273,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-06-27 08:20:15"
+            "time": "2013-07-06 06:26:16"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -459,12 +459,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "1eb9164784848777ad3cb65859f33271b97b1d34"
+                "reference": "3.7.22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1eb9164784848777ad3cb65859f33271b97b1d34",
-                "reference": "1eb9164784848777ad3cb65859f33271b97b1d34",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3.7.22",
+                "reference": "3.7.22",
                 "shasum": ""
             },
             "require": {
@@ -473,12 +473,12 @@
                 "ext-reflection": "*",
                 "ext-spl": "*",
                 "php": ">=5.3.3",
-                "phpunit/php-code-coverage": ">=1.2.1,<1.3",
+                "phpunit/php-code-coverage": "~1.2.1",
                 "phpunit/php-file-iterator": ">=1.3.1",
                 "phpunit/php-text-template": ">=1.1.1",
-                "phpunit/php-timer": ">=1.0.2,<1.1",
-                "phpunit/phpunit-mock-objects": ">=1.2,<1.3",
-                "symfony/yaml": ">=2.0,<3.0"
+                "phpunit/php-timer": "~1.0.2",
+                "phpunit/phpunit-mock-objects": "~1.2.0",
+                "symfony/yaml": "~2.0"
             },
             "require-dev": {
                 "pear-pear/pear": "1.9.4"
@@ -525,7 +525,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-06-27 09:55:21"
+            "time": "2013-07-06 06:29:15"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -533,12 +533,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "977c5327c5f9e2a0f08728a59389ee604e5b2f47"
+                "reference": "b07614827c82083615b981e6a9813092cec43073"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/977c5327c5f9e2a0f08728a59389ee604e5b2f47",
-                "reference": "977c5327c5f9e2a0f08728a59389ee604e5b2f47",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/b07614827c82083615b981e6a9813092cec43073",
+                "reference": "b07614827c82083615b981e6a9813092cec43073",
                 "shasum": ""
             },
             "require": {
@@ -583,7 +583,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2013-06-23 05:41:31"
+            "time": "2013-07-10 05:37:22"
         },
         {
             "name": "psr/log",
@@ -657,7 +657,7 @@
             "source": {
                 "type": "git",
                 "url": "ssh://git@bitbucket.org/redpixelinteractive/rpi-foundation.git",
-                "reference": "0ec6b21dda1b41fa97d556d8f962b94fa07fffd4"
+                "reference": "e458448a82c3fb6df917b1d22413374a80f22412"
             },
             "require": {
                 "ext-apc": "*",
@@ -695,7 +695,7 @@
             ],
             "description": "RPI Core Foundation",
             "homepage": "http://packages.red-pixel.co.uk/",
-            "time": "2013-06-12 15:38:30"
+            "time": "2013-06-29 13:55:11"
         },
         {
             "name": "rpi/schemas",
@@ -703,7 +703,7 @@
             "source": {
                 "type": "git",
                 "url": "ssh://git@bitbucket.org/redpixelinteractive/rpi-schemas.git",
-                "reference": "d063f92fa6c7ac85b337332373690c20a3c43a1f"
+                "reference": "01877f5383afe9519ff2b45867969aa6a755603f"
             },
             "type": "library",
             "autoload": {
@@ -722,7 +722,7 @@
             ],
             "description": "RPI Schemas",
             "homepage": "http://packages.red-pixel.co.uk/",
-            "time": "2013-05-23 19:26:12"
+            "time": "2013-06-28 11:22:08"
         },
         {
             "name": "rpi/test-harness",
@@ -884,12 +884,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "651a7576ced2438d940b7bcb24f7db4de940fc6f"
+                "reference": "aad849c926d7cf03b7e92cab1d4b09dac887b359"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/651a7576ced2438d940b7bcb24f7db4de940fc6f",
-                "reference": "651a7576ced2438d940b7bcb24f7db4de940fc6f",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/aad849c926d7cf03b7e92cab1d4b09dac887b359",
+                "reference": "aad849c926d7cf03b7e92cab1d4b09dac887b359",
                 "shasum": ""
             },
             "require": {
@@ -947,7 +947,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2013-06-27 06:40:10"
+            "time": "2013-07-10 01:20:11"
         },
         {
             "name": "symfony/finder",
@@ -956,12 +956,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Finder.git",
-                "reference": "d8da924d4f7d9f325ebd72feefee40c17a3e9104"
+                "reference": "57b67729f863be8b950441a739b82678b91accde"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Finder/zipball/d8da924d4f7d9f325ebd72feefee40c17a3e9104",
-                "reference": "d8da924d4f7d9f325ebd72feefee40c17a3e9104",
+                "url": "https://api.github.com/repos/symfony/Finder/zipball/57b67729f863be8b950441a739b82678b91accde",
+                "reference": "57b67729f863be8b950441a739b82678b91accde",
                 "shasum": ""
             },
             "require": {
@@ -994,7 +994,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "http://symfony.com",
-            "time": "2013-06-23 08:16:33"
+            "time": "2013-07-08 13:37:01"
         },
         {
             "name": "symfony/yaml",
@@ -1049,12 +1049,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/theseer/fDOMDocument.git",
-                "reference": "Release-1.4.1"
+                "reference": "Release-1.4.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/theseer/fDOMDocument/zipball/Release-1.4.1",
-                "reference": "Release-1.4.1",
+                "url": "https://api.github.com/repos/theseer/fDOMDocument/zipball/Release-1.4.2",
+                "reference": "Release-1.4.2",
                 "shasum": ""
             },
             "require": {
@@ -1081,7 +1081,7 @@
             ],
             "description": "The classes contained within this repository extend the standard DOM to use exceptions at all occasions of errors instead of PHP warnings or notices. They also add various custom methods and shortcuts for convinience and to simplify the usage of DOM.",
             "homepage": "https://github.com/theseer/fDOMDocument",
-            "time": "2013-04-27 20:28:00"
+            "time": "2013-06-30 12:26:39"
         },
         {
             "name": "ulrichsg/getopt-php",

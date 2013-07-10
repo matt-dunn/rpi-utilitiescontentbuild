@@ -143,10 +143,11 @@
                 </element>
             </metadata>
         </pharpackage>
+        
+        <move file="bin/contentbuild.phar" tofile="bin/contentbuild" overwrite="true"/>
     </target>
     
     <target name="install">
-        <move file="bin/contentbuild.phar" tofile="bin/contentbuild" overwrite="true"/>
         <exec command="chmod +x bin/contentbuild" />
         <copy file="bin/contentbuild" tofile="/usr/local/bin/contentbuild" overwrite="true" />
     </target>
